@@ -7,41 +7,59 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-<header>
+
+    <!-- cabeçalho -->
+<header class="header">
     <h1>Lume Pet</h1>
     <nav>
         <ul>
-            <li><a href="#">Início</a></li>
-            <li><a href="#">Sobre</a></li>
-            <li><a href="#">Serviços</a></li>
-            <li><a href="#">Contato</a></li>
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#servicos">Serviços</a></li>
+            <li><a href="#contato">Contato</a></li>
         </ul>
     </nav>
 </header>
 
+<!-- banner -->
 <section class="banner">
     <h2>Mais que um pet shop, uma missão!</h2>
     <p>A Lume Pet nasceu para unir amor e responsabilidade, oferecendo produtos de qualidade e promovendo o bem-estar animal. Junte-se a nós nessa jornada de cuidado e carinho pelos nossos amigos de quatro patas.</p>
-    <button>Fazer Doação</button>
-    <button>Adotar um amigo</button>
+   
+    <div class="botao">
+    <button class="btn-primary">Fazer Doação</button>
+    <button class="btn-seg">Adotar um amigo</button>
+    </div>
 </section>
 
+<!-- carrossel de imagens-->
+<section class="pets">
+   <div class="carrossel">
+        <img src="img/pet1.jpg" alt="pet 1">
+        <img src="img/pet2.jpg" alt="pet 2">
+        <img src="img/pet3.jpg" alt="pet 3">
+   </div>
+</section>
+
+
+<!-- parte para o formulario de adoção-->
 <section class="adote">
     <h2>Adote um Amigo</h2>
     <button>Responda o nosso formulário</button>
 </section>
 
-<section class="adocao">
+<!-- doação-->
+<section class="doacao">
     <h2>Ajude uma Vida hoje</h2>
     <button>10</button>
     <button>20</button>
     <button>50</button>
     <button>100</button>
     
-    <container>
-        <input type="number" placeholder="Ou digite outro valor">
-        <input type="text" placeholder=" Nome">
+    <div class="container">
+        <h2>faça sua doação</h2>
+        <input type="number" placeholder="Valor">
+        <input type="text" placeholder="Nome">
         <input type="email" placeholder="Email">
 
         <h3>Forma de pagamento</h3>
@@ -50,15 +68,16 @@
         <button>Cartão de Débito</button>
 
         <button>Doar</button>
-    </container>
+    </div>
+</section>
 
-<section class="Sobre">
+<section class="sobre">
     <h2>Sobre Nós</h2>
     <p>A Lume Pet foi criada com o propósito de ser mais do que um simples pet shop. Nossa missão é promover e concientizar a importancia do cuidado e bem-estar animal, alem de oferecer produtos de alta qualidade para seus pets, buscamos também ser um ponto de apoio para aqueles que desejam adotar e cuidar de um novo amiguinho de quatro patas. Acreditamos que cada animal merece amor, cuidado e um lar, com esse proposito estamos aqui para auxiliar e inspirar a população a fazer a diferença na vida dos animais, seja através de adoções, doações ou simplesmente compartilhando o conhecimento sobre o bem-estar animal. Junte-se a nós nessa jornada de amor e responsabilidade, e vamos juntos conosco construir um mundo melhor para nossos amigos peludos!</p>
 </section>
 
-<section class="Avaliação">
-    <h2>Avalaliações</h2>
+<section class="avaliacao">
+    <h2>Avaliações</h2>
     <p>Feedbacks que ilumina nossa jornada!</p>
     
     <div class="container-card">
@@ -84,10 +103,12 @@
     </div>
 </section>
 
-<section class="Contato">
+<section class="contato">
     <h2>Contato</h2>
     <p>Para mais informações, entre em contato conosco através do email contato@lumepet.com.br ou pelo telefone (11) 1234-5678.</p>
 </section>
+
+<script src="js/script.js"></script>
 
 </body>
 </html>
