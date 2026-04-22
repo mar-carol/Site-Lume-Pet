@@ -17,11 +17,33 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: rgb(241, 127, 85);
+    background-color: #385A81;
     border-bottom: 2px solid #333;
     position: fixed;
     width: 100%;
     top: 0; 
     z-index: 1000;
 
+}
+
+.header h1 {
+    color: #FFFEEE;
+}
+
+.header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.header nav ul li a {
+    color: #FFFEEE;
+    margin-left: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.header nav ul li a:hover {
+    color: #FA8000;
 }
