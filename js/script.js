@@ -900,7 +900,6 @@ function adicionarProdutoDaPagina() {
   for (let i = 0; i < produtoQtd; i++) {
     adicionarAoCarrinho(produtoAtual.nome, produtoAtual.preco);
   }
-  alert(`${produtoQtd}x "${produtoAtual.nome}" adicionado ao carrinho!`);
 }
 
 // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar)
