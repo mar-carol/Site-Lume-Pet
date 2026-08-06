@@ -551,6 +551,16 @@ function confirmarPedido() {
 }
 
 function finalizarPedido() {
+  // registra os produtos comprados para liberar avaliação
+  if (usuarioLogado) {
+    const chave = 'lumepet_compras_' + usuarioLogado.email;
+    const compras = JSON.parse(localStorage.getItem(chave) || '[]');
+    itensCarrinho.forEach(item => {
+      if (!compras.includes(item.nome)) compras.push(item.nome);
+    });
+    localStorage.setItem(chave, JSON.stringify(compras));
+  }
+
   pararTimerPix();
   esvaziarCarrinho();
   fecharPagamento();
@@ -832,4 +842,201 @@ function confirmarDoacao() {
   document.getElementById('doacao-email').value = '';
   document.getElementById('doacao-valor').value = '';
   document.querySelectorAll('.btn-valor').forEach(btn => btn.classList.remove('ativo'));
+}
+
+
+// PÁGINA DE PRODUTO
+
+let produtoAtual = null;
+let produtoQtd = 1;
+
+const SECOES_CLASSES = ['.carrossel', '.servico', '.loja', '.adote', '.doacao', '.sobre', '.avaliacao', '.contato'];
+
+function abrirProduto(card) {
+  const img = card.querySelector('.produto-img img');
+  const nome = card.querySelector('h3').textContent.trim();
+  const preco = card.querySelector('.produto-preco').textContent.trim();
+  const paragrafos = Array.from(card.querySelectorAll('p')).map(p => p.textContent.trim());
+
+  produtoAtual = { nome, preco: preco.replace('R$', '').trim() };
+  produtoQtd = 1;
+
+  document.getElementById('pd-img').src = img.src;
+  document.getElementById('pd-img').alt = img.alt;
+  document.getElementById('pd-nome').textContent = nome;
+  document.getElementById('pd-desc').textContent = paragrafos.join(' ');
+  document.getElementById('pd-preco').textContent = preco;
+  document.getElementById('pd-qtd').textContent = produtoQtd;
+
+  SECOES_CLASSES.forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) el.style.display = 'none';
+  });
+
+  document.getElementById('produtoPagina').classList.add('aberta');
+  renderAvaliacoesSecao(nome);
+  montarFormAvaliacao(nome);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function fecharProduto() {
+  document.getElementById('produtoPagina').classList.remove('aberta');
+
+  SECOES_CLASSES.forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) el.style.display = '';
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function alterarQtdProduto(delta) {
+  produtoQtd = Math.max(1, produtoQtd + delta);
+  document.getElementById('pd-qtd').textContent = produtoQtd;
+}
+
+function adicionarProdutoDaPagina() {
+  if (!produtoAtual) return;
+  for (let i = 0; i < produtoQtd; i++) {
+    adicionarAoCarrinho(produtoAtual.nome, produtoAtual.preco);
+  }
+  alert(`${produtoQtd}x "${produtoAtual.nome}" adicionado ao carrinho!`);
+}
+
+// abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar)
+document.getElementById('lojaGrade').addEventListener('click', function (e) {
+  if (e.target.closest('button')) return;
+  const card = e.target.closest('.produto-card');
+  if (card) abrirProduto(card);
+});
+
+
+// AVALIAÇÕES DE PRODUTOS
+
+function getAvaliacoes(produtoNome) {
+  try {
+    const todas = JSON.parse(localStorage.getItem('lumepet_avaliacoes') || '{}');
+    return todas[produtoNome] || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function salvarAvaliacao(produtoNome, avaliacao) {
+  const todas = JSON.parse(localStorage.getItem('lumepet_avaliacoes') || '{}');
+  if (!todas[produtoNome]) todas[produtoNome] = [];
+  todas[produtoNome].push(avaliacao);
+  localStorage.setItem('lumepet_avaliacoes', JSON.stringify(todas));
+}
+
+function comprouProduto(produtoNome) {
+  if (!usuarioLogado) return false;
+  try {
+    const compras = JSON.parse(localStorage.getItem('lumepet_compras_' + usuarioLogado.email) || '[]');
+    return compras.includes(produtoNome);
+  } catch (e) {
+    return false;
+  }
+}
+
+function renderEstrelas(nota) {
+  let html = '<span class="estrelas">';
+  for (let i = 1; i <= 5; i++) {
+    html += i <= nota ? '★' : '☆';
+  }
+  html += '</span>';
+  return html;
+}
+
+function renderAvaliacoesSecao(produtoNome) {
+  const avaliacoes = getAvaliacoes(produtoNome);
+  const media = document.getElementById('pd-media');
+  const lista = document.getElementById('pd-lista-avaliacoes');
+
+  if (avaliacoes.length === 0) {
+    media.innerHTML = '';
+    lista.innerHTML = '<p class="pd-sem-avaliacoes">Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>';
+    return;
+  }
+
+  const somaNotas = avaliacoes.reduce((s, a) => s + a.nota, 0);
+  const mediaNota = (somaNotas / avaliacoes.length).toFixed(1);
+
+  media.innerHTML = `${renderEstrelas(Math.round(mediaNota))} <strong>${mediaNota}</strong> (${avaliacoes.length} avaliação${avaliacoes.length > 1 ? 'ões' : ''})`;
+
+  lista.innerHTML = avaliacoes.map(a => `
+    <div class="avaliacao-item">
+      ${renderEstrelas(a.nota)}
+      <strong>${a.autor}</strong>
+      <p>${a.texto}</p>
+    </div>
+  `).join('');
+}
+
+let notaSelecionada = 0;
+
+function montarFormAvaliacao(produtoNome) {
+  const container = document.getElementById('pd-nova-avaliacao');
+  notaSelecionada = 0;
+
+  if (!usuarioLogado) {
+    container.innerHTML = `<div class="pd-aviso-compra">Entre na sua conta e compre este produto para deixar sua avaliação.</div>`;
+    return;
+  }
+
+  if (!comprouProduto(produtoNome)) {
+    container.innerHTML = `<div class="pd-aviso-compra">Você poderá avaliar este produto depois de comprá-lo.</div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="pd-nova-avaliacao-form">
+      <strong>Deixe sua avaliação</strong>
+      <div class="estrelas-input" id="estrelasInput">
+        <span data-valor="1">★</span>
+        <span data-valor="2">★</span>
+        <span data-valor="3">★</span>
+        <span data-valor="4">★</span>
+        <span data-valor="5">★</span>
+      </div>
+      <textarea id="textoAvaliacao" placeholder="Conte como foi sua experiência com o produto..."></textarea>
+      <button onclick="enviarAvaliacao('${produtoNome.replace(/'/g, "\\'")}')">Enviar avaliação</button>
+    </div>
+  `;
+
+  document.querySelectorAll('#estrelasInput span').forEach(estrela => {
+    estrela.addEventListener('click', function () {
+      notaSelecionada = parseInt(this.dataset.valor);
+      atualizarEstrelasInput();
+    });
+  });
+}
+
+function atualizarEstrelasInput() {
+  document.querySelectorAll('#estrelasInput span').forEach(estrela => {
+    estrela.classList.toggle('ativa', parseInt(estrela.dataset.valor) <= notaSelecionada);
+  });
+}
+
+function enviarAvaliacao(produtoNome) {
+  const texto = document.getElementById('textoAvaliacao').value.trim();
+
+  if (notaSelecionada === 0) {
+    alert('Selecione de 1 a 5 estrelas antes de enviar.');
+    return;
+  }
+  if (!texto) {
+    alert('Escreva um comentário sobre o produto.');
+    return;
+  }
+
+  salvarAvaliacao(produtoNome, {
+    nota: notaSelecionada,
+    texto,
+    autor: usuarioLogado.nome
+  });
+
+  alert('✅ Avaliação enviada, obrigado pelo feedback!');
+  renderAvaliacoesSecao(produtoNome);
+  montarFormAvaliacao(produtoNome);
 }

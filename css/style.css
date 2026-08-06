@@ -1565,3 +1565,248 @@ transform: translateY(-50%) rotate(90deg); }
     font-size: 14px;
   }
 }
+
+/* PÁGINA DE PRODUTO */
+.produto-pagina {
+  display: none;
+  padding: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.produto-pagina.aberta {
+  display: block;
+}
+
+.produto-voltar {
+  background: none;
+  border: 2px solid #385A81;
+  color: #385A81;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 28px;
+  transition: all 0.3s;
+}
+
+.produto-voltar:hover {
+  background: #385A81;
+  color: #fff;
+}
+
+.produto-detalhe {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.produto-detalhe-img {
+  flex: 1;
+  min-width: 260px;
+  width: 100%;
+  max-width: 380px;
+  height: 320px;
+  background: #f9f9f9;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.produto-detalhe-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.produto-detalhe-info {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.produto-detalhe-info h2 {
+  color: #385A81;
+  font-size: 26px;
+}
+
+.pd-descricao {
+  color: #666;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.pd-preco {
+  font-size: 26px;
+  font-weight: bold;
+  color: #FA8000;
+}
+
+.pd-quantidade {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qtd-controle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid #385A81;
+  border-radius: 20px;
+  padding: 6px 14px;
+}
+
+.qtd-controle button {
+  background: #385A81;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.pd-add-carrinho {
+  background: #385A81;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s;
+  max-width: 280px;
+}
+
+.pd-add-carrinho:hover {
+  background: #FA8000;
+}
+
+.pd-avaliacoes h3 {
+  color: #385A81;
+  margin-bottom: 20px;
+}
+
+/* ESTRELAS E AVALIAÇÕES DO PRODUTO */
+.estrelas {
+  color: #FA8000;
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+.pd-media {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.pd-lista-avaliacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.avaliacao-item {
+  background: #f7faf8;
+  border: 1px solid #d4ead9;
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.avaliacao-item .estrelas {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.avaliacao-item strong {
+  color: #385A81;
+  font-size: 13px;
+}
+
+.avaliacao-item p {
+  font-size: 14px;
+  color: #555;
+  margin: 6px 0 0;
+  line-height: 1.6;
+}
+
+.pd-sem-avaliacoes {
+  color: #888;
+  font-size: 14px;
+}
+
+.pd-nova-avaliacao-form {
+  background: #fff;
+  border: 2px solid #cde0d3;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.estrelas-input {
+  display: flex;
+  gap: 4px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.estrelas-input span {
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.estrelas-input span.ativa {
+  color: #FA8000;
+}
+
+.pd-nova-avaliacao-form textarea {
+  padding: 10px 14px;
+  border: 2px solid #cde0d3;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.pd-nova-avaliacao-form button {
+  align-self: flex-start;
+  background: #385A81;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.pd-nova-avaliacao-form button:hover {
+  background: #FA8000;
+}
+
+.pd-aviso-compra {
+  background: #fff4e0;
+  border: 1px solid #f2c98a;
+  color: #8a5d00;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  max-width: 420px;
+}
