@@ -1039,3 +1039,18 @@ function enviarAvaliacao(produtoNome) {
   renderAvaliacoesSecao(produtoNome);
   montarFormAvaliacao(produtoNome);
 }
+
+// MENU HAMBÚRGUER
+
+function toggleMenu() {
+  document.getElementById('menuHamburguer').classList.toggle('aberto');
+  document.getElementById('navMenu').classList.toggle('aberto');
+}
+
+// fecha o menu ao clicar em qualquer link
+document.querySelectorAll('#navMenu a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('menuHamburguer').classList.remove('aberto');
+    document.getElementById('navMenu').classList.remove('aberto');
+  });
+});
