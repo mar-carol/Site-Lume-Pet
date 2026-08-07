@@ -1031,17 +1031,45 @@ transform: translateY(-50%) rotate(90deg); }
 /* ADOÇÃO */
 .adote {
   background: #fff;
-  text-align: center;
-  padding: 50px 40px;
+  padding: 60px 40px;
 }
  
-.adote h2 {
-  font-size: 26px;
+.adote-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+ 
+/*lado esquerdo - formulário*/
+.adote-info {
+  flex: 1;
+  text-align: left;
+}
+
+.adote-info h2 {
+  font-size: 28px;
   color: #385A81;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
- 
-.adote button {
+
+
+.adote-info h3 {
+  font-size: 18px;
+  color: #385A81;
+  margin-bottom: 8px;
+}
+
+.adote-info p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 24px;
+  max-width: 420px;
+}
+
+.adote-info button {
   background: #385A81;
   color: #fff;
   border: none;
@@ -1054,7 +1082,16 @@ transform: translateY(-50%) rotate(90deg); }
 }
  
 .adote button:hover { background: #385A81; }
- 
+
+/*lado direito - carrossel*/
+
+.adote-carrossel {
+  flex: 1;
+  position: relative;
+  width: 100%;  
+  max-width: 480px;
+}
+
 /* DOAÇÃO */
 .doacao {
   background: #2d8bba;

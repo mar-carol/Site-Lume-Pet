@@ -415,8 +415,37 @@ pets
 
 <!-- parte para o formulario de adoção-->
 <section class="adote" id="adote">
-  <h2>Adote um Amigo</h2>
-  <button onclick="window.open('https://docs.google.com/forms/d/19jwE_GqqetJgKmBXx1GyW-G6J0R0P3yBoZaWcABsxVQ/viewform?ts=6a5eda39&edit_requested=true', '_blank')">Responda o nosso formulário</button>
+  <div class="adote-wrapper">
+
+    <!--lado esquerdo -  formulário-->
+    <div class="adote-info">
+       <h2>Adote um Pet!</h2>
+      <p>Se você está pensando em adotar um animal de estimação, preencha nosso formulário de adoção. Estamos ansiosos para ajudá-lo a encontrar o companheiro perfeito!</p>
+
+      <h3>Formulário de Adoção</h3>
+      <p>Preencha o formulário abaixo para iniciar o processo de adoção. Estamos ansiosos para ajudá-lo a encontrar o companheiro perfeito!</p>
+      <button onclick="window.open('https://docs.google.com/forms/d/19jwE_GqqetJgKmBXx1GyW-G6J0R0P3yBoZaWcABsxVQ/viewform?ts=6a5eda39&edit_requested=true', '_blank')">Responda o nosso formulário</button>
+    </div>
+
+    <!--lado direito - carrossel de pets adotados-->
+    <div class="adote-carrossel" id="adoteCarrossel">
+      <div class="adote-slide"> 
+
+        <div class="adote-slide">
+          <img src="css/imagem css/pet-adotado1.jpg" alt="Pet Adotado">
+          <span class="adote-tag">🐾 Lana - Adotado</span>
+        </div>
+
+        <div class="adote-slide">
+          <img src="css/imagem css/pet-adotado2.jpg" alt="Pet Adotado">
+          <span class="adote-tag">🐾 Max - Adotado</span>
+        </div>
+
+        </div>
+
+         <!-- DOTS -->
+      <div class="adote-dots" id="adoteDots"></div>
+
 </section>
 
 <!-- doação-->
