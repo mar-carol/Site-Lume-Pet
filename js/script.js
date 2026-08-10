@@ -629,7 +629,7 @@ function filtrarProdutos() {
 filtrarProdutos();
 
 
-// CARROSSEL
+// CARROSSEL PRINCIPAL (topo do site)
 
 (function () {
   const slidesEl   = document.getElementById('slides');
@@ -638,7 +638,7 @@ filtrarProdutos();
 
   if (!slidesEl) return; // sai se não houver carrossel na página
 
-  const total    = document.querySelectorAll('.slide').length;
+  const total    = document.querySelectorAll('#slides .slide').length;
   const INTERVAL = 5000; // ms entre troca automática de slide
 
   let current      = 0;
@@ -665,7 +665,7 @@ filtrarProdutos();
 
   // Atualizar dots 
   function updateDots() {
-    document.querySelectorAll('.dot').forEach(function (d, i) {
+    dotsWrap.querySelectorAll('.dot').forEach(function (d, i) {
       d.classList.toggle('active', i === current);
     });
   }
@@ -748,6 +748,43 @@ filtrarProdutos();
   // ── Iniciar ──
   resetAuto();
 })();
+
+
+// CARROSSEL - ADOTE UM PET
+
+(function () {
+  const carrossel = document.getElementById('adoteCarrossel');
+  if (!carrossel) return; // sai se essa seção não existir na página
+
+  const slides = carrossel.querySelectorAll('.adote-slide');
+  const dotsWrap = document.getElementById('adoteDots');
+  if (slides.length === 0 || !dotsWrap) return;
+
+  let current = 0;
+
+  // cria os dots dinamicamente
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Ir para foto ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  const dots = dotsWrap.querySelectorAll('.dot');
+
+  function goTo(i) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  // troca automática a cada 4 segundos
+  setInterval(() => goTo((current + 1) % slides.length), 4000);
+})();
+
 
 //Doação
 let metodoDoacao = 'pix';
