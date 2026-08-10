@@ -42,44 +42,47 @@
 <body>
 
     <!-- cabeçalho/menu -->
-    <header class="header">
-        <div class="logo">
-            <a href="#inicio">
-                <img src="css/imagem css/marcad.png" alt="LumePet">
+   <header class="header">
+    <div class="header-mobile-esquerda">
+        <button class="menu-hamburguer" id="menuHamburguer" onclick="toggleMenu()" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="#" class="usuario-icon-mobile" onclick="toggleLogin(event)" aria-label="Entrar">
+            <i class="fa-regular fa-user"></i>
+        </a>
+    </div>
+
+    <div class="logo">
+        <a href="#inicio">
+            <img src="css/imagem css/marcad.png" alt="LumePet">
+        </a>
+    </div>
+
+    <div class="header-nav-wrap">
+        <nav id="navMenu">
+            <ul>
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#loja">Produtos</a></li>
+                <li><a href="#adote">Adote</a></li>
+                <li><a href="#doacao">Doação</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#avaliacao">Avaliações</a></li>
+                <li><a href="#contato">Contato</a></li>
+                <li>
+                    <a href="#" class="usuario-icon" onclick="toggleLogin(event)" id="usuarioLink">
+                        <span id="usuarioNome">Entrar</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="header-direita">
+            <a href="#" class="carrinho-icon" onclick="toggleCarrinho(event)">
+                🛒 <span class="carrinho-count">0</span>
             </a>
         </div>
-
-        <div class="header-nav-wrap">
-            <nav id="navMenu">
-                <ul>
-                    <li><a href="#inicio">Início</a></li>
-                    <li><a href="#loja">Produtos</a></li>
-                    <li><a href="#adote">Adote</a></li>
-                    <li><a href="#doacao">Doação</a></li>
-                    <li><a href="#sobre">Sobre</a></li>
-                    <li><a href="#avaliacao">Avaliações</a></li>
-                    <li><a href="#contato">Contato</a></li>
-                    <li>
-                        <a href="#" class="usuario-icon" onclick="toggleLogin(event)" id="usuarioLink">
-                            <span id="usuarioNome">Entrar</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="header-direita">
-                <a href="#" class="carrinho-icon" onclick="toggleCarrinho(event)">
-                    🛒 <span class="carrinho-count">0</span>
-                </a>
-
-                <button class="menu-hamburguer" id="menuHamburguer" onclick="toggleMenu()" aria-label="Abrir menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </header>
+    </div>
+</header>
 
     <!-- MODAL DE LOGIN / CADASTRO -->
     <div class="login-overlay" id="loginOverlay">

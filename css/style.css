@@ -95,6 +95,16 @@ body {
   transform: translateY(-8px) rotate(-45deg);
 }
 
+.header-mobile-esquerda {
+  display: none;
+}
+
+.usuario-icon-mobile {
+  color: #161510;
+  text-decoration: none;
+  font-size: 20px;
+}
+
 @media (max-width: 768px) {
   .menu-hamburguer {
     display: flex;
@@ -1721,12 +1731,41 @@ transform: translateY(-50%) rotate(90deg); }
 /* RESPONSIVIDADE */
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px 20px;
-    text-align: center;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    text-align: initial;
   }
- 
+
+  .header-mobile-esquerda {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    order: 1;
+  }
+
+  .logo {
+    order: 2;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .header-nav-wrap {
+    display: contents;
+  }
+
+  .header-direita {
+    order: 3;
+    display: flex;
+    align-items: center;
+  }
+
+  #navMenu li:has(.usuario-icon) {
+    display: none;
+  }
+
   .header nav ul {
     flex-wrap: wrap;
     justify-content: center;
