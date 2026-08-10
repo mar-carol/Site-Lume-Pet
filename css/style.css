@@ -22,6 +22,7 @@ body {
 
 .header {
     display: flex;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
     padding: 15px 24px;
@@ -95,7 +96,7 @@ body {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .menu-hamburguer {
     display: flex;
   }
@@ -104,6 +105,10 @@ body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .header-nav-wrap {
+    gap: 0;
   }
 
   #navMenu {
@@ -416,6 +421,7 @@ body {
 /* AGRUPAMENTO DO LADO DIREITO DO HEADER */
 .header-nav-wrap {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 24px;
 }
@@ -1136,28 +1142,16 @@ transform: translateY(-50%) rotate(90deg); }
 /* ADOÇÃO */
 .adote {
   background: #fff;
-  padding: 60px 40px;
+  text-align: center;
+  padding: 50px 40px;
 }
  
-.adote-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
- 
-/*lado esquerdo - formulário*/
-.adote-info {
-  flex: 1;
-  text-align: left;
-}
-
-.adote-info h2 {
-  font-size: 28px;
+.adote h2 {
+  font-size: 26px;
   color: #385A81;
   margin-bottom: 16px;
 }
+
 
 .adote-info h3 {
   font-size: 18px;
@@ -1172,8 +1166,8 @@ transform: translateY(-50%) rotate(90deg); }
   margin-bottom: 24px;
   max-width: 420px;
 }
-
-.adote-info button {
+ 
+.adote button {
   background: #385A81;
   color: #fff;
   border: none;
@@ -1185,7 +1179,7 @@ transform: translateY(-50%) rotate(90deg); }
   transition: background 0.2s;
 }
  
-.adote-info button:hover { background: #FA8000; }
+.adote button:hover { background: #385A81; }
 
 /*lado direito - carrossel*/
 
@@ -1194,82 +1188,6 @@ transform: translateY(-50%) rotate(90deg); }
   position: relative;
   width: 100%;  
   max-width: 480px;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.adote-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.adote-slide.active {
-  opacity: 1;
-}
-
-.adote-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.adote-tag {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  background: rgba(56, 90, 129, 0.85);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.adote-dots {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 2;
-}
-
-.adote-dots .dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  border: none;
-  cursor: pointer;
-  transition: background 0.25s, transform 0.25s;
-}
-
-.adote-dots .dot.active {
-  background: #fff;
-  transform: scale(1.35);
-}
-
-@media (max-width: 768px) {
-  .adote-wrapper {
-    flex-direction: column;
-  }
-
-  .adote-carrossel {
-    max-width: 100%;
-  }
-
-  .adote-info {
-    text-align: center;
-  }
-
-  .adote-info p {
-    margin: 0 auto 24px;
-  }
 }
 
 /* DOAÇÃO */
