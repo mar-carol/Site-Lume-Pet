@@ -433,7 +433,8 @@ body {
 .header-direita {
   display: flex;
   align-items: center;
-  gap: 10px; /* controla o quão "colados" ficam carrinho e hambúrguer */
+  gap: 10px; 
+  /* controla o quão "colados" ficam carrinho e hambúrguer */
 }
 
 /* MODAL PAGAMENTO */
@@ -725,6 +726,7 @@ body {
   position: relative;
   width: 100%;
   height: auto;
+  object-fit: contain;
   overflow: hidden;
   background: #eee;
 }
