@@ -771,7 +771,7 @@ body {
   position: relative;
   z-index: 2;
   padding: 0 60px;
-  max-width: 520px;
+  max-width:max-content;
 }
 
  
