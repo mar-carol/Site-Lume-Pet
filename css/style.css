@@ -283,6 +283,17 @@ body {
   background: #FA8000;
 }
 
+.esqueci-senha {
+  background: none;
+  border: none;
+  color: #FA8000;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+}
+
+
 /* CARRINHO - PAINEL */
 .carrinho-painel {
   display: none;
