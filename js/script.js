@@ -750,6 +750,31 @@
   })();
 
 
+  // Carrossel serviços
+
+  (function () {
+  const slides = document.querySelectorAll('#servicoCarrossel .servico-slide');
+  const dotsWrap = document.getElementById('servicoDots');
+  let atual = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => irParaSlide(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  function irParaSlide(i) {
+    slides[atual].classList.remove('active');
+    dotsWrap.children[atual].classList.remove('active');
+    atual = i;
+    slides[atual].classList.add('active');
+    dotsWrap.children[atual].classList.add('active');
+  }
+
+  setInterval(() => irParaSlide((atual + 1) % slides.length), 4000);
+})();
+
   // CARROSSEL - ADOTE UM PET
 
   (function () {
