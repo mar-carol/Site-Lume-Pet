@@ -874,7 +874,7 @@ transform: translateY(-50%) rotate(90deg); }
   text-align: center;
 }
 
-.servico > h2 {
+.servico > h1 {
   font-size: 28px;
   color: #385A81;
   margin-bottom: 80px;
@@ -896,7 +896,7 @@ transform: translateY(-50%) rotate(90deg); }
   text-align: left;
 }
 
-.servico-info h3 {
+.servico-info h2 {
   font-size: 20px;
   color: #385A81 !important;
   margin-bottom: 16px;
