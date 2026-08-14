@@ -867,74 +867,17 @@ transform: translateY(-50%) rotate(90deg); }
   transition: width 0.2s linear;
 }
  
-/* SERVIÇO - Lado esquerdo */
-.servico {
-  text-align: left;
-  padding: 60px 40px;
-  background: #fff;
-}
- 
-.servico h2 {
-  font-size: 28px;
-  color: #385A81;
-  margin-bottom: 16px;
-}
- 
-.servico p {
-  max-width: 680px;
-  margin: 30 auto 30px;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #555;
-}
- 
-.botao {
-  display: flex;
-  gap: 16px;
-  justify-content: left;
-  flex-wrap: wrap;
-}
- 
-.btn-primary {
-  background: #2d8bba;
-  color: #fff;
-  border: none;
-  padding: 12px 28px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
- 
-.btn-primary:hover { 
-  background: #385A81;
-  color: #fff;
-  transform: translateY(-1px);
-}
- 
-.btn-seg {
-  background: transparent;
-  color: #385A81;
-  border: 2px solid #385A81;
-  padding: 12px 28px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
- 
-.btn-seg:hover {
-  background: #385A81;
-  color: #fff;
-  transform: translateY(-1px);
-}
-
 /* SERVIÇO */
 .servico {
   padding: 60px 40px;
   background: #fff;
+  text-align: center;
+}
+
+.servico > h2 {
+  font-size: 28px;
+  color: #385A81;
+  margin-bottom: 80px;
 }
 
 .servico-wrapper {
@@ -943,16 +886,19 @@ transform: translateY(-50%) rotate(90deg); }
   gap: 40px;
   max-width: 1100px;
   margin: 0 auto;
+  padding-top: 10px;
+  text-align: left;
 }
 
+/* lado esquerdo - texto e botões */
 .servico-info {
   flex: 1;
   text-align: left;
 }
 
-.servico-info h2 {
-  font-size: 28px;
-  color: #385A81;
+.servico-info h3 {
+  font-size: 20px;
+  color: #385A81 !important;
   margin-bottom: 16px;
 }
 
@@ -967,7 +913,44 @@ transform: translateY(-50%) rotate(90deg); }
 .botao {
   display: flex;
   gap: 16px;
+  justify-content: flex-start;
   flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: #2d8bba;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #385A81;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-seg {
+  background: transparent;
+  color: #385A81;
+  border: 2px solid #385A81;
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-seg:hover {
+  background: #385A81;
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 /* lado direito - carrossel de ONGs */
@@ -975,11 +958,12 @@ transform: translateY(-50%) rotate(90deg); }
   flex: 1;
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: 450px;
   aspect-ratio: 3 / 2;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #FA8000;
+  border: 2px solid #FA8000;
+  margin: 0 auto;
 }
 
 .servico-slide {
@@ -1061,7 +1045,6 @@ transform: translateY(-50%) rotate(90deg); }
     justify-content: center;
   }
 }
-
 
 /*LOJA*/
 .loja {
