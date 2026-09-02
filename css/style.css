@@ -293,6 +293,15 @@ body {
   text-align: center;
 }
 
+.politica-privacidade {
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+}
+
 
 /* CARRINHO - PAINEL */
 .carrinho-painel {
