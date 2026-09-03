@@ -27,13 +27,16 @@
     if (!nomeEl || !link) return;
 
     if (usuarioLogado) {
-      nomeEl.textContent = usuarioLogado.nome.split(' ')[0];
-      link.title = 'Clique para sair da conta';
-    } else {
-      nomeEl.textContent = 'Entrar';
-      link.title = 'Entrar ou cadastrar';
-    }
+    nomeEl.textContent = usuarioLogado.nome.split(' ')[0];
+    link.title = 'Clique para sair da conta';
+    montarDropdownUsuario();
+  } else {
+    nomeEl.textContent = 'Entrar';
+    link.title = 'Entrar ou cadastrar';
+    document.getElementById('usuarioDropdownDesktop').innerHTML = '';
+    document.getElementById('usuarioDropdownMobile').innerHTML = '';
   }
+}
 
  function toggleLogin(event) {
     event.preventDefault();
@@ -149,7 +152,6 @@
   function montarDropdownUsuario() {
     const html = `
       <a href="#" onclick="abrirPedidos(event,'atuais')">Meus Pedidos</a>
-      <a href="#" onclick="abrirPedidos(event,'historico')">Histórico de Pedidos</a>
       <a href="#" onclick="abrirConta(event)">Minha Conta</a>
       <a href="#" onclick="fazerLogout(event)" class="usuario-dropdown-sair">Sair</a>
     `;
@@ -196,7 +198,7 @@
     localStorage.setItem('lumepet_pedidos_' + email, JSON.stringify(lista));
   }
 
-  function abrirPedidos(event, tipo) {
+  function abrirPedidos(event) {
     event.preventDefault();
     fecharDropdownsUsuario();
 
@@ -209,36 +211,29 @@
     const titulo = document.getElementById('pedidosTitulo');
     const lista = document.getElementById('pedidosLista');
 
-    let pedidosMostrar = pedidos;
-    if (tipo === 'atuais') {
-      titulo.textContent = 'Meus Pedidos';
-      pedidosMostrar = pedidos.slice(0, 3);
-    } else {
-      titulo.textContent = 'Histórico de Pedidos';
-    }
+    titulo.textContent = 'Meus Pedidos';
 
-    if (pedidosMostrar.length === 0) {
-      lista.innerHTML = '<p class="pedidos-vazio">Você ainda não fez nenhum pedido.</p>';
-    } else {
-      lista.innerHTML = pedidosMostrar.map(p => `
-        <div class="pedido-card">
-          <div class="pedido-card-topo">
-            <strong>Pedido #${p.id}</strong>
-            <span>${p.data}</span>
-          </div>
-          <ul>
-            ${p.itens.map(i => `<li>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</li>`).join('')}
-          </ul>
-          <div class="pedido-card-rodape">
-            <span>Pagamento: ${p.metodo}</span>
-            <strong>Total: R$ ${p.total.toFixed(2).replace('.', ',')}</strong>
-          </div>
+  if (pedidos.length === 0) {
+    lista.innerHTML = '<p class="pedidos-vazio">Você ainda não fez nenhum pedido.</p>';
+  } else {
+    lista.innerHTML = pedidos.map(p => `
+      <div class="pedido-card">
+        <div class="pedido-card-topo">
+          <strong>Pedido #${p.id}</strong>
+          <span>${p.data}</span>
         </div>
-      `).join('');
-    }
-
-    document.getElementById('pedidosOverlay').classList.add('aberto');
+        <ul>
+          ${p.itens.map(i => `<li>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</li>`).join('')}
+        </ul>
+        <div class="pedido-card-rodape">
+          <span>Pagamento: ${p.metodo}</span>
+          <strong>Total: R$ ${p.total.toFixed(2).replace('.', ',')}</strong>
+        </div>
+      </div>
+    `).join('');
   }
+
+  document.getElementById('pedidosOverlay').classList.add('aberto');
 
   function fecharPedidos() {
     document.getElementById('pedidosOverlay').classList.remove('aberto');

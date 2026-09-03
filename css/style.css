@@ -311,7 +311,7 @@ body {
   position: relative;
 }
 
-.usuario.dropdown {
+.usuario-dropdown {
   display: none;
   flex-direction: column;
   position: absolute;
@@ -331,7 +331,7 @@ body {
   left: 0;
 }
 
-.usuario-dropdown-aberto {
+.usuario-dropdown.aberto {
   display: flex;
 }
 
