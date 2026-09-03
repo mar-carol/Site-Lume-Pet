@@ -608,12 +608,8 @@
     atualizarResumoPagamento();
   }
 
-  function atualizarResumoPagamento() {
-    const resumo = document.getElementById('pagamentoResumo');
-    if (!resumo) return;
-
+  function calcularTotaisPagamento() {
     const subtotal = itensCarrinho.reduce((s, i) => s + i.preco * i.qtd, 0);
-
     let frete = cepValidado ? freteAtual : 0;
     let desconto = 0;
 
@@ -628,6 +624,14 @@
     }
 
     const total = Math.max(subtotal - desconto, 0) + frete;
+    return { subtotal, frete, desconto, total };
+  }
+
+  function atualizarResumoPagamento() {
+    const resumo = document.getElementById('pagamentoResumo');
+    if (!resumo) return;
+
+    const { subtotal, frete, desconto, total } = calcularTotaisPagamento();
 
     let html = itensCarrinho.map(i =>
       `<p>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</p>`
@@ -775,18 +779,17 @@
       }
 
       const nomeTipo = tipoCartao === 'credito' ? 'Cartão de Crédito' : 'Cartão de Débito';
-      alert(`✅ Pedido confirmado via ${nomeTipo}!\nObrigado pela compra! 🐾`);
-      finalizarPedido();
+      alert(`✅ Pedido confirmado via ${nomeTipo}!\nObrigado pela compra!`);
+      finalizarPedido(nomeTipo);
       return;
     }
 
     // PIX
-    alert('✅ Pagamento via PIX confirmado!\nObrigado pela compra! 🐾');
-    finalizarPedido();
+    alert('✅ Pagamento via PIX confirmado!\nObrigado pela compra!');
+    finalizarPedido('PIX');
   }
 
-  function finalizarPedido() {
-    // registra os produtos comprados para liberar avaliação
+  function finalizarPedido(metodoNome) {
     if (usuarioLogado) {
       const chave = 'lumepet_compras_' + usuarioLogado.email;
       const compras = JSON.parse(localStorage.getItem(chave) || '[]');
@@ -794,6 +797,19 @@
         if (!compras.includes(item.nome)) compras.push(item.nome);
       });
       localStorage.setItem(chave, JSON.stringify(compras));
+
+      const totais = calcularTotaisPagamento();
+      const pedido = {
+        id: Date.now().toString().slice(-6),
+        data: new Date().toLocaleDateString('pt-BR'),
+        itens: itensCarrinho.map(i => ({ nome: i.nome, qtd: i.qtd, preco: i.preco })),
+        subtotal: totais.subtotal,
+        frete: totais.frete,
+        desconto: totais.desconto,
+        total: totais.total,
+        metodo: metodoNome || 'PIX'
+      };
+      salvarPedido(usuarioLogado.email, pedido);
     }
 
     pararTimerPix();
@@ -802,7 +818,6 @@
     document.getElementById('numeroCasa').value = '';
     document.getElementById('complemento').value = '';
   }
-
 
   // LOJA - FILTROS (pesquisa em todas as categorias)
 
