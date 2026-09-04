@@ -27,27 +27,18 @@
     if (!nomeEl || !link) return;
 
     if (usuarioLogado) {
-      nomeEl.textContent = usuarioLogado.nome.split(' ')[0];
-      link.title = 'Clique para sair da conta';
-    } else {
-      nomeEl.textContent = 'Entrar';
-      link.title = 'Entrar ou cadastrar';
-    }
+    nomeEl.textContent = usuarioLogado.nome.split(' ')[0];
+    montarDropdownUsuario();
+  } else {
+    nomeEl.textContent = 'Entrar';
+    link.title = 'Entrar ou cadastrar';
+    document.getElementById('usuarioDropdownDesktop').innerHTML = '';
+    document.getElementById('usuarioDropdownMobile').innerHTML = '';
   }
+}
 
-  function toggleLogin(event) {
+ function toggleLogin(event) {
     event.preventDefault();
-
-    if (usuarioLogado) {
-      const sair = confirm(`Olá, ${usuarioLogado.nome}! Deseja sair da sua conta?`);
-      if (sair) {
-        usuarioLogado = null;
-        localStorage.removeItem('lumepet_usuario_logado');
-        atualizarUsuarioUI();
-      }
-      return;
-    }
-
     mudarAba('login');
     document.getElementById('loginOverlay').classList.add('aberto');
   }
@@ -119,6 +110,12 @@
       return;
     }
 
+    const aceitoPolitica = document.getElementById('cad-aceito').checked;
+    if (!aceitoPolitica) {
+      erro.textContent = 'Você precisa aceitar a política de privacidade para criar uma conta.';
+      return;
+    }
+
     const usuarios = getUsuarios();
     if (usuarios.find(u => u.email === email)) {
       erro.textContent = 'Já existe uma conta com este e-mail.';
@@ -142,7 +139,247 @@
   document.addEventListener('DOMContentLoaded', atualizarUsuarioUI);
 
 
+  // MENU SUSPENSO DO USUÁRIO
 
+  function usuarioClick(event) {
+    event.preventDefault();
+
+    if (!usuarioLogado) {
+      toggleLogin(event);
+      return;
+    }
+
+    montarDropdownUsuario();
+    document.getElementById('usuarioDropdownDesktop').classList.toggle('aberto');
+    document.getElementById('usuarioDropdownMobile').classList.toggle('aberto');
+  }
+
+  function montarDropdownUsuario() {
+    const html = `
+      <a href="#" onclick="abrirPedidos(event,'atuais')">Meus Pedidos</a>
+      <a href="#" onclick="abrirConta(event)">Minha Conta</a>
+      <a href="#" onclick="fazerLogout(event)" class="usuario-dropdown-sair">Sair</a>
+    `;
+    document.getElementById('usuarioDropdownDesktop').innerHTML = html;
+    document.getElementById('usuarioDropdownMobile').innerHTML = html;
+  }
+
+  function fecharDropdownsUsuario() {
+    document.getElementById('usuarioDropdownDesktop')?.classList.remove('aberto');
+    document.getElementById('usuarioDropdownMobile')?.classList.remove('aberto');
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.usuario-item') && !e.target.closest('.usuario-mobile-wrap')) {
+      fecharDropdownsUsuario();
+    }
+  });
+
+  function fazerLogout(event) {
+    event.preventDefault();
+    const confirmar = confirm('Deseja realmente sair da sua conta?');
+    if (!confirmar) return;
+
+    usuarioLogado = null;
+    localStorage.removeItem('lumepet_usuario_logado');
+    atualizarUsuarioUI();
+    fecharDropdownsUsuario();
+  }
+
+
+  // MEUS PEDIDOS / HISTÓRICO
+
+  function getPedidos(email) {
+    try {
+      return JSON.parse(localStorage.getItem('lumepet_pedidos_' + email) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function salvarPedido(email, pedido) {
+    const lista = getPedidos(email);
+    lista.unshift(pedido);
+    localStorage.setItem('lumepet_pedidos_' + email, JSON.stringify(lista));
+  }
+
+  function abrirPedidos(event) {
+    event.preventDefault();
+    fecharDropdownsUsuario();
+
+    if (!usuarioLogado) {
+      alert('Entre na sua conta para ver seus pedidos.');
+      return;
+    }
+  
+
+    const pedidos = getPedidos(usuarioLogado.email);
+    const titulo = document.getElementById('pedidosTitulo');
+    const lista = document.getElementById('pedidosLista');
+
+    titulo.textContent = 'Meus Pedidos';
+
+  if (pedidos.length === 0) {
+    lista.innerHTML = '<p class="pedidos-vazio">Você ainda não fez nenhum pedido.</p>';
+  } else {
+    lista.innerHTML = pedidos.map(p => `
+      <div class="pedido-card">
+        <div class="pedido-card-topo">
+          <strong>Pedido #${p.id}</strong>
+          <span>${p.data}</span>
+        </div>
+        <ul>
+          ${p.itens.map(i => `<li>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</li>`).join('')}
+        </ul>
+        <div class="pedido-card-rodape">
+          <span>Pagamento: ${p.metodo}</span>
+          <strong>Total: R$ ${p.total.toFixed(2).replace('.', ',')}</strong>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('pedidosOverlay').classList.add('aberto');
+}
+
+  function fecharPedidos() {
+    document.getElementById('pedidosOverlay').classList.remove('aberto');
+  }
+
+
+  // MINHA CONTA
+
+  function abrirConta(event) {
+    event.preventDefault();
+    fecharDropdownsUsuario();
+    if (!usuarioLogado) return;
+
+    document.getElementById('conta-nome').value = usuarioLogado.nome;
+    document.getElementById('conta-email').value = usuarioLogado.email;
+    document.getElementById('conta-senha-atual').value = '';
+    document.getElementById('conta-senha-nova').value = '';
+    document.getElementById('conta-senha-nova2').value = '';
+    ['erro-conta-nome', 'erro-conta-email', 'erro-conta-senha'].forEach(id => {
+      document.getElementById(id).textContent = '';
+    });
+
+    document.getElementById('contaOverlay').classList.add('aberto');
+  }
+
+  function fecharConta() {
+    document.getElementById('contaOverlay').classList.remove('aberto');
+  }
+
+  function salvarNome() {
+    const novoNome = document.getElementById('conta-nome').value.trim();
+    const erro = document.getElementById('erro-conta-nome');
+    erro.textContent = '';
+
+    if (!novoNome) {
+      erro.textContent = 'O nome não pode ficar vazio.';
+      return;
+    }
+
+    const usuarios = getUsuarios();
+    const usuario = usuarios.find(u => u.email === usuarioLogado.email);
+    if (usuario) {
+      usuario.nome = novoNome;
+      salvarUsuarios(usuarios);
+    }
+
+    usuarioLogado.nome = novoNome;
+    localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
+    atualizarUsuarioUI();
+    alert('Nome atualizado com sucesso!');
+  }
+
+  function salvarEmail() {
+    const novoEmail = document.getElementById('conta-email').value.trim().toLowerCase();
+    const erro = document.getElementById('erro-conta-email');
+    erro.textContent = '';
+
+    if (!novoEmail || !novoEmail.includes('@') || !novoEmail.includes('.')) {
+      erro.textContent = 'Informe um e-mail válido.';
+      return;
+    }
+
+    const usuarios = getUsuarios();
+    if (novoEmail !== usuarioLogado.email && usuarios.find(u => u.email === novoEmail)) {
+      erro.textContent = 'Já existe uma conta com este e-mail.';
+      return;
+    }
+
+    const emailAntigo = usuarioLogado.email;
+    const usuario = usuarios.find(u => u.email === emailAntigo);
+    if (usuario) {
+      usuario.email = novoEmail;
+      salvarUsuarios(usuarios);
+    }
+
+    ['lumepet_compras_', 'lumepet_pedidos_'].forEach(prefixo => {
+      const dado = localStorage.getItem(prefixo + emailAntigo);
+      if (dado) {
+        localStorage.setItem(prefixo + novoEmail, dado);
+        localStorage.removeItem(prefixo + emailAntigo);
+      }
+    });
+
+    usuarioLogado.email = novoEmail;
+    localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
+    alert('E-mail atualizado com sucesso!');
+  }
+
+  function salvarSenha() {
+    const atual = document.getElementById('conta-senha-atual').value;
+    const nova = document.getElementById('conta-senha-nova').value;
+    const nova2 = document.getElementById('conta-senha-nova2').value;
+    const erro = document.getElementById('erro-conta-senha');
+    erro.textContent = '';
+
+    const usuarios = getUsuarios();
+    const usuario = usuarios.find(u => u.email === usuarioLogado.email);
+
+    if (!usuario || usuario.senha !== atual) {
+      erro.textContent = 'Senha atual incorreta.';
+      return;
+    }
+    if (nova.length < 6) {
+      erro.textContent = 'A nova senha deve ter no mínimo 6 caracteres.';
+      return;
+    }
+    if (nova !== nova2) {
+      erro.textContent = 'As senhas não coincidem.';
+      return;
+    }
+
+    usuario.senha = nova;
+    salvarUsuarios(usuarios);
+
+    document.getElementById('conta-senha-atual').value = '';
+    document.getElementById('conta-senha-nova').value = '';
+    document.getElementById('conta-senha-nova2').value = '';
+    alert('Senha alterada com sucesso!');
+  }
+
+  function excluirConta() {
+    const confirmar1 = confirm('Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.');
+    if (!confirmar1) return;
+    const confirmar2 = confirm('Todos os seus dados (pedidos, avaliações e compras) serão perdidos. Confirmar exclusão definitiva?');
+    if (!confirmar2) return;
+
+    const email = usuarioLogado.email;
+    const usuarios = getUsuarios().filter(u => u.email !== email);
+    salvarUsuarios(usuarios);
+
+    localStorage.removeItem('lumepet_compras_' + email);
+    localStorage.removeItem('lumepet_pedidos_' + email);
+    localStorage.removeItem('lumepet_usuario_logado');
+
+    usuarioLogado = null;
+    atualizarUsuarioUI();
+    fecharConta();
+    alert('Conta excluida com sucesso.');
+  }
   // CARRINHO
 
 
@@ -373,12 +610,8 @@
     atualizarResumoPagamento();
   }
 
-  function atualizarResumoPagamento() {
-    const resumo = document.getElementById('pagamentoResumo');
-    if (!resumo) return;
-
+  function calcularTotaisPagamento() {
     const subtotal = itensCarrinho.reduce((s, i) => s + i.preco * i.qtd, 0);
-
     let frete = cepValidado ? freteAtual : 0;
     let desconto = 0;
 
@@ -393,6 +626,14 @@
     }
 
     const total = Math.max(subtotal - desconto, 0) + frete;
+    return { subtotal, frete, desconto, total };
+  }
+
+  function atualizarResumoPagamento() {
+    const resumo = document.getElementById('pagamentoResumo');
+    if (!resumo) return;
+
+    const { subtotal, frete, desconto, total } = calcularTotaisPagamento();
 
     let html = itensCarrinho.map(i =>
       `<p>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</p>`
@@ -540,18 +781,17 @@
       }
 
       const nomeTipo = tipoCartao === 'credito' ? 'Cartão de Crédito' : 'Cartão de Débito';
-      alert(`✅ Pedido confirmado via ${nomeTipo}!\nObrigado pela compra! 🐾`);
-      finalizarPedido();
+      alert(`✅ Pedido confirmado via ${nomeTipo}!\nObrigado pela compra!`);
+      finalizarPedido(nomeTipo);
       return;
     }
 
     // PIX
-    alert('✅ Pagamento via PIX confirmado!\nObrigado pela compra! 🐾');
-    finalizarPedido();
+    alert('✅ Pagamento via PIX confirmado!\nObrigado pela compra!');
+    finalizarPedido('PIX');
   }
 
-  function finalizarPedido() {
-    // registra os produtos comprados para liberar avaliação
+  function finalizarPedido(metodoNome) {
     if (usuarioLogado) {
       const chave = 'lumepet_compras_' + usuarioLogado.email;
       const compras = JSON.parse(localStorage.getItem(chave) || '[]');
@@ -559,6 +799,19 @@
         if (!compras.includes(item.nome)) compras.push(item.nome);
       });
       localStorage.setItem(chave, JSON.stringify(compras));
+
+      const totais = calcularTotaisPagamento();
+      const pedido = {
+        id: Date.now().toString().slice(-6),
+        data: new Date().toLocaleDateString('pt-BR'),
+        itens: itensCarrinho.map(i => ({ nome: i.nome, qtd: i.qtd, preco: i.preco })),
+        subtotal: totais.subtotal,
+        frete: totais.frete,
+        desconto: totais.desconto,
+        total: totais.total,
+        metodo: metodoNome || 'PIX'
+      };
+      salvarPedido(usuarioLogado.email, pedido);
     }
 
     pararTimerPix();
@@ -567,7 +820,6 @@
     document.getElementById('numeroCasa').value = '';
     document.getElementById('complemento').value = '';
   }
-
 
   // LOJA - FILTROS (pesquisa em todas as categorias)
 

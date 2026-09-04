@@ -48,9 +48,12 @@
         <button class="menu-hamburguer" id="menuHamburguer" onclick="toggleMenu()" aria-label="Abrir menu">
             <span></span><span></span><span></span>
         </button>
-        <a href="#" class="usuario-icon-mobile" onclick="toggleLogin(event)" aria-label="Entrar">
+    <div class="usuario-mobile-wrap">
+        <a href="#" class="usuario-icon-mobile" onclick="usuarioClick(event)" aria-label="Entrar/Conta">
             <i class="fa-regular fa-user"></i>
         </a>
+        <div class="usuario-dropdown" id="usuarioDropdownMobile"></div>
+    </div>
     </div>
 
     <div class="logo">
@@ -69,10 +72,11 @@
                 <li><a href="#sobre">Sobre</a></li>
                 <li><a href="#avaliacao">Avaliações</a></li>
                 <li><a href="#contato">Contato</a></li>
-                <li>
-                    <a href="#" class="usuario-icon" onclick="toggleLogin(event)" id="usuarioLink">
+                <li class="usuario-item">
+                    <a href="#" class="usuario-icon" onclick="usuarioClick(event)" id="usuarioLink">
                         <span id="usuarioNome">Entrar</span>
                     </a>
+                    <div class="usuario-dropdown" id="usuarioDropdownDesktop"></div>
                 </li>
             </ul>
         </nav>
@@ -142,6 +146,63 @@
             </div>
         </div>
     </div>
+
+    <!-- PEDIDOS -->
+     <div class="pedidos-overlay" id="pedidosOverlay">
+        <div class="pedidos-modal">
+            <div class="pedidos-header">
+                <h3 id="pedidosTitulo">Meus Pedidos</h3>
+                <button onclick="fecharPedidos()">✕</button>
+            </div>
+            <div class="pedidos-lista" id="pedidosLista"></div>
+        </div>
+     </div>
+
+     <!-- MINHA CONTA -->
+      <div class="conta-overlay" id="contaOverlay">
+        <div class="conta-modal">
+            <div class="conta-header">
+                <h3>Minha Conta</h3>
+                <button onclick="fecharConta()">✕</button>
+            </div>
+
+            <div class="conta-secao">
+                <label>Nome</label>
+                <div class="conta-linha">
+                    <input type="text" id="conta-nome" placeholder="Seu nome">
+                    <button onclick="salvarNome()">Salvar</button>
+                </div>
+                <span class="erro" id="erro-conta-nome"></span>
+            </div>
+
+            <div class="conta-secao">
+                <label>E-mail</label>
+                <div class="conta-linha">
+                    <input type="email" id="conta-email" placeholder="seu@email.com">
+                    <button onclick="salvarEmail()">Salvar</button>
+                </div>
+                <span class="erro" id="erro-conta-email"></span>
+            </div>
+
+            <div class="conta-secao">
+                <label>Alterar senha</label>
+                <input type="password" id="conta-senha-atual" placeholder="Senha atual">
+                <input type="password" id="conta-senha-nova" placeholder="Nova senha (mín. 6 caracteres)">
+                <input type="password" id="conta-senha-nova2" placeholder="Confirmar nova senha">
+                <button class="btn-conta-senha" onclick="salvarSenha()">Alterar senha</button>
+                <span class="erro" id="erro-conta-senha"></span>
+            </div>
+
+            <div class="conta-secao">
+                <a href="politica.html" target="_blank">Política de Privacidade</a>
+            </div>
+
+            <div class="conta-secao conta-perigo">
+                <button class="btn-excluir-conta" onclick="excluirConta()">Excluir minha conta</button>
+            </div>
+
+        </div>
+      </div>
 
     <!-- PAINEL DO CARRINHO -->
     <div class="carrinho-painel" id="carrinhoPainel">
