@@ -28,7 +28,6 @@
 
     if (usuarioLogado) {
     nomeEl.textContent = usuarioLogado.nome.split(' ')[0];
-    link.title = 'Clique para sair da conta';
     montarDropdownUsuario();
   } else {
     nomeEl.textContent = 'Entrar';
@@ -108,6 +107,12 @@
     }
     if (senha !== senha2) {
       erro.textContent = 'As senhas não coincidem.';
+      return;
+    }
+
+    const aceitoPolitica = document.getElementById('cad-aceito').checked;
+    if (!aceitoPolitica) {
+      erro.textContent = 'Você precisa aceitar a política de privacidade para criar uma conta.';
       return;
     }
 

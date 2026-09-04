@@ -318,7 +318,7 @@ body {
   top: 130%;
   right: 0;
   background: #FFFEEE;
-  border: 2px solid #385A81;
+  border: 2px solid #385A81;  
   border-radius: 12px;
   min-width: 210px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.18);
@@ -855,10 +855,13 @@ body {
 .endereco-linha {
   display: flex;
   gap: 8px;
+  width: 100%;
 }
 
 .endereco-linha input {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   padding: 10px 14px;
   border: 2px solid #cde0d3;
   border-radius: 8px;
@@ -1941,7 +1944,10 @@ transform: translateY(-50%) rotate(90deg); }
   gap: 10px;
 }
 
-.cartao-linha input { flex: 1; }
+.cartao-linha input { 
+  flex: 1;
+  min-width: 0;
+ }
 
 .btn-confirmar-doacao {
   width: 100%;
