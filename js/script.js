@@ -206,6 +206,7 @@
       alert('Entre na sua conta para ver seus pedidos.');
       return;
     }
+  
 
     const pedidos = getPedidos(usuarioLogado.email);
     const titulo = document.getElementById('pedidosTitulo');
@@ -234,6 +235,7 @@
   }
 
   document.getElementById('pedidosOverlay').classList.add('aberto');
+}
 
   function fecharPedidos() {
     document.getElementById('pedidosOverlay').classList.remove('aberto');
