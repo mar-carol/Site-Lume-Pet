@@ -2112,6 +2112,7 @@ transform: translateY(-50%) rotate(90deg); }
 .contato h2 {
   font-size: 22px;
   margin-bottom: 10px;
+  color:#385A81;
 }
  
 .contato p {
@@ -2127,6 +2128,160 @@ transform: translateY(-50%) rotate(90deg); }
  
 .contato a:hover {
   text-decoration: underline;
+}
+
+
+.contato-sub {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 40px;
+
+}
+
+.contato-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.contato-canais {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contato-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.contato-card:hover {
+  box-shadow: 0 8px 20px rgba(56, 90, 129, 0.12);
+  transform: translateY(-2px);
+}
+
+.contato-icone {
+  font-size: 22px;
+  background: #eef6fb;
+  color: #2d8bba;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contato-card h3 {
+  font-size: 15px;
+  color: #385A81;
+  margin-bottom: 4px;
+}
+
+.contato-card a {
+  color: #2d8bba;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.contato-card a:hover { text-decoration: underline; }
+
+.contato-card p {
+  font-size: 13px;
+  color: #666;
+  margin: 2px 0;
+}
+
+.contato-obs {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.contato-form {
+  flex: 1;
+  background: #fff;
+  border-top: 4px solid #FA8000;
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.contato-form h3 {
+  font-size: 20px;
+  color: #385A81;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.contato-form > p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.contato-form select,
+.contato-form textarea {
+  padding: 10px 14px;
+  border: 2px solid #cde0d3;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fff;
+  font-family: inherit;
+  width: 100%;
+}
+
+.contato-form select:focus,
+.contato-form textarea:focus {
+  border-color: #2d8bba;
+}
+
+.contato-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.btn-contato {
+  width: 100%;
+  background: #FA8000;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.3s;
+  margin-top: 8px;
+}
+
+.btn-contato-whatsapp:hover {
+  background: #1ebe5d;
+}
+
+@media (max-width: 768px) {
+  .contato-wrapper {
+    flex-direction: column;
+  }
 }
 
 /*RODAPE*/

@@ -1370,6 +1370,66 @@
       });
     });
 
+    // CONTATO - máscara de telefone
+function mascaraTelefoneContato(input) {
+  let v = input.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 10) {
+    v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  } else if (v.length > 5) {
+    v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+  } else if (v.length > 2) {
+    v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+  } else {
+    v = v.replace(/(\d{0,2})/, '($1');
+  }
+  input.value = v;
+}
+
+// CONTATO - enviar formulário para o banco de dados (via PHP)
+async function enviarContato() {
+  const nome = document.getElementById('contato-nome').value.trim();
+  const email = document.getElementById('contato-email').value.trim();
+  const telefone = document.getElementById('contato-telefone').value.trim();
+  const assunto = document.getElementById('contato-assunto').value;
+  const mensagem = document.getElementById('contato-mensagem').value.trim();
+  const erro = document.getElementById('erro-contato');
+  erro.textContent = '';
+  erro.style.color = '';
+
+  if (!nome) {
+    erro.textContent = 'Por favor, informe seu nome completo.';
+    return;
+  }
+  if (telefone.replace(/\D/g, '').length < 10) {
+    erro.textContent = 'Por favor, informe um número de celular/WhatsApp válido.';
+    return;
+  }
+
+  try {
+    const resposta = await fetch('processa_contato.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, email, telefone, assunto, mensagem })
+    });
+
+    const resultado = await resposta.json();
+
+    if (resultado.sucesso) {
+      erro.style.color = 'green';
+      erro.textContent = 'Mensagem enviada com sucesso!';
+      document.getElementById('contato-nome').value = '';
+      document.getElementById('contato-email').value = '';
+      document.getElementById('contato-telefone').value = '';
+      document.getElementById('contato-assunto').value = '';
+      document.getElementById('contato-mensagem').value = '';
+    } else {
+      erro.textContent = resultado.erro || 'Erro ao enviar. Tente novamente.';
+    }
+  } catch (e) {
+    erro.textContent = 'Erro de conexão. Tente novamente.';
+  }
+}
+
     // TOAST DE NOTIFICAÇÃO
 
 function mostrarToast(nomeProduto) {
