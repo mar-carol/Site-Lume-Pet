@@ -2556,6 +2556,7 @@ height: 100%;
   transition: 0.3s ease;
 } 
 
+
 .home-ong i {
   font-size: 20px;
 }
@@ -2565,8 +2566,6 @@ height: 100%;
   background: #FA8000;
   color: #fff;
 }
- 
-/*logo lume pet*/
 
 .logo-header {
   position:absolute;
@@ -2607,4 +2606,183 @@ height: 100%;
   .logo-header img {
     width: 105px;
   }
+}
+
+/*HERO DA PÁGINA*/
+
+  html{
+    scroll-behavior: smooth;
+  }
+
+  .ongs-hero {
+    position: relative;
+    height: 480px;
+
+    background:linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)),
+              url('imagem css/hero-image.jpg');
+
+    background-size:cover;
+    background-position:center;
+
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    
+    color:#fff;
+  }
+
+.ongs-hero-overlay h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.ongs-hero-overlay p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  color: #f1f1f1;
+}
+
+.ongs-hero-lista{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: 12px;
+}
+
+.ongs-hero-lista a {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid #fff;
+  color: #fff;
+
+  padding: 8px 18px;
+  border-radius: 30px;
+
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+
+  transition: 0.3s ease;
+}
+
+.ongs-hero-lista a:hover {
+  background: #FA8000;
+  border-color: #FA8000;
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .ongs-hero {
+    height: auto;
+    padding: 60px 15px;
+  }
+
+  .ongs-hero-overlay h1 {
+    font-size: 24px;
+  }
+}
+
+/*ONGS PARCEIRAS*/
+
+.ongs-pagina {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.ongs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.ong-card {
+  display: flex;
+  align-items: stretch;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ong-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.ong-card-imagem{
+  flex: 0 0 40%;
+}
+
+.ong-card-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ong-card-conteudo {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ong-card-conteudo h2 {
+  font-size: 22px;
+  color: #2d8bba;
+  margin-bottom: 0 0 10px;
+}
+
+.ong-card-conteudo p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.btn-ong-site {
+  align-self: flex-start;
+
+  background: #FA8000;
+  color: #fff;
+
+padding: 10px 24px;
+border-radius: 30px;
+
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+
+  transition: 0.3s ease;
+}
+
+.btn-ong-site:hover {
+  background: #385A81;
+  transform: scale(1.05);
+}
+
+.ong-card:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 700px) {
+  .ong-card,
+  .ong-card:nth-child(even) {
+    flex-direction: column;
+  }
+
+  .ong-card-imagem {
+    flex: none;
+    height: 220px;
+  }
+
+  .ong-card-conteudo {
+    padding: 20px;
+  }
+
 }
