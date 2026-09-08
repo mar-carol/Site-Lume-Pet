@@ -339,10 +339,10 @@
     <!-- loja -->
     <section class="loja" id="loja">
         <h2>Nossos produtos</h2>
-        <p>Descubra nossa seleção de produtos de alta qualidade, feitos com ingredientes naturais e dedicados ao bem-estar dos seus animais de estimação.</p>
+        <p>Encontre produtos de qualidade das melhores marcas, selecionados especialmente para cuidar do bem-estar e da felicidade do seu pet.</p>
 
         <div class="loja-pesquisa">
-            <input type="text" id="campoPesquisa" placeholder="🔍 Digite o que seu pet precisa..." oninput="filtrarProdutos()">
+            <input type="text" id="campoPesquisa" placeholder="Digite o que seu pet precisa..." oninput="filtrarProdutos()">
         </div>
 
         <div class="loja-categorias">
@@ -745,14 +745,87 @@
         </div>
     </section>
 
-    <section class="contato" id="contato">
-        <h2>Contato</h2>
-        <p>
-            Email: <a href="mailto:contato@lumepet.com.br">contato@lumepet.com.br</a>
-            &nbsp;|&nbsp;
-            Telefone: <a href="tel:+551140028922">(11) 4002-8922</a>
-        </p>
-    </section>
+    <!-- CONTATO -->
+<section class="contato" id="contato">
+    <h1>Fale conosco</h1>
+    <h3 class="contato-sub">Estamos aqui para ajudar! Envie uma mensagem e nossa equipe responderá o mais breve possível.</h3>
+
+    <div class="contato-wrapper">
+
+        <!-- FORMULÁRIO à esquerda -->
+        <div class="contato-form">
+            <h3>Pronto para tirar sua dúvida?</h3>
+            <p>Preencha o formulário e entraremos em contato com você.</p>
+
+            <div class="campo-grupo">
+                <label>Nome completo <span class="obrigatorio">*</span></label>
+                <input type="text" id="contato-nome" placeholder="Seu nome completo">
+            </div>
+
+            <div class="campo-grupo">
+                <label>E-mail <span class="opcional">(opcional)</span></label>
+                <input type="email" id="contato-email" placeholder="seu@email.com">
+            </div>
+
+            <div class="campo-grupo">
+                <label>Celular / WhatsApp <span class="obrigatorio">*</span></label>
+                <input type="text" id="contato-telefone" placeholder="(11) 91234-5678" maxlength="15" oninput="mascaraTelefoneContato(this)">
+            </div>
+
+            <div class="campo-grupo">
+                <label>Assunto de interesse</label>
+                <select id="contato-assunto">
+                    <option value="">Selecione...</option>
+                    <option value="Produtos">Produtos</option>
+                    <option value="Adoção">Adoção</option>
+                    <option value="Doação">Doação</option>
+                    <option value="Parceria com ONG">Parceria com ONG</option>
+                    <option value="Outro assunto">Outro assunto</option>
+                </select>
+            </div>
+
+            <div class="campo-grupo">
+                <label>Mensagem <span class="opcional">(opcional)</span></label>
+                <textarea id="contato-mensagem" placeholder="Conte um pouco sobre o que você precisa..."></textarea>
+            </div>
+
+            <span class="erro" id="erro-contato"></span>
+
+            <button class="btn-contato" onclick="enviarContato()">
+                Enviar
+            </button>
+        </div>
+
+        <!-- CANAIS à direita -->
+        <div class="contato-canais">
+
+            <div class="contato-card">
+                <div class="contato-icone"><i class="fa-solid fa-phone"></i></div>
+                <div>
+                    <h3>Telefone</h3>
+                    <a href="tel:+551140028922">(11) 4002-8922</a>
+                </div>
+            </div>
+
+            <div class="contato-card">
+                <div class="contato-icone"><i class="fa-brands fa-whatsapp"></i></div>
+                <div>
+                    <h3>WhatsApp</h3>
+                    <a href="https://wa.me/5511999999999" target="_blank">(11) 99999-9999</a>
+                    <span class="contato-obs">Clique para conversar</span>
+                </div>
+            </div>
+
+            <div class="contato-card">
+                <div class="contato-icone"><i class="fa-solid fa-envelope"></i></div>
+                <div>
+                    <h3>E-mail</h3>
+                    <a href="mailto:contato@lumepet.com.br">contato@lumepet.com.br</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <footer class="footer">
         <p>&copy; 2026 LumePet. Todos os direitos reservados.</p>
