@@ -2571,7 +2571,6 @@ transform: translateY(-50%) rotate(90deg); }
     width: 100%;
   }
 }
-
 /* ABA SOBRE AS ONGS */
 
 /*header*/
@@ -2703,17 +2702,55 @@ height: 100%;
     color:#fff;
   }
 
+  .ongs-hero-overlay {
+    width: 100%;
+    max-width: 980px;
+    padding: 35px 45px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
 .ongs-hero-overlay h1 {
   font-size: 32px;
-  margin-bottom: 15px;
+  line-height: 1.2;
+  margin: 0 0 30px;
+  color: #FFF;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.ongs-hero-texto {
+  display: flex;
+  gap: 40px;
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.ongs-hero-coluna {
+  flex: 1;
 }
 
 .ongs-hero-overlay p {
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 25px;
-  color: #f1f1f1;
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.7;
+  color:#FFFEEE;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
+
+.ongs-hero-coluna p:last-child {
+  margin-bottom: 0;
+}
+
+.ongs-hero-overlay strong,
+.ongs-hero-destaque {
+  display: block;
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
 
 .ongs-hero-lista{
   display:flex;
@@ -2743,14 +2780,54 @@ height: 100%;
   transform: scale(1.05);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .ongs-hero {
-    height: auto;
-    padding: 60px 15px;
+    min-height: auto;
+    padding: 50px 20px;
+  }
+
+  .ongs-hero-overlay {
+    max-width: 650px;
+    padding: 30px 25px;
+  }
+
+  .ongs-hero-overlay h1{
+    font-size: 26px;
+  }
+
+  .ongs-hero-texto {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .ongs-hero-overlay p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ongs-hero-overlay strong,
+  .ongs-hero-destaque {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .ongs-hero {
+    padding: 40px 15px;
+  }
+
+  .ongs-hero-overlay {
+    padding: 25px 20px;
   }
 
   .ongs-hero-overlay h1 {
-    font-size: 24px;
+    font-size: 23px;
+    margin-bottom: 20px;
+  }
+
+  .ongs-hero-overlay p {
+    font-size: 14px;
   }
 }
 
@@ -2803,13 +2880,13 @@ height: 100%;
 }
 
 .ong-card-conteudo h2 {
-  font-size: 22px;
+  font-size: 20px;
   color: #2d8bba;
-  margin-bottom: 0 0 10px;
+  margin: 0 0 10px;
 }
 
 .ong-card-conteudo p {
-  font-size: 14px;
+  font-size: 12px;
   color: #555;
   line-height: 1.6;
   margin: 0 0 20px;
