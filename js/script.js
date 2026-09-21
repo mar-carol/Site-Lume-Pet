@@ -139,7 +139,7 @@
     document.addEventListener('DOMContentLoaded', atualizarUsuarioUI);
 
 
-    // MENU SUSPENSO DO USUÁRIO
+    // MENU SUSPENSO DO USUÁRIO  - sub menu com "Meus Pedidos", "Minha Conta" e "Sair"
 
     function usuarioClick(event) {
       event.preventDefault();
