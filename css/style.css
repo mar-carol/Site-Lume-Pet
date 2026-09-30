@@ -153,6 +153,7 @@ body {
 
 
 /* USUÁRIO / LOGIN - ÍCONE */
+
 .usuario-icon {
   font-size: 15px;
   display: flex;
@@ -302,7 +303,7 @@ body {
   text-align: center;
 }
 
-/* DROPDOWN USUARIO */
+/* DROPDOWN USUARIO - Menu suspenso */
 .usuario-item {
   position:relative;
 }
@@ -324,6 +325,11 @@ body {
   box-shadow: 0 8px 20px rgba(0,0,0,0.18);
   overflow: hidden;
   z-index: 1050;
+}
+
+.usuario-dropdown:empty {
+  display: none !important;
+  border: none;
 }
 
 .usuario-mobile-wrap .usuario-dropdown {
@@ -2112,7 +2118,7 @@ transform: translateY(-50%) rotate(90deg); }
 .contato h1 {
   font-size: 22px;
   margin-bottom: 10px;
-  color:#385A81;
+  color:#fffaaa;
 }
  
 .contato h3 {

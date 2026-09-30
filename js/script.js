@@ -1,24 +1,106 @@
     // LOGIN / CADASTRO
     // (armazenamento local no navegador — apenas para demonstração)
 
-    let usuarioLogado = null;
+    let usuarioLogado = window.usuarioSessao || null;
+
+   async function fazerLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const senha = document.getElementById('login-senha').value;
+    const erro = document.getElementById('erro-login');
+
+    erro.textContent = '';
+
+    if (!email || !senha) {
+        erro.textContent = 'Preencha e-mail e senha.';
+        return;
+    }
+
+    const dados = new FormData();
+
+    dados.append('email', email);
+    dados.append('senha', senha);
 
     try {
-      usuarioLogado = JSON.parse(localStorage.getItem('lumepet_usuario_logado') || 'null');
-    } catch (e) {
-      usuarioLogado = null;
-    }
+        const resposta = await fetch('api/login.php', {
+            method: 'POST',
+            body: dados,
+            credentials: 'same-origin'
+        });
 
-    function getUsuarios() {
-      try {
-        return JSON.parse(localStorage.getItem('lumepet_usuarios') || '[]');
-      } catch (e) {
-        return [];
-      }
+        const resultado = await resposta.json();
+
+        if (!resultado.sucesso) {
+            erro.textContent = resultado.erro;
+            return;
+        }
+
+        usuarioLogado = resultado.usuario;
+        localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
+        fecharLogin();
+
+        window.location.reload();
+
+    } catch (erroConexao) {
+        erro.textContent =
+            'Erro de conexão com o servidor.';
     }
+}
 
     function salvarUsuarios(lista) {
       localStorage.setItem('lumepet_usuarios', JSON.stringify(lista));
+    }
+
+    async function fazerCadastro() {
+      const nome = document.getElementById('cad-nome').value.trim();
+      const email = document.getElementById('cad-email').value.trim();
+      const senha = document.getElementById('cad-senha').value;
+      const senha2 = document.getElementById('cad-senha2').value;
+      const aceitouPolitica = document.getElementById('cad-aceito').checked;
+      const erro = document.getElementById('erro-cadastro');
+      erro.textContent = '';
+
+      if (!nome || !email || !senha || !senha2) {
+        erro.textContent = 'Preencha todos os campos.';
+        return;
+      }
+      if (!aceitouPolitica) {
+        erro.textContent = 'Aceite a Política de Privacidade para continuar.';
+        return;
+      }
+      if (senha.length < 6) {
+        erro.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+        return;
+      }
+      if (senha !== senha2) {
+        erro.textContent = 'As senhas não coincidem.';
+        return;
+      }
+
+      const dados = new FormData();
+      dados.append('nome', nome);
+      dados.append('email', email);
+      dados.append('senha', senha);
+      dados.append('senha2', senha2);
+
+      try {
+        const resposta = await fetch('api/cadastro.php', {
+          method: 'POST',
+          body: dados,
+          credentials: 'same-origin'
+        });
+        const resultado = await resposta.json();
+
+        if (!resposta.ok || !resultado.sucesso) {
+          erro.textContent = resultado.erro || 'Não foi possível criar a conta.';
+          return;
+        }
+
+        usuarioLogado = resultado.usuario;
+        localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
+        window.location.reload();
+      } catch (erroConexao) {
+        erro.textContent = 'Erro de conexão com o servidor.';
+      }
     }
 
     function atualizarUsuarioUI() {
@@ -36,6 +118,8 @@
       document.getElementById('usuarioDropdownMobile').innerHTML = '';
     }
   }
+
+  atualizarUsuarioUI();
 
   function toggleLogin(event) {
       event.preventDefault();
@@ -57,89 +141,7 @@
       document.getElementById('loginTitulo').textContent = aba === 'login' ? 'Entrar' : 'Criar conta';
     }
 
-    function fazerLogin() {
-      const email = document.getElementById('login-email').value.trim().toLowerCase();
-      const senha = document.getElementById('login-senha').value;
-      const erro = document.getElementById('erro-login');
-      erro.textContent = '';
-
-      if (!email || !senha) {
-        erro.textContent = 'Preencha e-mail e senha.';
-        return;
-      }
-
-      const usuarios = getUsuarios();
-      const usuario = usuarios.find(u => u.email === email && u.senha === senha);
-
-      if (!usuario) {
-        erro.textContent = 'E-mail ou senha incorretos.';
-        return;
-      }
-
-      usuarioLogado = { nome: usuario.nome, email: usuario.email };
-      localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
-      atualizarUsuarioUI();
-      fecharLogin();
-
-      document.getElementById('login-email').value = '';
-      document.getElementById('login-senha').value = '';
-    }
-
-    function fazerCadastro() {
-      const nome = document.getElementById('cad-nome').value.trim();
-      const email = document.getElementById('cad-email').value.trim().toLowerCase();
-      const senha = document.getElementById('cad-senha').value;
-      const senha2 = document.getElementById('cad-senha2').value;
-      const erro = document.getElementById('erro-cadastro');
-      erro.textContent = '';
-
-      if (!nome || !email || !senha || !senha2) {
-        erro.textContent = 'Preencha todos os campos.';
-        return;
-      }
-      if (!email.includes('@') || !email.includes('.')) {
-        erro.textContent = 'Informe um e-mail válido.';
-        return;
-      }
-      if (senha.length < 6) {
-        erro.textContent = 'A senha deve ter no mínimo 6 caracteres.';
-        return;
-      }
-      if (senha !== senha2) {
-        erro.textContent = 'As senhas não coincidem.';
-        return;
-      }
-
-      const aceitoPolitica = document.getElementById('cad-aceito').checked;
-      if (!aceitoPolitica) {
-        erro.textContent = 'Você precisa aceitar a política de privacidade para criar uma conta.';
-        return;
-      }
-
-      const usuarios = getUsuarios();
-      if (usuarios.find(u => u.email === email)) {
-        erro.textContent = 'Já existe uma conta com este e-mail.';
-        return;
-      }
-
-      usuarios.push({ nome, email, senha });
-      salvarUsuarios(usuarios);
-
-      usuarioLogado = { nome, email };
-      localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
-      atualizarUsuarioUI();
-      fecharLogin();
-
-      document.getElementById('cad-nome').value = '';
-      document.getElementById('cad-email').value = '';
-      document.getElementById('cad-senha').value = '';
-      document.getElementById('cad-senha2').value = '';
-    }
-
-    document.addEventListener('DOMContentLoaded', atualizarUsuarioUI);
-
-
-    // MENU SUSPENSO DO USUÁRIO
+    // MENU SUSPENSO DO USUÁRIO  - sub menu com "Meus Pedidos", "Minha Conta" e "Sair"
 
     function usuarioClick(event) {
       event.preventDefault();
@@ -175,10 +177,22 @@
       }
     });
 
-    function fazerLogout(event) {
+    async function fazerLogout(event) {
       event.preventDefault();
       const confirmar = confirm('Deseja realmente sair da sua conta?');
       if (!confirmar) return;
+
+      try {
+        const resposta = await fetch('api/logout.php', {
+          method: 'POST',
+          credentials: 'same-origin'
+        });
+
+        if (!resposta.ok) throw new Error('Falha ao encerrar a sessão.');
+      } catch (erroConexao) {
+        alert('Não foi possível sair da conta. Tente novamente.');
+        return;
+      }
 
       usuarioLogado = null;
       localStorage.removeItem('lumepet_usuario_logado');
@@ -393,19 +407,27 @@
 
     // O carrinho só fecha quando o usuário clicar para fechar
 
-    function adicionarAoCarrinho(nome, preco) {
-      const precoNum = parseFloat(preco.replace(',', '.'));
-      const existente = itensCarrinho.find(i => i.nome === nome);
+   function adicionarAoCarrinho(id, nome, preco) {
+    const precoNum = Number(preco);
 
-      if (existente) {
+    const existente = itensCarrinho.find(
+        item => item.id === id
+    );
+
+    if (existente) {
         existente.qtd++;
-      } else {
-        itensCarrinho.push({ nome, preco: precoNum, qtd: 1 });
-      }
-
-      atualizarCarrinho();
-      mostrarToast(nome);
+    } else {
+        itensCarrinho.push({
+            id: id,
+            nome: nome,
+            preco: precoNum,
+            qtd: 1
+        });
     }
+
+    atualizarCarrinho();
+    mostrarToast(nome);
+}
 
     function alterarQtd(nome, delta) {
       const item = itensCarrinho.find(i => i.nome === nome);
@@ -841,7 +863,12 @@
       const texto = campoPesquisa.value.toLowerCase().trim();
       const cards = document.querySelectorAll('.produto-card');
       const vazio = document.getElementById('lojaVazio');
-      const geralProdutos = ['shampoo natural', 'ração premium', 'bolinha de borracha', 'cama pet'];
+      const categoriasPorFiltro = {
+        higiene: ['higiene'],
+        alimento: ['alimento', 'alimentos', 'comida', 'ração', 'racao'],
+        brinquedo: ['brinquedo', 'brinquedos'],
+        conforto: ['conforto']
+      };
       let produtosVisiveis = 0;
 
       cards.forEach(card => {
@@ -854,9 +881,8 @@
           // com texto digitado, a busca vale para TODAS as categorias
           passaCategoria = true;
         } else {
-          passaCategoria = categoriaAtiva === 'geral'
-            ? geralProdutos.includes(nome)
-            : categoria === categoriaAtiva;
+          const categoriasPermitidas = categoriasPorFiltro[categoriaAtiva] || [categoriaAtiva];
+          passaCategoria = categoriaAtiva === 'geral' || categoriasPermitidas.includes(categoria);
         }
 
         const deveMostrar = passaCategoria && passaPesquisa;
@@ -1173,7 +1199,11 @@
       const preco = card.querySelector('.produto-preco').textContent.trim();
       const paragrafos = Array.from(card.querySelectorAll('p')).map(p => p.textContent.trim());
 
-      produtoAtual = { nome, preco: preco.replace('R$', '').trim() };
+      produtoAtual = {
+        id: Number(card.dataset.id),
+        nome,
+        preco: Number(card.dataset.preco)
+      };
       produtoQtd = 1;
 
       document.getElementById('pd-img').src = img.src;
@@ -1213,7 +1243,7 @@
     function adicionarProdutoDaPagina() {
       if (!produtoAtual) return;
       for (let i = 0; i < produtoQtd; i++) {
-        adicionarAoCarrinho(produtoAtual.nome, produtoAtual.preco);
+        adicionarAoCarrinho(produtoAtual.id, produtoAtual.nome, produtoAtual.preco);
       }
     }
 
@@ -1405,16 +1435,20 @@ async function enviarContato() {
     return;
   }
 
+  const botao = document.querySelector('.btn-contato');
+  if (botao) botao.disabled = true;
+
   try {
-    const resposta = await fetch('processa_contato.php', {
+    const resposta = await fetch('api/contato.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
       body: JSON.stringify({ nome, email, telefone, assunto, mensagem })
     });
 
     const resultado = await resposta.json();
 
-    if (resultado.sucesso) {
+    if (resposta.ok && resultado.sucesso) {
       erro.style.color = 'green';
       erro.textContent = 'Mensagem enviada com sucesso!';
       document.getElementById('contato-nome').value = '';
@@ -1427,6 +1461,8 @@ async function enviarContato() {
     }
   } catch (e) {
     erro.textContent = 'Erro de conexão. Tente novamente.';
+  } finally {
+    if (botao) botao.disabled = false;
   }
 }
 
