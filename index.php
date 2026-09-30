@@ -1,3 +1,45 @@
+<?php
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/includes/auth.php';
+
+$usuarioLogado = usuarioEstaLogado();
+
+$usuario = null;
+
+if ($usuarioLogado) {
+    $pdo = getConexao();
+
+    $stmt = $pdo->prepare(
+        'SELECT * FROM usuarios WHERE id = :id LIMIT 1'
+    );
+
+    $stmt->execute([
+        'id' => $_SESSION['usuario_id']
+    ]);
+
+    $usuario = $stmt->fetch();
+}
+
+$usuarioSessao = $usuario ? [
+    'id' => (int) $usuario['id'],
+    'nome' => $usuario['nome'],
+    'email' => $usuario['email'],
+    'tipo' => $usuario['tipo'],
+] : null;
+
+/* BUSCAR PRODUTOS DO BANCO */
+
+$pdo = getConexao();
+
+$stmt = $pdo->query(
+    "SELECT * FROM produtos
+     WHERE status = 'ativo'
+     ORDER BY criado_em DESC"
+);
+
+$produtos = $stmt->fetchAll();
+
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -111,7 +153,7 @@
                     <label>Senha</label>
                     <input type="password" id="login-senha" placeholder="Sua senha">
                 </div>
-                  <a href="recuperar.html" class="esqueci-senha" onclick="esqueciSenha()">Esqueci minha senha</a>
+                  <a href="recuperar.php" class="esqueci-senha" onclick="esqueciSenha()">Esqueci minha senha</a>
 
                 <span class="erro" id="erro-login"></span>
                 <button class="btn-confirmar-login" onclick="fazerLogin()">Entrar</button>
@@ -129,7 +171,7 @@
                 </div>
                 <div class="campo-grupo">
                     <label>Senha</label>
-                    <input type="password" id="cad-senha" placeholder="Crie uma senha (mín. 6 caracteres)">
+                    <input type="password" id="cad-senha" placeholder="Crie uma senha (mín. 6 caracteres)" minlength="6">
                 </div>
                 <div class="campo-grupo">
                     <label>Confirmar senha</label>
@@ -138,7 +180,7 @@
                 <div class="politica-privacidade">
                     <input type="checkbox" id="cad-aceito" name="cad-aceito"required>
                     <label for="cad-aceito">
-                    Li e concordo com a <a href="politica.html" target="_blank">Política de Privacidade</a>
+                    Li e concordo com a <a href="politica.php" target="_blank">Política de Privacidade</a>
                 </label>
                 </div>
                 <span class="erro" id="erro-cadastro"></span>
@@ -194,7 +236,7 @@
             </div>
 
             <div class="conta-secao">
-                <a href="politica.html" target="_blank">Política de Privacidade</a>
+                <a href="politica.php" target="_blank">Política de Privacidade</a>
             </div>
 
             <div class="conta-secao conta-perigo">
@@ -355,147 +397,89 @@
 
         <div class="loja-grade" id="lojaGrade">
 
-            <div class="loja-vazio" id="lojaVazio" style="display: none;">
-                <h3>Nenhum produto encontrado</h3>
-                <p>Não encontramos itens com essa busca. Tente outra palavra ou confira as categorias.</p>
-                <div class="loja-sugestoes">
-                    <span>Que tal ajudar uma instituição?</span>
-                    <p>Ao fazer uma doação no site da Lume Pet o valor é destinado 100% à insituição parceira!</p>
-                </div>
+    <div class="loja-vazio" id="lojaVazio" style="display: none;">
+        <h3>Nenhum produto encontrado</h3>
+        <p>Não encontramos itens com essa busca. Tente outra palavra ou confira as categorias.</p>
+        <div class="loja-sugestoes">
+            <span>Que tal ajudar uma instituição?</span>
+            <p>Ao fazer uma doação no site da Lume Pet o valor é destinado 100% à insituição parceira!</p>
+        </div>
+    </div>
+
+    <?php foreach ($produtos as $produto): ?>
+
+        <?php
+            $categoria = strtolower(trim($produto['categoria'] ?? ''));
+            $nome = $produto['nome'] ?? '';
+            $descricao = $produto['descricao'] ?? '';
+            $preco = (float) ($produto['preco'] ?? 0);
+            $imagem = $produto['imagem'] ?? '';
+
+            $arquivoImagem = __DIR__ . '/uploads/produtos/' . basename($imagem);
+            if ($imagem !== '' && is_file($arquivoImagem)) {
+                $caminhoImagem = 'uploads/produtos/' . basename($imagem);
+            } else {
+                $categoriaImagem = strtolower($categoria);
+                $imagemFallback = str_contains($categoriaImagem, 'higiene')
+                    ? 'kit higiene.jpg'
+                    : (str_contains($categoriaImagem, 'brinquedo')
+                        ? 'bolinhapet.jpg'
+                        : (str_contains($categoriaImagem, 'conforto')
+                            ? 'camapet.jpg'
+                            : (str_contains($categoriaImagem, 'comida') || str_contains($categoriaImagem, 'alimento') || str_contains($categoriaImagem, 'ração') || str_contains($categoriaImagem, 'racao')
+                                ? 'raçãopremierspitz.jpg'
+                                : 'marcad.png')));
+                $caminhoImagem = 'css/imagem css/' . $imagemFallback;
+            }
+
+            $nomeJs = json_encode(
+                $nome,
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+            );
+        ?>
+
+        <div
+            class="produto-card"
+            data-id="<?= (int) $produto['id'] ?>"
+            data-preco="<?= htmlspecialchars((string) $preco, ENT_QUOTES, 'UTF-8') ?>"
+            data-categoria="<?= htmlspecialchars($categoria, ENT_QUOTES, 'UTF-8') ?>"
+            data-nome="<?= htmlspecialchars(strtolower($nome), ENT_QUOTES, 'UTF-8') ?>"
+        >
+
+            <div class="produto-img">
+                <img
+                    src="<?= htmlspecialchars($caminhoImagem, ENT_QUOTES, 'UTF-8') ?>"
+                    alt="<?= htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') ?>"
+                >
             </div>
 
-            <div class="produto-card" data-categoria="higiene" data-nome="shampoo natural">
-                <div class="produto-img"><img src="css/imagem css/shampoo.jpeg" alt="Shampoo Hidratante"></div>
-                <h3>Shampoo Hidratante</h3>
-                <p>Hello Kitty Pochacco para Cães 300 ml</p>
-                <span class="produto-preco">R$ 29,90</span>
-                <button onclick="adicionarAoCarrinho('Shampoo Hidratante', '29,90')">Adicionar ao carrinho</button>
-            </div>
+            <h3>
+                <?= htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') ?>
+            </h3>
 
-            <div class="produto-card" data-categoria="higiene" data-nome="condicionador pet">
-                <div class="produto-img"><img src="css/imagem css/condicionador.jpeg" alt="Condicionador Hidratante"></div>
-                <h3>Condicionador Hidratante</h3>
-                <p>Hello Kitty Pochacco para Cães 300 ml.</p>
-                <span class="produto-preco">R$ 30,90</span>
-                <button onclick="adicionarAoCarrinho('Condicionador Hidratante', '30,90')">Adicionar ao carrinho</button>
-            </div>
+            <p>
+                <?= htmlspecialchars($descricao, ENT_QUOTES, 'UTF-8') ?>
+            </p>
 
-            <div class="produto-card" data-categoria="higiene" data-nome="escova de dentes pet">
-                <div class="produto-img"><img src="css/imagem css/kit higiene.jpg" alt="Escova de Dentes Pet"></div>
-                <h3>Kit de Higiene para Cães</h3>
-                <p>Higiene bucal fácil e segura.</p>
-                <p>Kit de higiene pet completo Pet Clean</p>
-                <span class="produto-preco">R$ 19,90</span>
-                <button onclick="adicionarAoCarrinho('Escova de Dentes Pet', '19,90')">Adicionar ao carrinho</button>
-            </div>
+            <span class="produto-preco">
+                R$ <?= number_format($preco, 2, ',', '.') ?>
+            </span>
 
-            <div class="produto-card" data-categoria="higiene" data-nome="lenço umedecido pet">
-                <div class="produto-img"><img src="css/imagem css/toalhaumedecida.jpg" alt="Lenço Umedecido Pet"></div>
-                <h3>Toalha Umedecida Pet</h3>
-                <p>Toalha Umedecida Biodegradável Cansei de ser Gato com 50 und.</p>
-                <p>Toalha Umedecida Biodegradável Cansei de ser Gato com 50 unidades</p>
-                <span class="produto-preco">R$ 25,90</span>
-                <button onclick="adicionarAoCarrinho('Lenço Umedecido Pet', '25,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="alimento" data-nome="ração premium">
-                <div class="produto-img"><img src="css/imagem css/raçãopremierspitz.jpg" alt="Ração Premium"></div>
-                <h3>Ração Premier</h3>
-                <p>Ração Premier Raças Específicas Spitz Alemão para Cães Adultos, 1Kg</p>
-                <span class="produto-preco">R$ 47,99</span>
-                <button onclick="adicionarAoCarrinho('Ração Premium', '47,99')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="alimento" data-nome="petisco natural">
-                <div class="produto-img"><img src="css/imagem css/petiscodreamiesgato.jpg" alt="Petisco Natural"></div>
-                <h3>Petisco Natural</h3>
-                <p>Snacks saudáveis sem conservantes.</p>
-                <span class="produto-preco">R$ 22,90</span>
-                <button onclick="adicionarAoCarrinho('Petisco Natural', '22,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="alimento" data-nome="ração úmida">
-                <div class="produto-img"><img src="css/imagem css/raçãoumida.jpg" alt="Ração Úmida"></div>
-                <h3>Ração Úmida</h3>
-                <p>Refeição Natural Zee.Dog Kitchen Lata para Cães Adultos Sabor Frango, 400g</p>
-                <span class="produto-preco">R$ 25,90</span>
-                <button onclick="adicionarAoCarrinho('Ração Úmida', '25,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="alimento" data-nome="suplemento vitamínico">
-                <div class="produto-img"><img src="css/imagem css/suplementovitaminico.jpg" alt="Suplemento Vitamínico"></div>
-                <h3>Suplemento Vitamínico</h3>
-                <p>Suplemento Happy Days Multivitamínico para Cães 84 g</p>
-                <span class="produto-preco">R$ 55,00</span>
-                <button onclick="adicionarAoCarrinho('Suplemento Vitamínico', '55,00')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="brinquedo" data-nome="bolinha de borracha">
-                <div class="produto-img"><img src="css/imagem css/bolinhapet.jpg" alt="Bolinha de Borracha"></div>
-                <h3>Bolinha de Borracha</h3>
-                <p>Brinquedo Spike Bola Spiky Laranja para Cães</p>
-                <span class="produto-preco">R$ 18,90</span>
-                <button onclick="adicionarAoCarrinho('Bolinha de Borracha', '18,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="brinquedo" data-nome="corda de puxar">
-                <div class="produto-img"><img src="css/imagem css/brinquedo de puxar.jpg" alt="Corda de Puxar"></div>
-                <h3>Brinquedo de Puxar</h3>
-                <p>Brinquedo Spike Bola de Corda de Puxar Laranja para Cães</p>
-                <span class="produto-preco">R$ 17,90</span>
-                <button onclick="adicionarAoCarrinho('Corda de Puxar', '17,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="brinquedo" data-nome="ratinho de pelúcia">
-                <div class="produto-img"><img src="css/imagem css/rato de pelucia.jpg" alt="Ratinho de Pelúcia"></div>
-                <h3>Ratinho de Pelúcia</h3>
-                <p>Brinquedo Cansei de Ser Gato Presas Robert para Gatos</p>
-                <span class="produto-preco">R$ 25,90</span>
-                <button onclick="adicionarAoCarrinho('Ratinho de Pelúcia', '25,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="brinquedo" data-nome="arranhador gato">
-                <div class="produto-img"><img src="css/imagem css/arranhadorgato.jpg" alt="Arranhador para Gato"></div>
-                <h3>Arranhador para Gato</h3>
-                <p>Arranhador Fuzz Post Fred para Gatos</p>
-                <span class="produto-preco">R$ 54,90</span>
-                <button onclick="adicionarAoCarrinho('Arranhador para Gato', '54,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="conforto" data-nome="cama pet">
-                <div class="produto-img"><img src="css/imagem css/camapet.jpg" alt="Cama Pet"></div>
-                <h3>Cama Pet</h3>
-                <p>Conforto e aconchego para seu animal.</p>
-                <span class="produto-preco">R$ 189,90</span>
-                <button onclick="adicionarAoCarrinho('Cama Pet', '189,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="conforto" data-nome="caminha donut">
-                <div class="produto-img"><img src="css/imagem css/camadonut.jpg" alt="Caminha Donut"></div>
-                <h3>Caminha Donut</h3>
-                <p>Cama Griff Dog para Cães Donut Marrom</p>
-                <span class="produto-preco">R$ 199,90</span>
-                <button onclick="adicionarAoCarrinho('Caminha Donut', '199,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="conforto" data-nome="roupinha de frio">
-                <div class="produto-img"><img src="css/imagem css/roupinhadefrio.jpg" alt="Roupinha de Frio"></div>
-                <h3>Roupinha de Frio</h3>
-                <p>Casaco Tip Top Peludinhos Vaquinha Branca para Cães Tam M/P</p>
-                <span class="produto-preco">R$ 79,90</span>
-                <button onclick="adicionarAoCarrinho('Roupinha de Frio', '79,90')">Adicionar ao carrinho</button>
-            </div>
-
-            <div class="produto-card" data-categoria="conforto" data-nome="manta pet">
-                <div class="produto-img"><img src="css/imagem css/mantadefrio.jpg" alt="Manta Pet"></div>
-                <h3>Manta Pet</h3>
-                <p>Manta Microfibra Vermelha para Cães Modernpet</p>
-                <span class="produto-preco">R$ 34,90</span>
-                <button onclick="adicionarAoCarrinho('Manta Pet', '34,90')">Adicionar ao carrinho</button>
-            </div>
+            <button
+                onclick="adicionarAoCarrinho(
+    <?= (int) $produto['id'] ?>,
+    <?= htmlspecialchars($nomeJs, ENT_QUOTES, 'UTF-8') ?>,
+    <?= json_encode($preco) ?>
+)"
+            >
+                Adicionar ao carrinho
+            </button>
 
         </div>
-    </section>
+
+    <?php endforeach; ?>
+
+</div>
 
     <!-- parte de adoção -->
     <section class="adote" id="adote">
@@ -842,6 +826,7 @@
     <!-- Toast de notificação -->
 <div class="toast-container" id="toastContainer"></div>
 
+    <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="js/script.js"></script>
 </body>
 </html>
