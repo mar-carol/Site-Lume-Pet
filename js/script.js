@@ -1247,22 +1247,12 @@
       }
     }
 
-    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar)
+    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar) ARRUMAR ISSO QUE NAO TA ABRINDO 
     document.getElementById('lojaGrade').addEventListener('click', function (e) {
       if (e.target.closest('button')) return;
       const card = e.target.closest('.produto-card');
       if (card) abrirProduto(card);
     });
-
-      lojaGrade.addEventListener('keydown', function (e) {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        if (e.target.closest('button')) return;
-        const card = e.target.closest('.produto-card');
-        if (!card) return;
-        e.preventDefault();
-        abrirProduto(card);
-      });
-    }
 
 
     // AVALIAÇÕES DE PRODUTOS
