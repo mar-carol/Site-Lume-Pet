@@ -120,6 +120,7 @@ $produtos = $stmt->fetchAll();
                     </a>
                     <div class="usuario-dropdown" id="usuarioDropdownDesktop"></div>
                 </li>
+                <li><a href="includes/index.php">Admin</a></li>
             </ul>
         </nav>
 
