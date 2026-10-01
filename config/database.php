@@ -1,6 +1,6 @@
 <?php
 
-define('BASE_URL', '/lumepet');
+define('BASE_URL', '/Site-Lume-Pet');
 
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'lume_pet');
