@@ -1247,7 +1247,7 @@
       }
     }
 
-    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar)
+    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar) ARRUMAR ISSO QUE NAO TA ABRINDO 
     document.getElementById('lojaGrade').addEventListener('click', function (e) {
       if (e.target.closest('button')) return;
       const card = e.target.closest('.produto-card');

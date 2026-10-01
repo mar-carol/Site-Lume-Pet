@@ -32,7 +32,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <header class="lp-topnav">
     <div class="lp-brand">
-        <span class="lp-brand-mark">🐾</span>
+        <span class="lp-brand-mark"> </span>
         <span>Lume Pet</span>
     </div>
 

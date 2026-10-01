@@ -120,6 +120,7 @@ $produtos = $stmt->fetchAll();
                     </a>
                     <div class="usuario-dropdown" id="usuarioDropdownDesktop"></div>
                 </li>
+                <li><a href="includes/index.php">Admin</a></li>
             </ul>
         </nav>
 
@@ -437,9 +438,13 @@ $produtos = $stmt->fetchAll();
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
             );
         ?>
+      <! -- Produto Card da loja em php gerenciado pelo dashboard -- >
 
         <div
             class="produto-card"
+            role="button"
+            tabindex="0"
+            aria-label="Ver detalhes de <?= htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') ?>"
             data-id="<?= (int) $produto['id'] ?>"
             data-preco="<?= htmlspecialchars((string) $preco, ENT_QUOTES, 'UTF-8') ?>"
             data-categoria="<?= htmlspecialchars($categoria, ENT_QUOTES, 'UTF-8') ?>"
@@ -469,8 +474,7 @@ $produtos = $stmt->fetchAll();
                 onclick="adicionarAoCarrinho(
     <?= (int) $produto['id'] ?>,
     <?= htmlspecialchars($nomeJs, ENT_QUOTES, 'UTF-8') ?>,
-    <?= json_encode($preco) ?>
-)"
+    <?= json_encode($preco) ?>)"
             >
                 Adicionar ao carrinho
             </button>
@@ -481,7 +485,7 @@ $produtos = $stmt->fetchAll();
 
 </div>
 
-    <!-- parte de adoção -->
+    <!-- parte de adoção eu preciso mudar isso pq agora vai cadastrar os animais pelo dashboard -->
     <section class="adote" id="adote">
         <div class="adote-wrapper">
 
