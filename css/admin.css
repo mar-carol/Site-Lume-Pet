@@ -63,7 +63,7 @@ a:hover {
     margin: 0 12px 35px;
     color: var(--primary);
     font-size: 21px;
-    font-weight: 700;
+    font-weight: 10;
 }
 
 .lp-brand-mark {
@@ -75,6 +75,11 @@ a:hover {
     background: var(--primary);
     color: #fff;
     font-weight: 700;
+}
+
+.lp-brand .lp-brand-mark img {
+    width: 50px;
+    height: 50px;
 }
 
 .lp-nav {

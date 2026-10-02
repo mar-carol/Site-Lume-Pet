@@ -24,19 +24,10 @@ $paginaAtual = $paginaAtual ?? '';
 <div class="lp-app">
     <aside class="lp-sidebar">
         <div class="lp-brand">
-            <span class="lp-brand-mark"><img src="../css/imagem_css/" alt=""></span>
+            <span class="lp-brand-mark"><img src="<?= BASE_URL ?>/img/icon_branca.png" alt="Logo Branca"></span>
             Lume Pet <small style="font-weight:400;opacity:.7;">admin</small>
         </div>
         <ul class="lp-nav">
-            <a href="<?= BASE_URL ?>/index.php">Dashboard</a>
-
-<a href="<?= BASE_URL ?>/produtos.php">Produtos</a>
-
-<a href="<?= BASE_URL ?>/ongs.php">ONGs parceiras</a>
-
-<a href="<?= BASE_URL ?>/animais.php">Animais</a>
-
-<a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
 
             <li><a href="<?= BASE_URL ?>/index.php" class="<?= $paginaAtual === 'dashboard' ? 'active' : '' ?>"> Dashboard</a></li>
             <li><a href="<?= BASE_URL ?>/produtos.php" class="<?= $paginaAtual === 'produtos' ? 'active' : '' ?>"> Produtos</a></li>
