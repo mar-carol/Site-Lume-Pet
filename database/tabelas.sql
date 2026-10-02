@@ -173,7 +173,6 @@ CREATE TABLE pontos_historico (
 
 
 
-
 -- Usuário admin padrão (senha: lumepet2026 -- TROQUE depois do primeiro login)
 INSERT INTO usuarios (nome, email, senha_hash, telefone, endereco, tipo)
 VALUES ('Administrador', 'admin@lumepet.com', '$2b$10$D2oL8jfafZMGb/0eF1i7uuxIJ579kKjiqLjym4N83rhzyHE7yonI2', '(00) 00000-0000', 'Sede Lume Pet', 'admin');
