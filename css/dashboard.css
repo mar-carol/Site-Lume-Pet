@@ -1,0 +1,380 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+	--azul: #385a81;
+	--azul-claro: #2d8bba;
+	--laranja: #fa8000;
+	--creme: #fffef0;
+	--fundo: #f4f8fa;
+	--texto: #263746;
+	--borda: #d7e5eb;
+	--sombra: 0 12px 30px rgba(56, 90, 129, 0.1);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	min-height: 100%;
+}
+
+body {
+	min-height: 100vh;
+	margin: 0;
+	padding: 42px clamp(16px, 4vw, 64px) 48px;
+	background: linear-gradient(135deg, #f4f8fa 0%, #fffef0 100%);
+	color: var(--texto);
+	font-family: 'Poppins', sans-serif;
+	line-height: 1.6;
+}
+
+body::before {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 6px;
+	background: linear-gradient(90deg, var(--azul), var(--azul-claro), var(--laranja));
+	content: '';
+	z-index: 10;
+}
+
+h1,
+h2,
+h3,
+p {
+	margin-top: 0;
+}
+
+h1,
+h2 {
+	color: var(--azul);
+	line-height: 1.2;
+}
+
+h1 {
+	margin-bottom: 10px;
+	font-size: clamp(1.8rem, 3vw, 2.5rem);
+	font-weight: 700;
+}
+
+h2 {
+	margin-bottom: 18px;
+	font-size: 1.25rem;
+}
+
+a {
+	color: var(--azul-claro);
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+a:hover {
+	color: var(--laranja);
+}
+
+body > nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 24px 0 32px;
+	padding: 12px 16px;
+	border: 1px solid var(--borda);
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.82);
+	box-shadow: var(--sombra);
+}
+
+body > nav a {
+	padding: 6px 12px;
+	border-radius: 6px;
+}
+
+body > nav a:hover {
+	background: #fff1e3;
+}
+
+body > ul {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+	gap: 16px;
+	max-width: 1000px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+body > ul li {
+	min-height: 100px;
+	padding: 20px;
+	border: 1px solid var(--borda);
+	border-left: 4px solid var(--laranja);
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: var(--sombra);
+	font-weight: 600;
+}
+
+form {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px 18px;
+	max-width: 760px;
+	margin: 0 0 42px;
+	padding: clamp(20px, 4vw, 32px);
+	border: 1px solid var(--borda);
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.92);
+	box-shadow: var(--sombra);
+}
+
+form label {
+	align-self: end;
+	color: var(--azul);
+	font-size: 0.85rem;
+	font-weight: 700;
+}
+
+form input:not([type='hidden']),
+form textarea,
+form select {
+	width: 100%;
+	min-height: 44px;
+	padding: 10px 13px;
+	border: 2px solid var(--borda);
+	border-radius: 7px;
+	background: #fff;
+	color: var(--texto);
+	font: inherit;
+	outline: none;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+form textarea {
+	min-height: 96px;
+	resize: vertical;
+}
+
+form input:not([type='hidden']):focus,
+form textarea:focus,
+form select:focus {
+	border-color: var(--azul-claro);
+	box-shadow: 0 0 0 3px rgba(45, 139, 186, 0.14);
+}
+
+form input[type='file'] {
+	padding: 8px;
+}
+
+form button,
+button {
+	border: 0;
+	border-radius: 7px;
+	background: var(--azul);
+	color: #fff;
+	padding: 11px 18px;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease, transform 0.2s ease;
+}
+
+form button:hover,
+button:hover {
+	background: var(--laranja);
+	transform: translateY(-1px);
+}
+
+form button,
+form > a {
+	align-self: end;
+	justify-self: start;
+}
+
+form > img {
+	width: 80px;
+	height: 80px;
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+body > table {
+	width: 100%;
+	max-width: 1100px;
+	border-collapse: separate;
+	border-spacing: 0;
+	overflow: hidden;
+	border: 1px solid var(--borda);
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: var(--sombra);
+}
+
+body > table th,
+body > table td {
+	padding: 13px 14px;
+	border-bottom: 1px solid #e8eff2;
+	text-align: left;
+}
+
+body > table th {
+	background: var(--azul);
+	color: #fff;
+	font-size: 0.82rem;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+body > table tr:last-child td {
+	border-bottom: 0;
+}
+
+body > table tr:hover td {
+	background: #fffaf4;
+}
+
+body > table td:last-child {
+	white-space: nowrap;
+}
+
+body > p[style*='color:red'] {
+	max-width: 760px;
+	padding: 12px 16px;
+	border-left: 4px solid #e74c3c;
+	border-radius: 6px;
+	background: #fff0ee;
+	color: #b42318 !important;
+	font-weight: 600;
+}
+
+@media (max-width: 700px) {
+	body {
+		padding: 30px 14px 34px;
+	}
+
+	form {
+		grid-template-columns: 1fr;
+	}
+
+	body > table {
+		display: block;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+
+	body > nav {
+		gap: 4px;
+	}
+}
+
+   /* ---- Widget do cartão (específico desta página) ---- */
+    .lp-pay-wrap {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 34px;
+        align-items: start;
+    }
+    @media (max-width: 760px) {
+        .lp-pay-wrap { grid-template-columns: 1fr; }
+    }
+
+    /* Cartão visual */
+    .lp-card-stage {
+        perspective: 1000px;
+        height: 210px;
+    }
+    .lp-credit-card {
+        width: 100%;
+        height: 200px;
+        border-radius: 18px;
+        padding: 22px 24px;
+        background: #2d8bba;
+        color: #fff;
+        box-shadow: var(--lp-shadow-lg);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-family: 'Poppins', sans-serif;
+        position: relative;
+        overflow: hidden;
+    }
+    .lp-credit-card::after {
+        content: "";
+        position: absolute;
+        top: -40px; right: -60px;
+        width: 220px; height: 220px;
+        background: radial-gradient(circle, rgba(255,255,255,.10) 0%, transparent 70%);
+    }
+    .lp-cc-top {
+        display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .lp-cc-brand {
+        font-weight: 700; letter-spacing: .06em; font-size: .95rem; opacity: .95;
+    }
+    .lp-cc-chip {
+        width: 38px; height: 28px; border-radius: 6px;
+        background: linear-gradient(135deg, #f6dc8f, #d8a93b);
+        margin-top: 4px;
+    }
+    .lp-cc-wave { font-size: 1.3rem; opacity: .85; transform: rotate(90deg); }
+    .lp-cc-number {
+        font-size: 1.28rem;
+        letter-spacing: .12em;
+        font-weight: 600;
+        margin: 6px 0 2px;
+        font-family: 'Courier New', monospace;
+    }
+    .lp-cc-bottom {
+        display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .lp-cc-name {
+        text-transform: uppercase;
+        font-size: .8rem;
+        letter-spacing: .04em;
+        opacity: .95;
+    }
+    .lp-cc-expiry { font-size: .8rem; opacity: .9; text-align: right; }
+    .lp-cc-expiry span { display: block; font-size: .6rem; opacity: .7; letter-spacing: .05em; }
+    .lp-cc-flag { font-size: .75rem; font-weight: 700; opacity: .9; }
+
+    /* Formulário */
+    .lp-pay-form {width: 100%;
+    box-sizing: border-box;}
+    .lp-pay-form > .lp-link-muted {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+    .lp-pay-form label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+        text-transform: uppercase; color: var(--lp-text-muted); margin: 16px 0 6px; }
+    .lp-pay-form label:first-of-type { margin-top: 0; }
+    .lp-input-icon { position: relative; }
+    .lp-input-icon input { padding-right: 42px; }
+    .lp-input-icon .lp-icon { position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+        font-size: 1.1rem; opacity: .55; pointer-events: none; }
+    .lp-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .lp-actions { display: flex; gap: 12px; margin-top: 22px; width: 100%; align-items: stretch; }
+    .lp-actions button, .lp-actions a { flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    text-align: center; }
+    .lp-btn-outline { align-items: center; justify-content: center; display: flex; gap: 6px; }
+
+    /* Lista de cartões salvos */
+    .lp-saved-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .lp-saved-item {
+        display: flex; align-items: center; justify-content: space-between;
+        background: var(--lp-surface); border: 1px solid var(--lp-border);
+        border-radius: 12px; padding: 14px 18px; font-size: .9rem;
+    }
+    .lp-saved-item .lp-saved-info { display: flex; align-items: center; gap: 12px; }
+    .lp-mini-card {
+        width: 42px; height: 28px; border-radius: 5px;
+        background: linear-gradient(135deg, var(--lp-secondary-light), var(--lp-secondary-dark));
+        flex-shrink: 0;
+    }
+    .lp-saved-item a { color: var(--lp-danger); font-size: .82rem; font-weight: 600; }
