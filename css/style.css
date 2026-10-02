@@ -9,22 +9,6 @@ body {
     background: white;
     color: #333;
     padding-top: 90px;
-    margin: 0;
-}
-
-/* Tirar margem da pagina */
-
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100%;
-  max-width: 100% !important;
-  border: none !important;
-}
-
-.header {
-  left: 0;
-  right: 0;
 }
 
 section {
