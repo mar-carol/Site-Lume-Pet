@@ -24,7 +24,7 @@ $paginaAtual = $paginaAtual ?? '';
 <div class="lp-app">
     <aside class="lp-sidebar">
         <div class="lp-brand">
-            <span class="lp-brand-mark">🐾</span>
+            <span class="lp-brand-mark"><img src="../css/imagem_css/" alt=""></span>
             Lume Pet <small style="font-weight:400;opacity:.7;">admin</small>
         </div>
         <ul class="lp-nav">
