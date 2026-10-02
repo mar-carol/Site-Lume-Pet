@@ -432,7 +432,7 @@ $produtos = $stmt->fetchAll();
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
             );
         ?>
-      <! -- Produto Card da loja em php gerenciado pelo dashboard -- >
+      <!-- Produto Card da loja em php gerenciado pelo dashboard -->
 
         <div
             class="produto-card"
