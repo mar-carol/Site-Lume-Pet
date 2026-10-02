@@ -478,6 +478,7 @@ $produtos = $stmt->fetchAll();
     <?php endforeach; ?>
 
 </div>
+    </section>
 
     <!-- parte de adoção eu preciso mudar isso pq agora vai cadastrar os animais pelo dashboard -->
     <section class="adote" id="adote">
