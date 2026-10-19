@@ -584,7 +584,7 @@ $produtos = $stmt->fetchAll();
             <div class="metodo-detalhe" id="detalhe-pix">
                 <p>Escaneie o QR Code ou copie a chave PIX abaixo:</p>
                 <div class="pix-qr"></div>
-                <input type="text" value="lumepet@pix.com.br" readonly onclick="this.select()">
+                <input type="text" value="vendas@lumepet.com.br" readonly onclick="this.select()">
                 <small>Clique na chave para selecionar e copiar</small>
             </div>
 
@@ -822,6 +822,8 @@ $produtos = $stmt->fetchAll();
 <div class="toast-container" id="toastContainer"></div>
 
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/pix.js"></script>
     <script src="js/auth.js?v=20261018-organized-fix2"></script>
     <script src="js/commerce.js?v=20261018-organized-fix2"></script>
     <script src="js/site.js?v=20261018-organized-fix2"></script>
