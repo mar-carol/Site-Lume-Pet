@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/functions.php';
 /**
  * Header padrão - Lume Pet
  *
@@ -25,7 +26,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css">
 </head>
 
 <body class="lp-public">
@@ -37,11 +39,12 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <nav aria-label="Navegação principal">
-        <a href="perfil.php">Perfil</a>
-        <a href="compras.php">Compras</a>
-        <a href="doacoes.php">Doações</a>
-        <a href="pontos.php">Pontos</a>
-        <a href="cartoes.php">Cartões</a>
-        <a href="/auth/logout.php">Sair</a>
+        <a href="<?= BASE_URL ?>/usuario/dashboard.php">Minha conta</a>
+        <a href="<?= BASE_URL ?>/perfil.php">Perfil</a>
+        <a href="<?= BASE_URL ?>/compras.php">Compras</a>
+        <a href="<?= BASE_URL ?>/doacoes.php">Doações</a>
+        <a href="<?= BASE_URL ?>/pontos.php">Pontos</a>
+        <a href="<?= BASE_URL ?>/cartoes.php">Cartões</a>
+        <a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
     </nav>
 </header>

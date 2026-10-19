@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $usuario = autenticarUsuario($dados['email'], $senha);
         iniciarSessaoUsuario($usuario);
-        redirecionar('/lume_pet/perfil.php');
+        redirecionar(BASE_URL . '/usuario/dashboard.php');
     }
 }
 ?>
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cadastro - Lume Pet</title>
-<link rel="stylesheet" href="../CSS/style.css?v=2">
+<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=2">
 </head>
 <body>
 <h1>Criar conta</h1>

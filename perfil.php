@@ -46,18 +46,19 @@ $usuario = $stmt->fetch();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu perfil - Lume Pet</title>
-    <link rel="stylesheet" href="CSS/style.css?v=2">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=3">
 </head>
 <body>
 <h1>Olá, <?= limpar($usuario['nome']) ?></h1>
 
 <nav>
-    <a href="perfil.php">Meu perfil</a> |
-    <a href="compras.php">Minhas compras</a> |
-    <a href="doacoes.php">Minhas doações</a> |
-    <a href="pontos.php">Meus pontos (<?= (int) $usuario['pontos'] ?>)</a> |
-    <a href="cartoes.php">Meus cartões</a> |
-    <a href="INCLUDES/logout.php">Sair</a>
+    <a href="<?= BASE_URL ?>/usuario/dashboard.php">Minha conta</a> |
+    <a href="<?= BASE_URL ?>/perfil.php">Meu perfil</a> |
+    <a href="<?= BASE_URL ?>/compras.php">Minhas compras</a> |
+    <a href="<?= BASE_URL ?>/doacoes.php">Minhas doações</a> |
+    <a href="<?= BASE_URL ?>/pontos.php">Meus pontos (<?= (int) $usuario['pontos'] ?>)</a> |
+    <a href="<?= BASE_URL ?>/cartoes.php">Meus cartões</a> |
+    <a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
 </nav>
 
 <?php if ($sucesso): ?><p style="color:green;">Dados atualizados com sucesso!</p><?php endif; ?>
@@ -75,19 +76,25 @@ $usuario = $stmt->fetch();
     <label>Telefone</label>
     <input type="text" name="telefone" value="<?= limpar($usuario['telefone']) ?>" required>
 
-    <label>Endereço</label>
-    <input type="text" name="endereco" value="<?= limpar($usuario['endereco']) ?>" required>
+    <label for="perfil-endereco">Endereço</label>
+    <input type="text" id="perfil-endereco" name="endereco" value="<?= limpar($usuario['endereco']) ?>" required>
 
-    <label>Cidade</label>
-    <input type="text" name="cidade" value="<?= limpar($usuario['cidade'] ?? '') ?>">
+    <label for="perfil-cidade">Cidade</label>
+    <input type="text" id="perfil-cidade" name="cidade" value="<?= limpar($usuario['cidade'] ?? '') ?>">
 
-    <label>Estado</label>
-    <input type="text" name="estado" maxlength="2" value="<?= limpar($usuario['estado'] ?? '') ?>">
+    <label for="perfil-estado">Estado</label>
+    <input type="text" id="perfil-estado" name="estado" maxlength="2" value="<?= limpar($usuario['estado'] ?? '') ?>">
 
-    <label>CEP</label>
-    <input type="text" name="cep" value="<?= limpar($usuario['cep'] ?? '') ?>">
+    <label for="perfil-cep">CEP</label>
+    <div class="perfil-cep-controle">
+        <input type="text" id="perfil-cep" name="cep" value="<?= limpar($usuario['cep'] ?? '') ?>"
+            maxlength="9" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000">
+        <button type="button" id="buscar-cep">Buscar endereço</button>
+    </div>
+    <p class="perfil-cep-status" id="perfil-cep-status" role="status" aria-live="polite"></p>
 
     <button type="submit">Salvar</button>
 </form>
+<script src="<?= BASE_URL ?>/js/cep-perfil.js?v=1"></script>
 </body>
 </html>

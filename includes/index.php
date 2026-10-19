@@ -18,18 +18,18 @@ $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE s
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Painel administrativo - Lume Pet</title>
-	<link rel="stylesheet" href="../CSS/style.css">
-	<link rel="stylesheet" href="../CSS/dashboard.css">
+	<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
+	<link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css">
 </head>
 <body>
 <h1>Painel administrativo</h1>
 
 <nav>
-	<a href="index.php">Dashboard</a> |
-	<a href="../produtos.php">Produtos</a> |
-	<a href="../ongs.php">ONGs</a> |
-	<a href="../animais.php">Animais</a> |
-	<a href="logout.php">Sair</a>
+	<a href="<?= BASE_URL ?>/includes/index.php">Dashboard</a> |
+	<a href="<?= BASE_URL ?>/produtos.php">Produtos</a> |
+	<a href="<?= BASE_URL ?>/ongs.php">ONGs</a> |
+	<a href="<?= BASE_URL ?>/animais.php">Animais</a> |
+	<a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
 </nav>
 
 <ul>
