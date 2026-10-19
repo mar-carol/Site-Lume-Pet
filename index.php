@@ -796,7 +796,7 @@ $produtos = $stmt->fetchAll();
             </nav>
 
             <div class="site-footer-coluna">
-                <h2>Fale com a gente</h2>
+                <h2>Fale conosco</h2>
                 <a href="#contato">Formulário de contato</a>
                 <a href="tel:+551140028922">(11) 4002-8922</a>
                 <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
