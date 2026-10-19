@@ -46,7 +46,7 @@ $produtos = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lume Pet</title>
-    <link rel="icon" href="css/imagem css/imgicon.ico" type="image/x-icon">
+    <link rel="icon" href="css/imagem_css/imgicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=pets" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -94,7 +94,7 @@ $produtos = $stmt->fetchAll();
 
     <div class="logo">
         <a href="#inicio">
-            <img src="css/imagem css/marcad.png" alt="LumePet">
+            <img src="css/imagem_css/marcad.png" alt="LumePet">
         </a>
     </div>
 
@@ -114,7 +114,11 @@ $produtos = $stmt->fetchAll();
                     </a>
                     <div class="usuario-dropdown" id="usuarioDropdownDesktop"></div>
                 </li>
-                <li><a href="includes/index.php">Admin</a></li>
+                <?php if (usuarioEhAdmin()): ?>
+    <li>
+        <a href="includes/index.php">Painel Administrativo</a>
+    </li>
+<?php endif; ?>
             </ul>
         </nav>
 
@@ -312,13 +316,13 @@ $produtos = $stmt->fetchAll();
             <div class="slide">
                 <div class="slide-bg"></div>
                 <a href="#loja">
-                    <img src="css/imagem css/banner1.jpeg" alt="banner 1" class="slide-bg">
+                    <img src="css/imagem_css/banner1.jpeg" alt="banner 1" class="slide-bg">
                 </a>
             </div>
             <div class="slide">
                 <div class="slide-bg"></div>
                 <a href="#loja">
-                    <img src="css/imagem css/banner2.jpeg" alt="banner 2" class="slide-bg">
+                    <img src="css/imagem_css/banner2.jpeg" alt="banner 2" class="slide-bg">
                 </a>
             </div>
         </div>
@@ -351,19 +355,19 @@ $produtos = $stmt->fetchAll();
         <!-- Imagens ongs -->
          <div class="servico-carrossel" id="servicoCarrossel">
             <div class="servico-slide active">
-                <img src="css/imagem css/viralataviraamg.jpeg" alt="Ong 1">
+                <img src="css/imagem_css/viralataviraamg.jpeg" alt="Ong 1">
                 <a href="ong.html" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong2">
-                <img src="css/imagem css/caramelhoong.jpg" alt="ong 2">
+                <img src="css/imagem_css/caramelhoong.jpg" alt="ong 2">
                 <a href="ong.html" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong3">
-                <img src="css/imagem css/salvagato.jpg" alt="ong 3">
+                <img src="css/imagem_css/salvagato.jpg" alt="ong 3">
                 <a href="ong.html" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong4">
-                <img src="css/imagem css/viralata10.jpg" alt="ong 4">
+                <img src="css/imagem_css/viralata10.jpg" alt="ong 4">
                 <a href="ong.html" class="ong-tag">Saiba Mais</a>
             </div>
             
@@ -424,7 +428,7 @@ $produtos = $stmt->fetchAll();
                             : (str_contains($categoriaImagem, 'comida') || str_contains($categoriaImagem, 'alimento') || str_contains($categoriaImagem, 'ração') || str_contains($categoriaImagem, 'racao')
                                 ? 'raçãopremierspitz.jpg'
                                 : 'marcad.png')));
-                $caminhoImagem = 'css/imagem css/' . $imagemFallback;
+                $caminhoImagem = 'css/imagem_css/' . $imagemFallback;
             }
 
             $nomeJs = json_encode(
@@ -496,62 +500,62 @@ $produtos = $stmt->fetchAll();
             <div class="adote-carrossel" id="adoteCarrossel">
 
                                  <div class="adote-slide active">
-                    <img src="css/imagem css/GATA CRISTAL.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/GATA CRISTAL.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Cristal</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRA CRISTAL E MAYA.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRA CRISTAL E MAYA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Cristal e Maya</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRO RAFA.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRO RAFA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Rapha</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRA JUJUBA.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRA JUJUBA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Jujuba</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRA BUBBALOO.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRA BUBBALOO.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Bubbaloo</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRO JHONNY.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRO JHONNY.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Jhonny</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRA KIARA.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRA KIARA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Kiara</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/GATO THEO.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/GATO THEO.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Theo</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRO TITO.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRO TITO.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Tito</span>
                 </div>
 
                  <div class="adote-slide">
-                    <img src="css/imagem css/GATAS MÍSTICA E SELENE.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/GATAS MÍSTICA E SELENE.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Mística e Selene</span>
                 </div>
 
                  <div class="adote-slide">
-                    <img src="css/imagem css/CACHORRA MELZINHA2.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/CACHORRA MELZINHA2.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Melzinha</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem css/GATA PITTY.jpeg" alt="Pet Adotado">
+                    <img src="css/imagem_css/GATA PITTY.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Pitty</span>
                 </div>
 
@@ -568,7 +572,7 @@ $produtos = $stmt->fetchAll();
         <div class="doacao-wrapper">
 
             <div class="doacao-info">
-                <img src="css/imagem css/dog.jpg" alt="Ajudando animais" class="doacao-img">
+                <img src="css/imagem_css/dog.jpg" alt="Ajudando animais" class="doacao-img">
                 <h3>Sua doação faz a diferença!</h3>
                 <p>Cada contribuição ajuda animais abandonados a terem uma segunda chance. Com o seu apoio, conseguimos fornecer alimentação, cuidados veterinários e um lar temporário cheio de amor.</p>
                 <p>Junte-se a nós e transforme vidas — uma patinha de cada vez.</p>
@@ -687,7 +691,7 @@ $produtos = $stmt->fetchAll();
         <div class="sobre-wrapper">
 
             <div class="sobre-img">
-                <img src="css/imagem css/exemploftong.jpeg" alt="Lume Pet">
+                <img src="css/imagem_css/exemploftong.jpeg" alt="Lume Pet">
             </div>
 
             <div class="sobre-texto">
