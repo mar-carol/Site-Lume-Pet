@@ -2,7 +2,7 @@ const LumePix = (() => {
 
     // ====== Dados do pix ======
     const CONFIG = {
-        chave: 'vendas@lumepet.com.br',
+        chave: 'lumepet@gmail.com',
         nome: 'LUME PET',
         cidade: 'OSASCO'
     };

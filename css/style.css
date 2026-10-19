@@ -3062,3 +3062,31 @@ border-radius: 30px;
   }
 
 }
+
+/* CENTRALIZAR PIX (doação e produtos) */
+#pixDoacaoContainer,
+#pixContainerPedido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+#pixDoacaoContainer .pix-qr,
+#pixContainerPedido .pix-qr {
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+
+#pixDoacaoContainer input,
+#pixContainerPedido input {
+  width: 100%;
+  text-align: center;
+}
+
+#pixDoacaoContainer small,
+#pixContainerPedido small {
+  text-align: center;
+}

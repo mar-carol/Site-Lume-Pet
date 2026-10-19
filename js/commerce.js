@@ -276,6 +276,8 @@
       html += `<hr><strong>Total: R$ ${total.toFixed(2).replace('.', ',')}</strong>`;
 
       resumo.innerHTML = html;
+      if (document.getElementById('pixContainerPedido')) desenharPixPedido();
+
     }
 
     // ── FORMA DE PAGAMENTO (PIX ou Cartão) ──
@@ -289,29 +291,30 @@
 
       if (metodo === 'pix') {
         extra.innerHTML = renderPix();
+        desenharPixPedido();
         iniciarTimerPix();
       } else {
         extra.innerHTML = renderCartao();
       }
     }
 
-    function renderPix() {
-      pixCodigo = gerarCodigoPix();
+        function renderPix() {
       return `
         <div class="pix-bloco">
-          <p class="pix-aviso">⏱️ Pague em até <strong id="pixTempo">15:00</strong> ou o pedido será cancelado automaticamente.</p>
-          <div class="pix-qr"></div>
-          <p>Código Pix Copia e Cola:</p>
-          <input type="text" id="pixCodigoInput" value="${pixCodigo}" readonly onclick="this.select()">
-          <small>Toque no código para selecionar e copiar</small>
+          <p class="pix-aviso"> Pague em até <strong id="pixTempo">15:00</strong> ou o pedido será cancelado automaticamente.</p>
+          <div id="pixContainerPedido"></div>
         </div>
       `;
     }
 
-    function gerarCodigoPix() {
-      const bloco = () => Math.random().toString(36).slice(2, 10).toUpperCase();
-      return `00020126580014BR.GOV.BCB.PIX0136${bloco()}-${bloco()}-${bloco()}5204000053039865802BR5913LUME PET LTDA6009SAO PAULO62070503***6304${bloco().slice(0, 4)}`;
+    //==== espaço vazio para gerar o qrcode do pix ====
+    function desenharPixPedido() {
+      const container = document.getElementById('pixContainerPedido');
+      if (!container) return;
+      const total = calcularTotaisPagamento().total;
+      pixCodigo = LumePix.renderizar(container, total, 'PED' + Date.now());
     }
+
 
     function iniciarTimerPix() {
       pixExpiraEm = Date.now() + PIX_DURACAO_MS;
@@ -332,7 +335,7 @@
 
       if (restante <= 0) {
         pararTimerPix();
-        alert('⏱️ O tempo para pagamento via PIX expirou. Seu pedido foi cancelado.');
+        alert('⏱ O tempo para pagamento via PIX expirou. Seu pedido foi cancelado.');
         esvaziarCarrinho();
         fecharPagamento();
         return;

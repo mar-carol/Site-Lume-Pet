@@ -582,10 +582,8 @@ $produtos = $stmt->fetchAll();
             </div>
 
             <div class="metodo-detalhe" id="detalhe-pix">
-                <p>Escaneie o QR Code ou copie a chave PIX abaixo:</p>
-                <div class="pix-qr"></div>
-                <input type="text" value="vendas@lumepet.com.br" readonly onclick="this.select()">
-                <small>Clique na chave para selecionar e copiar</small>
+                <p>Escanei o QRcode ou cópie o código abaixo paea efetuar a doação via pix:</p>
+                <div id="pixDoacaoContainer"></div>
             </div>
 
             <div class="metodo-detalhe" id="detalhe-cartao" style="display:none">

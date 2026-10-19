@@ -308,6 +308,15 @@
 
       document.getElementById('detalhe-pix').style.display = metodo === 'pix' ? 'flex' : 'none';
       document.getElementById('detalhe-cartao').style.display = metodo !== 'pix' ? 'flex' : 'none';
+
+      if (metodo =='pix') {
+        const valor = parseFloat(document.getElementById('doacao-valor').value);
+        LumePix. renderizar (
+          document.getElementById('pixDoacaoContainer'),
+          valor,
+          'DOA' + Date.now()          
+        );
+      }
     }
 
     function mascaraCartao(input) {
