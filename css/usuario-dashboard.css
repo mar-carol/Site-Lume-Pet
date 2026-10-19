@@ -1,0 +1,89 @@
+.user-brand {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.user-brand small {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.user-welcome {
+    margin: 8px 0 0;
+    color: var(--muted);
+}
+
+.user-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.user-stat {
+    display: flex;
+    min-height: 150px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    padding: 22px 25px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    color: var(--muted);
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.user-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(45, 38, 75, .12);
+}
+
+.user-stat-label {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.user-stat strong {
+    color: var(--primary);
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.user-stat > span:last-child {
+    font-size: 12px;
+}
+
+.user-account-panel h2 {
+    margin-top: 0;
+}
+
+.user-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.user-shortcuts a {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+}
+
+@media (max-width: 600px) {
+    .user-stats,
+    .user-shortcuts {
+        grid-template-columns: 1fr;
+    }
+
+    .lp-topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

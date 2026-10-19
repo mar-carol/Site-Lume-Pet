@@ -4,5 +4,5 @@ require_once __DIR__ . '/../includes/auth.php';
 
 logoutUsuario();
 
-header('Location: ../index.php');
-exit;
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode(['sucesso' => true]);

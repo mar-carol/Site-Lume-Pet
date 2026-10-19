@@ -1,6 +1,7 @@
     // LOGIN / CADASTRO
     // (armazenamento local no navegador — apenas para demonstração)
 
+    const raizProjetoUrl = new URL('../', document.currentScript.src);
     let usuarioLogado = window.usuarioSessao || null;
 
    async function fazerLogin() {
@@ -37,7 +38,6 @@
         usuarioLogado = resultado.usuario;
         localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
         fecharLogin();
-
         window.location.reload();
 
     } catch (erroConexao) {
@@ -187,8 +187,11 @@
           method: 'POST',
           credentials: 'same-origin'
         });
+        const resultado = await resposta.json();
 
-        if (!resposta.ok) throw new Error('Falha ao encerrar a sessão.');
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error('Falha ao encerrar a sessão.');
+        }
       } catch (erroConexao) {
         alert('Não foi possível sair da conta. Tente novamente.');
         return;
@@ -196,8 +199,7 @@
 
       usuarioLogado = null;
       localStorage.removeItem('lumepet_usuario_logado');
-      atualizarUsuarioUI();
-      fecharDropdownsUsuario();
+      window.location.replace('index.php?logout=1');
     }
 
 
@@ -268,16 +270,7 @@
       fecharDropdownsUsuario();
       if (!usuarioLogado) return;
 
-      document.getElementById('conta-nome').value = usuarioLogado.nome;
-      document.getElementById('conta-email').value = usuarioLogado.email;
-      document.getElementById('conta-senha-atual').value = '';
-      document.getElementById('conta-senha-nova').value = '';
-      document.getElementById('conta-senha-nova2').value = '';
-      ['erro-conta-nome', 'erro-conta-email', 'erro-conta-senha'].forEach(id => {
-        document.getElementById(id).textContent = '';
-      });
-
-      document.getElementById('contaOverlay').classList.add('aberto');
+      window.location.href = new URL('conta.php', raizProjetoUrl).href;
     }
 
     function fecharConta() {

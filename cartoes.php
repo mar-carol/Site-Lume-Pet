@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'salvar'
             'mes'        => $mes,
             'ano'        => $ano,
         ]);
-        redirecionar('/lume_pet/cartoes.php');
+        redirecionar(BASE_URL . '/cartoes.php');
     }
 }
 
@@ -71,7 +71,7 @@ if (($_GET['acao'] ?? '') === 'excluir' && isset($_GET['id'])) {
         'uid' => $usuarioId
     ]);
 
-    redirecionar('/lume_pet/cartoes.php');
+    redirecionar(BASE_URL . '/cartoes.php');
 }
 
 $stmt = $pdo->prepare('SELECT * FROM cartoes WHERE usuario_id = :uid ORDER BY criado_em DESC');

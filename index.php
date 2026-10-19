@@ -115,10 +115,10 @@ $produtos = $stmt->fetchAll();
                     <div class="usuario-dropdown" id="usuarioDropdownDesktop"></div>
                 </li>
                 <?php if (usuarioEhAdmin()): ?>
-    <li>
-        <a href="includes/index.php">Painel Administrativo</a>
-    </li>
-<?php endif; ?>
+                    <li id="adminPanelNavItem">
+                        <a href="includes/index.php">Painel Administrativo</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </nav>
 
@@ -830,7 +830,7 @@ $produtos = $stmt->fetchAll();
 <div class="toast-container" id="toastContainer"></div>
 
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=20261018-account-router"></script>
 </body>
 </html>
 
