@@ -792,7 +792,7 @@ $produtos = $stmt->fetchAll();
                 <h2>Institucional</h2>
                 <a href="ong.html">ONGs parceiras</a>
                 <a href="politica.html">Política de privacidade</a>
-                <a href="conta.php">Minha conta</a>
+               
             </nav>
 
             <div class="site-footer-coluna">
