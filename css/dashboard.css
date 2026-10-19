@@ -193,6 +193,39 @@ form > a {
 	justify-self: start;
 }
 
+form .perfil-cep-controle {
+	display: flex;
+	align-items: stretch;
+	gap: 10px;
+}
+
+form .perfil-cep-controle input {
+	min-width: 0;
+}
+
+form .perfil-cep-controle button {
+	flex: 0 0 auto;
+}
+
+form .perfil-cep-controle button:disabled {
+	cursor: wait;
+	opacity: 0.7;
+}
+
+form .perfil-cep-status {
+	grid-column: 1 / -1;
+	margin: -8px 0 0;
+	font-size: 0.85rem;
+}
+
+form .perfil-cep-status[data-estado='erro'] {
+	color: #b42318;
+}
+
+form .perfil-cep-status[data-estado='sucesso'] {
+	color: #16703b;
+}
+
 form > img {
 	width: 80px;
 	height: 80px;

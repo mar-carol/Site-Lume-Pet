@@ -76,19 +76,25 @@ $usuario = $stmt->fetch();
     <label>Telefone</label>
     <input type="text" name="telefone" value="<?= limpar($usuario['telefone']) ?>" required>
 
-    <label>Endereço</label>
-    <input type="text" name="endereco" value="<?= limpar($usuario['endereco']) ?>" required>
+    <label for="perfil-endereco">Endereço</label>
+    <input type="text" id="perfil-endereco" name="endereco" value="<?= limpar($usuario['endereco']) ?>" required>
 
-    <label>Cidade</label>
-    <input type="text" name="cidade" value="<?= limpar($usuario['cidade'] ?? '') ?>">
+    <label for="perfil-cidade">Cidade</label>
+    <input type="text" id="perfil-cidade" name="cidade" value="<?= limpar($usuario['cidade'] ?? '') ?>">
 
-    <label>Estado</label>
-    <input type="text" name="estado" maxlength="2" value="<?= limpar($usuario['estado'] ?? '') ?>">
+    <label for="perfil-estado">Estado</label>
+    <input type="text" id="perfil-estado" name="estado" maxlength="2" value="<?= limpar($usuario['estado'] ?? '') ?>">
 
-    <label>CEP</label>
-    <input type="text" name="cep" value="<?= limpar($usuario['cep'] ?? '') ?>">
+    <label for="perfil-cep">CEP</label>
+    <div class="perfil-cep-controle">
+        <input type="text" id="perfil-cep" name="cep" value="<?= limpar($usuario['cep'] ?? '') ?>"
+            maxlength="9" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000">
+        <button type="button" id="buscar-cep">Buscar endereço</button>
+    </div>
+    <p class="perfil-cep-status" id="perfil-cep-status" role="status" aria-live="polite"></p>
 
     <button type="submit">Salvar</button>
 </form>
+<script src="<?= BASE_URL ?>/js/cep-perfil.js?v=1"></script>
 </body>
 </html>

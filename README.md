@@ -60,7 +60,8 @@ responsabilidade:
 ├── js/
 │   ├── auth.js               Login, cadastro, conta e sessão visual
 │   ├── commerce.js           Carrinho, checkout e pagamentos
-│   └── site.js               Catálogo, carrosséis, contato e avaliações
+│   ├── site.js               Catálogo, carrosséis, contato e avaliações
+│   └── cep-perfil.js         Busca de endereço por CEP no perfil do cliente
 ├── database/                 Schema e scripts SQL
 └── uploads/                  Imagens enviadas pelo painel
 ```
