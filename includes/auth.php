@@ -73,7 +73,7 @@ function usuarioEhAdmin(): bool
 function exigirLogin(): void
 {
     if (!usuarioEstaLogado()) {
-        header('Location: /auth/login.php');
+        header('Location: ' . BASE_URL . '/includes/login.php');
         exit;
     }
 }

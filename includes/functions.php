@@ -102,7 +102,11 @@ function registrarHistoricoProduto(int $produtoId, ?int $usuarioId, string $acao
 function concederPontos(int $usuarioId, int $pontos, string $tipo, ?int $referenciaId = null, ?string $descricao = null): void
 {
     $pdo = getConexao();
-    $pdo->beginTransaction();
+    $iniciaTransacao = !$pdo->inTransaction();
+
+    if ($iniciaTransacao) {
+        $pdo->beginTransaction();
+    }
 
     try {
         $stmt = $pdo->prepare('UPDATE usuarios SET pontos = pontos + :pontos WHERE id = :id');
@@ -118,9 +122,13 @@ function concederPontos(int $usuarioId, int $pontos, string $tipo, ?int $referen
             'descricao'     => $descricao,
         ]);
 
-        $pdo->commit();
+        if ($iniciaTransacao) {
+            $pdo->commit();
+        }
     } catch (Throwable $e) {
-        $pdo->rollBack();
+        if ($iniciaTransacao && $pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         throw $e;
     }
 }

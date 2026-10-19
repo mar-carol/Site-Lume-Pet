@@ -46,7 +46,7 @@ $produtos = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lume Pet</title>
-    <link rel="icon" href="css/imagem_css/imgicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/images/imgicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=pets" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -94,7 +94,7 @@ $produtos = $stmt->fetchAll();
 
     <div class="logo">
         <a href="#inicio">
-            <img src="css/imagem_css/marcad.png" alt="LumePet">
+            <img src="assets/images/marcad.png" alt="LumePet">
         </a>
     </div>
 
@@ -152,7 +152,7 @@ $produtos = $stmt->fetchAll();
                     <label>Senha</label>
                     <input type="password" id="login-senha" placeholder="Sua senha">
                 </div>
-                  <a href="recuperar.php" class="esqueci-senha" onclick="esqueciSenha()">Esqueci minha senha</a>
+                  <a href="recuperar.html" class="esqueci-senha">Esqueci minha senha</a>
 
                 <span class="erro" id="erro-login"></span>
                 <button class="btn-confirmar-login" onclick="fazerLogin()">Entrar</button>
@@ -179,7 +179,7 @@ $produtos = $stmt->fetchAll();
                 <div class="politica-privacidade">
                     <input type="checkbox" id="cad-aceito" name="cad-aceito"required>
                     <label for="cad-aceito">
-                    Li e concordo com a <a href="politica.php" target="_blank">Política de Privacidade</a>
+                    Li e concordo com a <a href="politica.html" target="_blank">Política de Privacidade</a>
                 </label>
                 </div>
                 <span class="erro" id="erro-cadastro"></span>
@@ -198,52 +198,6 @@ $produtos = $stmt->fetchAll();
             <div class="pedidos-lista" id="pedidosLista"></div>
         </div>
      </div>
-
-     <!-- MINHA CONTA -->
-      <div class="conta-overlay" id="contaOverlay">
-        <div class="conta-modal">
-            <div class="conta-header">
-                <h3>Minha Conta</h3>
-                <button onclick="fecharConta()">✕</button>
-            </div>
-
-            <div class="conta-secao">
-                <label>Nome</label>
-                <div class="conta-linha">
-                    <input type="text" id="conta-nome" placeholder="Seu nome">
-                    <button onclick="salvarNome()">Salvar</button>
-                </div>
-                <span class="erro" id="erro-conta-nome"></span>
-            </div>
-
-            <div class="conta-secao">
-                <label>E-mail</label>
-                <div class="conta-linha">
-                    <input type="email" id="conta-email" placeholder="seu@email.com">
-                    <button onclick="salvarEmail()">Salvar</button>
-                </div>
-                <span class="erro" id="erro-conta-email"></span>
-            </div>
-
-            <div class="conta-secao">
-                <label>Alterar senha</label>
-                <input type="password" id="conta-senha-atual" placeholder="Senha atual">
-                <input type="password" id="conta-senha-nova" placeholder="Nova senha (mín. 6 caracteres)">
-                <input type="password" id="conta-senha-nova2" placeholder="Confirmar nova senha">
-                <button class="btn-conta-senha" onclick="salvarSenha()">Alterar senha</button>
-                <span class="erro" id="erro-conta-senha"></span>
-            </div>
-
-            <div class="conta-secao">
-                <a href="politica.php" target="_blank">Política de Privacidade</a>
-            </div>
-
-            <div class="conta-secao conta-perigo">
-                <button class="btn-excluir-conta" onclick="excluirConta()">Excluir minha conta</button>
-            </div>
-
-        </div>
-      </div>
 
     <!-- PAINEL DO CARRINHO -->
     <div class="carrinho-painel" id="carrinhoPainel">
@@ -316,13 +270,13 @@ $produtos = $stmt->fetchAll();
             <div class="slide">
                 <div class="slide-bg"></div>
                 <a href="#loja">
-                    <img src="css/imagem_css/banner1.jpeg" alt="banner 1" class="slide-bg">
+                    <img src="assets/images/banner1.jpeg" alt="banner 1" class="slide-bg">
                 </a>
             </div>
             <div class="slide">
                 <div class="slide-bg"></div>
                 <a href="#loja">
-                    <img src="css/imagem_css/banner2.jpeg" alt="banner 2" class="slide-bg">
+                    <img src="assets/images/banner2.jpeg" alt="banner 2" class="slide-bg">
                 </a>
             </div>
         </div>
@@ -355,19 +309,19 @@ $produtos = $stmt->fetchAll();
         <!-- Imagens ongs -->
          <div class="servico-carrossel" id="servicoCarrossel">
             <div class="servico-slide active">
-                <img src="css/imagem_css/viralataviraamg.jpeg" alt="Ong 1">
+                <img src="assets/images/viralataviraamg.jpeg" alt="Ong 1">
                 <a href="ong.html" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong2">
-                <img src="css/imagem_css/caramelhoong.jpg" alt="ong 2">
+                <img src="assets/images/caramelhoong.jpg" alt="ong 2">
                 <a href="ong.html" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong3">
-                <img src="css/imagem_css/salvagato.jpg" alt="ong 3">
+                <img src="assets/images/salvagato.jpg" alt="ong 3">
                 <a href="ong.html" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong4">
-                <img src="css/imagem_css/viralata10.jpg" alt="ong 4">
+                <img src="assets/images/viralata10.jpg" alt="ong 4">
                 <a href="ong.html" class="ong-tag">Saiba Mais</a>
             </div>
             
@@ -428,7 +382,7 @@ $produtos = $stmt->fetchAll();
                             : (str_contains($categoriaImagem, 'comida') || str_contains($categoriaImagem, 'alimento') || str_contains($categoriaImagem, 'ração') || str_contains($categoriaImagem, 'racao')
                                 ? 'raçãopremierspitz.jpg'
                                 : 'marcad.png')));
-                $caminhoImagem = 'css/imagem_css/' . $imagemFallback;
+                $caminhoImagem = 'assets/images/' . $imagemFallback;
             }
 
             $nomeJs = json_encode(
@@ -500,62 +454,62 @@ $produtos = $stmt->fetchAll();
             <div class="adote-carrossel" id="adoteCarrossel">
 
                                  <div class="adote-slide active">
-                    <img src="css/imagem_css/GATA CRISTAL.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/GATA CRISTAL.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Cristal</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRA CRISTAL E MAYA.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRA CRISTAL E MAYA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Cristal e Maya</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRO RAFA.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRO RAFA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Rapha</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRA JUJUBA.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRA JUJUBA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Jujuba</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRA BUBBALOO.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRA BUBBALOO.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Bubbaloo</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRO JHONNY.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRO JHONNY.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Jhonny</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRA KIARA.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRA KIARA.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Kiara</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/GATO THEO.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/GATO THEO.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Theo</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRO TITO.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRO TITO.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Tito</span>
                 </div>
 
                  <div class="adote-slide">
-                    <img src="css/imagem_css/GATAS MÍSTICA E SELENE.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/GATAS MÍSTICA E SELENE.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Mística e Selene</span>
                 </div>
 
                  <div class="adote-slide">
-                    <img src="css/imagem_css/CACHORRA MELZINHA2.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/CACHORRA MELZINHA2.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Melzinha</span>
                 </div>
 
                 <div class="adote-slide">
-                    <img src="css/imagem_css/GATA PITTY.jpeg" alt="Pet Adotado">
+                    <img src="assets/images/GATA PITTY.jpeg" alt="Pet Adotado">
                     <span class="adote-tag">Pitty</span>
                 </div>
 
@@ -572,7 +526,7 @@ $produtos = $stmt->fetchAll();
         <div class="doacao-wrapper">
 
             <div class="doacao-info">
-                <img src="css/imagem_css/dog.jpg" alt="Ajudando animais" class="doacao-img">
+                <img src="assets/images/dog.jpg" alt="Ajudando animais" class="doacao-img">
                 <h3>Sua doação faz a diferença!</h3>
                 <p>Cada contribuição ajuda animais abandonados a terem uma segunda chance. Com o seu apoio, conseguimos fornecer alimentação, cuidados veterinários e um lar temporário cheio de amor.</p>
                 <p>Junte-se a nós e transforme vidas — uma patinha de cada vez.</p>
@@ -656,7 +610,7 @@ $produtos = $stmt->fetchAll();
 
         <div class="produto-detalhe">
             <div class="produto-detalhe-img">
-                <img id="pd-img" src="" alt="">
+                <img id="pd-img" src="assets/images/marcad.png" alt="Imagem do produto">
             </div>
 
             <div class="produto-detalhe-info">
@@ -691,7 +645,7 @@ $produtos = $stmt->fetchAll();
         <div class="sobre-wrapper">
 
             <div class="sobre-img">
-                <img src="css/imagem_css/exemploftong.jpeg" alt="Lume Pet">
+                <img src="assets/images/exemploftong.jpeg" alt="Lume Pet">
             </div>
 
             <div class="sobre-texto">
@@ -830,7 +784,9 @@ $produtos = $stmt->fetchAll();
 <div class="toast-container" id="toastContainer"></div>
 
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
-    <script src="js/script.js?v=20261018-account-router"></script>
+    <script src="js/auth.js?v=20261018-organized-fix2"></script>
+    <script src="js/commerce.js?v=20261018-organized-fix2"></script>
+    <script src="js/site.js?v=20261018-organized-fix2"></script>
 </body>
 </html>
 

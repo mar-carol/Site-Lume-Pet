@@ -46,18 +46,19 @@ $usuario = $stmt->fetch();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu perfil - Lume Pet</title>
-    <link rel="stylesheet" href="CSS/style.css?v=2">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=3">
 </head>
 <body>
 <h1>Olá, <?= limpar($usuario['nome']) ?></h1>
 
 <nav>
-    <a href="perfil.php">Meu perfil</a> |
-    <a href="compras.php">Minhas compras</a> |
-    <a href="doacoes.php">Minhas doações</a> |
-    <a href="pontos.php">Meus pontos (<?= (int) $usuario['pontos'] ?>)</a> |
-    <a href="cartoes.php">Meus cartões</a> |
-    <a href="INCLUDES/logout.php">Sair</a>
+    <a href="<?= BASE_URL ?>/usuario/dashboard.php">Minha conta</a> |
+    <a href="<?= BASE_URL ?>/perfil.php">Meu perfil</a> |
+    <a href="<?= BASE_URL ?>/compras.php">Minhas compras</a> |
+    <a href="<?= BASE_URL ?>/doacoes.php">Minhas doações</a> |
+    <a href="<?= BASE_URL ?>/pontos.php">Meus pontos (<?= (int) $usuario['pontos'] ?>)</a> |
+    <a href="<?= BASE_URL ?>/cartoes.php">Meus cartões</a> |
+    <a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
 </nav>
 
 <?php if ($sucesso): ?><p style="color:green;">Dados atualizados com sucesso!</p><?php endif; ?>

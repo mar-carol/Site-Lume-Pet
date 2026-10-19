@@ -19,11 +19,11 @@ $stmtItens = $pdo->prepare('SELECT ci.*, p.nome AS produto_nome
 <!DOCTYPE html>
 <html lang="pt-br">
 <head><meta charset="UTF-8"><title>Minhas compras - Lume Pet</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=3">
 </head>
 <body>
 <h1>Minhas compras</h1>
-<p><a href="perfil.php">&larr; Voltar ao perfil</a></p>
+<p><a href="<?= BASE_URL ?>/usuario/dashboard.php">&larr; Voltar à minha conta</a></p>
 
 <?php if (!$compras): ?>
     <p>Você ainda não fez nenhuma compra.</p>

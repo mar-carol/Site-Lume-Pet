@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '../includes/auth.php';
-require_once __DIR__ . '../includes/functions.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 
 exigirLogin();
 $usuarioId = $_SESSION['usuario_id'];
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'doar') 
             concederPontos($usuarioId, $pontos, 'doacao', $doacaoId, 'Cashback por doação #' . $doacaoId);
 
             $pdo->commit();
-            redirecionar('/lume_pet/doacoes.php');
+            redirecionar(BASE_URL . '/doacoes.php');
         } catch (Throwable $e) {
             $pdo->rollBack();
             $erros[] = 'Não foi possível registrar a doação. Tente novamente.';
@@ -65,11 +65,11 @@ $cartoes = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas doações - Lume Pet</title>
-    <link rel="stylesheet" href="CSS/style.css?v=2">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=3">
 </head>
 <body>
 <h1>Minhas doações</h1>
-<p><a href="perfil.php">&larr; Voltar ao perfil</a></p>
+<p><a href="<?= BASE_URL ?>/usuario/dashboard.php">&larr; Voltar à minha conta</a></p>
 
 <?php foreach ($erros as $erro): ?><p style="color:red;"><?= limpar($erro) ?></p><?php endforeach; ?>
 

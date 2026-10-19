@@ -20,11 +20,11 @@ $historico = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus pontos - Lume Pet</title>
-    <link rel="stylesheet" href="CSS/style.css?v=2">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=3">
 </head>
 <body>
 <h1>Meus pontos de cashback</h1>
-<p><a href="perfil.php">&larr; Voltar ao perfil</a></p>
+<p><a href="<?= BASE_URL ?>/usuario/dashboard.php">&larr; Voltar à minha conta</a></p>
 
 <h2>Saldo atual: <?= $saldo ?> pontos</h2>
 

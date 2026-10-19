@@ -3,7 +3,9 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 if (usuarioEstaLogado()) {
-    redirecionar(usuarioEhAdmin() ? '/lume_pet/INCLUDES/index.php' : '/lume_pet/perfil.php');
+    redirecionar(usuarioEhAdmin()
+        ? BASE_URL . '/includes/index.php'
+        : BASE_URL . '/usuario/dashboard.php');
 }
 
 $erro = '';
@@ -19,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($usuario) {
             iniciarSessaoUsuario($usuario);
-            redirecionar($usuario['tipo'] === 'admin' ? '/lume_pet/INCLUDES/index.php' : '/lume_pet/perfil.php');
+            redirecionar($usuario['tipo'] === 'admin'
+                ? BASE_URL . '/includes/index.php'
+                : BASE_URL . '/usuario/dashboard.php');
         } else {
             $erro = 'E-mail ou senha inválidos.';
         }
@@ -32,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - Lume Pet</title>
-<link rel="stylesheet" href="../CSS/style.css?v=2">
+<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=2">
 </head>
 <body>
 <h1>Entrar</h1>

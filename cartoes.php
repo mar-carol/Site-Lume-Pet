@@ -145,10 +145,8 @@ require_once __DIR__ . '/includes/header.php';
         <!-- Formulário -->
         <div class="lp-card-panel lp-pay-form">
             <!--
-              (!) action="" em vez de "/cartoes.php": envia o POST pra própria
-              URL atual, seja qual for a pasta onde o arquivo está hospedado
-              (ex: /lume_pet/cartoes.php). Isso evita o 404, e evita que o
-              formulário quebre de novo se você mover a pasta do projeto.
+              Envia o POST para a URL atual, para manter a página funcionando
+              independentemente da pasta onde o projeto estiver instalado.
             -->
             <form method="post" action="" id="formCartao">
                 <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
@@ -192,7 +190,7 @@ require_once __DIR__ . '/includes/header.php';
 
                 <div class="lp-actions">
                     <button type="submit">Confirmar cartão</button>
-                    <a href="perfil.php" class="lp-btn lp-btn-outline">Cancelar</a>
+                    <a href="<?= BASE_URL ?>/usuario/dashboard.php" class="lp-btn lp-btn-outline">Cancelar</a>
                 </div>
             </form>
             <p class="lp-link-muted" style="margin-top:14px;">

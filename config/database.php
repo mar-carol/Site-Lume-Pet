@@ -1,12 +1,35 @@
 <?php
 
-define('BASE_URL', '/Site-Lume-Pet');
+if (!defined('BASE_URL')) {
+    $projectRoot = realpath(dirname(__DIR__));
+    $documentRoot = isset($_SERVER['DOCUMENT_ROOT'])
+        ? realpath($_SERVER['DOCUMENT_ROOT'])
+        : false;
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'lume_pet');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+    if ($projectRoot !== false && $documentRoot !== false) {
+        $normalizedProjectRoot = rtrim(str_replace('\\', '/', $projectRoot), '/');
+        $normalizedDocumentRoot = rtrim(str_replace('\\', '/', $documentRoot), '/');
+        $documentRootPrefix = $normalizedDocumentRoot . '/';
+
+        if (stripos($normalizedProjectRoot, $documentRootPrefix) === 0) {
+            $baseUrl = substr($normalizedProjectRoot, strlen($normalizedDocumentRoot));
+        } elseif (strcasecmp($normalizedProjectRoot, $normalizedDocumentRoot) === 0) {
+            $baseUrl = '';
+        } else {
+            $baseUrl = '/' . basename($normalizedProjectRoot);
+        }
+    } else {
+        $baseUrl = '/' . basename(dirname(__DIR__));
+    }
+
+    define('BASE_URL', rtrim($baseUrl, '/'));
+}
+
+define('DB_HOST', getenv('LUME_PET_DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('LUME_PET_DB_NAME') ?: 'lume_pet');
+define('DB_USER', getenv('LUME_PET_DB_USER') ?: 'root');
+define('DB_PASS', getenv('LUME_PET_DB_PASS') ?: '');
+define('DB_CHARSET', getenv('LUME_PET_DB_CHARSET') ?: 'utf8mb4');
 
 function getConexao(): PDO
 {
