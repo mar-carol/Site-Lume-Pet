@@ -152,7 +152,7 @@ $produtos = $stmt->fetchAll();
                     <label>Senha</label>
                     <input type="password" id="login-senha" placeholder="Sua senha">
                 </div>
-                  <a href="recuperar.html" class="esqueci-senha">Esqueci minha senha</a>
+                  <a href="recuperar.php" class="esqueci-senha">Esqueci minha senha</a>
 
                 <span class="erro" id="erro-login"></span>
                 <button class="btn-confirmar-login" onclick="fazerLogin()">Entrar</button>
@@ -182,7 +182,7 @@ $produtos = $stmt->fetchAll();
                 <div class="politica-privacidade">
                     <input type="checkbox" id="cad-aceito" name="cad-aceito"required>
                     <label for="cad-aceito">
-                    Li e concordo com a <a href="politica.html" target="_blank">Política de Privacidade</a>
+                    Li e concordo com a <a href="politica.php" target="_blank">Política de Privacidade</a>
                 </label>
                 </div>
                 <span class="erro" id="erro-cadastro"></span>
@@ -313,19 +313,19 @@ $produtos = $stmt->fetchAll();
          <div class="servico-carrossel" id="servicoCarrossel">
             <div class="servico-slide active">
                 <img src="assets/images/viralataviraamg.jpeg" alt="Ong 1">
-                <a href="ong.html" class="ong-tag">Saiba mais</a>
+                <a href="ong.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong2">
                 <img src="assets/images/caramelhoong.jpg" alt="ong 2">
-                <a href="ong.html" class="ong-tag">Saiba mais</a>
+                <a href="ong.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong3">
                 <img src="assets/images/salvagato.jpg" alt="ong 3">
-                <a href="ong.html" class="ong-tag">Saiba mais</a>
+                <a href="ong.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong4">
                 <img src="assets/images/viralata10.jpg" alt="ong 4">
-                <a href="ong.html" class="ong-tag">Saiba Mais</a>
+                <a href="ong.php" class="ong-tag">Saiba Mais</a>
             </div>
             
             <div class="servico-dots" id="servicoDots"></div>
@@ -791,8 +791,8 @@ $produtos = $stmt->fetchAll();
 
             <nav class="site-footer-coluna" aria-label="Institucional">
                 <h2>Institucional</h2>
-                <a href="ong.html">ONGs parceiras</a>
-                <a href="politica.html">Política de privacidade</a>
+                <a href="ong.php">ONGs parceiras</a>
+                <a href="politica.php">Política de privacidade</a>
                
             </nav>
 
