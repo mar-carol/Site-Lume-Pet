@@ -63,8 +63,9 @@
         erro.textContent = 'Aceite a Política de Privacidade para continuar.';
         return;
       }
-      if (senha.length < 6) {
-        erro.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+      const erroSenha = validarSenha(senha);
+      if (erroSenha) {
+        erro.textContent = erroSenha;
         return;
       }
       if (senha !== senha2) {

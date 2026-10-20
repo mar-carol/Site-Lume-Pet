@@ -170,7 +170,10 @@ $produtos = $stmt->fetchAll();
                 </div>
                 <div class="campo-grupo">
                     <label>Senha</label>
-                    <input type="password" id="cad-senha" placeholder="Crie uma senha (mín. 6 caracteres)" minlength="6">
+                    <input type="password" id="cad-senha" placeholder="Crie uma senha" minlength="8">
+                    <small style="color: #777;font-size: 12px;">
+                        Mín. 8 caracteres, com letras maiúsculas, minúsculas, números e caracteres especiais (!@#$%&*?^_).
+                </small>
                 </div>
                 <div class="campo-grupo">
                     <label>Confirmar senha</label>
@@ -822,6 +825,7 @@ $produtos = $stmt->fetchAll();
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="js/pix.js"></script>
+    <script src="js/senha.js?v=1"></script>
     <script src="js/auth.js?v=20261018-organized-fix2"></script>
     <script src="js/commerce.js?v=20261018-organized-fix2"></script>
     <script src="js/site.js?v=20261018-organized-fix2"></script>
