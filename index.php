@@ -313,6 +313,7 @@ $produtos = $stmt->fetchAll();
          <div class="servico-carrossel" id="servicoCarrossel">
             <div class="servico-slide active">
                 <img src="assets/images/viralataviraamg.jpeg" alt="Ong 1">
+<<<<<<< HEAD
                 <a href="ong.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong2">
@@ -326,6 +327,21 @@ $produtos = $stmt->fetchAll();
             <div class="servico-slide" id="servicoong4">
                 <img src="assets/images/viralata10.jpg" alt="ong 4">
                 <a href="ong.php" class="ong-tag">Saiba Mais</a>
+=======
+                <a href="ongpage.php" class="ong-tag">Saiba mais</a>
+            </div>
+            <div class="servico-slide" id="servicoong2">
+                <img src="assets/images/caramelhoong.jpg" alt="ong 2">
+                <a href="ongpage.php" class="ong-tag">Saiba mais</a>
+            </div>
+            <div class="servico-slide" id="servicoong3">
+                <img src="assets/images/salvagato.jpg" alt="ong 3">
+                <a href="ongpage.php" class="ong-tag">Saiba mais</a>
+            </div>
+            <div class="servico-slide" id="servicoong4">
+                <img src="assets/images/viralata10.jpg" alt="ong 4">
+                <a href="ongpage.php" class="ong-tag">Saiba Mais</a>
+>>>>>>> 60560c2372a7bccc371a636f0bbbe18d1bd13039
             </div>
             
             <div class="servico-dots" id="servicoDots"></div>
