@@ -14,10 +14,11 @@ cadastro de produtos, ONGs e animais.
 1. Coloque o projeto em `C:\xampp\htdocs\Site-Lume-Pet`.
 2. Inicie Apache e MySQL pelo painel do XAMPP.
 3. No phpMyAdmin, importe `database/tabelas.sql`.
-4. Importe `database/mensagens_contato.sql` e `database/seeds/admins.sql`.
-5. Configure o banco no ambiente ou confira os valores locais em
+4. Em bancos já existentes, importe `database/migrations/avaliacoes.sql` para criar a tabela de avaliações.
+5. Importe `database/mensagens_contato.sql` e `database/seeds/admins.sql`.
+6. Configure o banco no ambiente ou confira os valores locais em
    `config/database.php`.
-6. Abra `http://localhost/Site-Lume-Pet/`.
+7. Abra `http://localhost/Site-Lume-Pet/`.
 
 `BASE_URL` é calculada a partir do caminho do projeto dentro do document root,
 para permitir que o projeto rode em uma subpasta ou diretamente na raiz do
@@ -47,6 +48,7 @@ responsabilidade:
 ├── pontos.php                Saldo e histórico de pontos
 ├── cartoes.php               Cartões tokenizados
 ├── produtos.php              Gerenciamento administrativo de produtos
+├── avaliacoes.php            Moderação administrativa de avaliações
 ├── ongs.php                  Gerenciamento administrativo de ONGs
 ├── animais.php               Gerenciamento administrativo de animais
 ├── usuario/
@@ -85,5 +87,9 @@ responsabilidade:
   `/lume_pet`, nomes de pastas em maiúsculas ou caminhos relativos à URL atual.
 - Mantenha a ordem de carregamento dos scripts e as funções chamadas pelos
   handlers HTML ao adicionar novas interações.
-- `api/avaliacao.php` e `api/finalizar-compra.php` estão vazios e ainda não
-  devem ser usados como endpoints funcionais.
+- Avaliações de clientes ficam pendentes até a aprovação em `avaliacoes.php`;
+  somente as aprovadas aparecem na página pública do produto.
+- `api/finalizar-compra.php` ainda não deve ser usado como endpoint funcional.
+
+
+## FINALIZAÇÃO DO SITE: ......

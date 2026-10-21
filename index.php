@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 
 $usuarioLogado = usuarioEstaLogado();
 
@@ -47,7 +48,7 @@ $produtos = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lume Pet</title>
     <link rel="icon" href="assets/images/imgicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=20261021-cards">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=pets" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -108,6 +109,13 @@ $produtos = $stmt->fetchAll();
                 <li><a href="#sobre">Sobre</a></li>
                 <li><a href="#avaliacao">Avaliações</a></li>
                 <li><a href="#contato">Contato</a></li>
+                <li class="nav-search">
+                    <form role="search" onsubmit="pesquisarPeloMenu(event)">
+                        <label class="sr-only" for="menuPesquisa">Pesquisar produtos</label>
+                        <input type="search" id="menuPesquisa" placeholder="Buscar produtos..." oninput="sincronizarPesquisaMenu()">
+                        <button type="submit" aria-label="Buscar produtos">⌕</button>
+                    </form>
+                </li>
                 <li class="usuario-item">
                     <a href="#" class="usuario-icon" onclick="usuarioClick(event)" id="usuarioLink">
                         <span id="usuarioNome">Entrar</span>
@@ -313,21 +321,6 @@ $produtos = $stmt->fetchAll();
          <div class="servico-carrossel" id="servicoCarrossel">
             <div class="servico-slide active">
                 <img src="assets/images/viralataviraamg.jpeg" alt="Ong 1">
-<<<<<<< HEAD
-                <a href="ong.php" class="ong-tag">Saiba mais</a>
-            </div>
-            <div class="servico-slide" id="servicoong2">
-                <img src="assets/images/caramelhoong.jpg" alt="ong 2">
-                <a href="ong.php" class="ong-tag">Saiba mais</a>
-            </div>
-            <div class="servico-slide" id="servicoong3">
-                <img src="assets/images/salvagato.jpg" alt="ong 3">
-                <a href="ong.php" class="ong-tag">Saiba mais</a>
-            </div>
-            <div class="servico-slide" id="servicoong4">
-                <img src="assets/images/viralata10.jpg" alt="ong 4">
-                <a href="ong.php" class="ong-tag">Saiba Mais</a>
-=======
                 <a href="ongpage.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong2">
@@ -341,7 +334,6 @@ $produtos = $stmt->fetchAll();
             <div class="servico-slide" id="servicoong4">
                 <img src="assets/images/viralata10.jpg" alt="ong 4">
                 <a href="ongpage.php" class="ong-tag">Saiba Mais</a>
->>>>>>> 60560c2372a7bccc371a636f0bbbe18d1bd13039
             </div>
             
             <div class="servico-dots" id="servicoDots"></div>
@@ -420,6 +412,7 @@ $produtos = $stmt->fetchAll();
             data-preco="<?= htmlspecialchars((string) $preco, ENT_QUOTES, 'UTF-8') ?>"
             data-categoria="<?= htmlspecialchars($categoria, ENT_QUOTES, 'UTF-8') ?>"
             data-nome="<?= htmlspecialchars(strtolower($nome), ENT_QUOTES, 'UTF-8') ?>"
+            data-descricao="<?= htmlspecialchars(strtolower($descricao), ENT_QUOTES, 'UTF-8') ?>"
         >
 
             <div class="produto-img">
@@ -455,6 +448,15 @@ $produtos = $stmt->fetchAll();
     <?php endforeach; ?>
 
 </div>
+
+        <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
+            <span class="banner-pontos-icone" aria-hidden="true">✦</span>
+            <div>
+                <h3 id="bannerPontosTitulo">Doe e acumule pontos</h3>
+                <p>Ganhe 1 ponto por real inteiro doado e acompanhe seu saldo no histórico.</p>
+            </div>
+            <a href="pontos.php">Conheça seus pontos</a>
+        </aside>
     </section>
 
     <!-- parte de adoção eu preciso mudar isso pq agora vai cadastrar os animais pelo dashboard -->
@@ -621,9 +623,7 @@ $produtos = $stmt->fetchAll();
 
     <!-- PÁGINA DE PRODUTO -->
     <section class="produto-pagina" id="produtoPagina">
-        <a href="#loja">
-            <button class="produto-voltar" onclick="fecharProduto()">← Voltar para a loja</button>
-        </a>
+        <button class="produto-voltar" onclick="fecharProduto()">← Voltar para a loja</button>
 
         <div class="produto-detalhe">
             <div class="produto-detalhe-img">
@@ -807,7 +807,7 @@ $produtos = $stmt->fetchAll();
 
             <nav class="site-footer-coluna" aria-label="Institucional">
                 <h2>Institucional</h2>
-                <a href="ong.php">ONGs parceiras</a>
+                <a href="ongpage.php">ONGs parceiras</a>
                 <a href="politica.php">Política de privacidade</a>
                
             </nav>
@@ -839,12 +839,13 @@ $produtos = $stmt->fetchAll();
 <div class="toast-container" id="toastContainer"></div>
 
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <script>window.csrfToken = <?= json_encode(gerarTokenCsrf(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="js/pix.js"></script>
     <script src="js/senha.js?v=1"></script>
     <script src="js/auth.js?v=20261018-organized-fix2"></script>
     <script src="js/commerce.js?v=20261018-organized-fix2"></script>
-    <script src="js/site.js?v=20261018-organized-fix2"></script>
+    <script src="js/site.js?v=20261021-ui"></script>
 </body>
 </html>
 

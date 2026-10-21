@@ -17,6 +17,10 @@
       if (!campoPesquisa) return;
 
       const texto = campoPesquisa.value.toLowerCase().trim();
+      const pesquisaMenu = document.getElementById('menuPesquisa');
+      if (pesquisaMenu && pesquisaMenu.value !== campoPesquisa.value) {
+        pesquisaMenu.value = campoPesquisa.value;
+      }
       const cards = document.querySelectorAll('.produto-card');
       const vazio = document.getElementById('lojaVazio');
       const categoriasPorFiltro = {
@@ -30,7 +34,8 @@
       cards.forEach(card => {
         const categoria = card.dataset.categoria;
         const nome = card.dataset.nome.toLowerCase();
-        const passaPesquisa = nome.includes(texto);
+        const descricao = (card.dataset.descricao || '').toLowerCase();
+        const passaPesquisa = nome.includes(texto) || descricao.includes(texto);
 
         let passaCategoria;
         if (texto) {
@@ -62,6 +67,22 @@
 
     // Inicia mostrando o Geral
     filtrarProdutos();
+
+    function sincronizarPesquisaMenu() {
+      const pesquisaMenu = document.getElementById('menuPesquisa');
+      const pesquisaLoja = document.getElementById('campoPesquisa');
+      if (!pesquisaMenu || !pesquisaLoja) return;
+      pesquisaLoja.value = pesquisaMenu.value;
+      filtrarProdutos();
+    }
+
+    function pesquisarPeloMenu(event) {
+      event.preventDefault();
+      sincronizarPesquisaMenu();
+      document.getElementById('loja')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('menuHamburguer')?.classList.remove('aberto');
+      document.getElementById('navMenu')?.classList.remove('aberto');
+    }
 
 
     // CARROSSEL PRINCIPAL (topo do site)
@@ -355,6 +376,7 @@
 
     let produtoAtual = null;
     let produtoQtd = 1;
+    let posicaoScrollProduto = 0;
 
     const SECOES_CLASSES = ['.carrossel', '.servico', '.loja', '.adote', '.doacao', '.sobre', '.avaliacao', '.contato'];
 
@@ -369,6 +391,7 @@
         nome,
         preco: Number(card.dataset.preco)
       };
+      posicaoScrollProduto = window.scrollY;
       produtoQtd = 1;
 
       document.getElementById('pd-img').src = img.src;
@@ -384,8 +407,8 @@
       });
 
       document.getElementById('produtoPagina').classList.add('aberta');
-      renderAvaliacoesSecao(nome);
-      montarFormAvaliacao(nome);
+      renderAvaliacoesSecao(produtoAtual.id);
+      montarFormAvaliacao(produtoAtual.id);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -397,7 +420,7 @@
         if (el) el.style.display = '';
       });
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: posicaoScrollProduto, behavior: 'smooth' });
     }
 
     function alterarQtdProduto(delta) {
@@ -425,32 +448,6 @@
 
     // AVALIAÇÕES DE PRODUTOS
 
-    function getAvaliacoes(produtoNome) {
-      try {
-        const todas = JSON.parse(localStorage.getItem('lumepet_avaliacoes') || '{}');
-        return todas[produtoNome] || [];
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function salvarAvaliacao(produtoNome, avaliacao) {
-      const todas = JSON.parse(localStorage.getItem('lumepet_avaliacoes') || '{}');
-      if (!todas[produtoNome]) todas[produtoNome] = [];
-      todas[produtoNome].push(avaliacao);
-      localStorage.setItem('lumepet_avaliacoes', JSON.stringify(todas));
-    }
-
-    function comprouProduto(produtoNome) {
-      if (!usuarioLogado) return false;
-      try {
-        const compras = JSON.parse(localStorage.getItem('lumepet_compras_' + usuarioLogado.email) || '[]');
-        return compras.includes(produtoNome);
-      } catch (e) {
-        return false;
-      }
-    }
-
     function renderEstrelas(nota) {
       let html = '<span class="estrelas">';
       for (let i = 1; i <= 5; i++) {
@@ -460,44 +457,59 @@
       return html;
     }
 
-    function renderAvaliacoesSecao(produtoNome) {
-      const avaliacoes = getAvaliacoes(produtoNome);
+    async function renderAvaliacoesSecao(produtoId) {
       const media = document.getElementById('pd-media');
       const lista = document.getElementById('pd-lista-avaliacoes');
+      media.textContent = '';
+      lista.textContent = 'Carregando avaliações...';
 
-      if (avaliacoes.length === 0) {
+      try {
+        const resposta = await fetch(`api/avaliacao.php?produto_id=${encodeURIComponent(produtoId)}`, {
+          credentials: 'same-origin'
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.erro || 'Não foi possível carregar as avaliações.');
+        }
+
+        const avaliacoes = resultado.avaliacoes;
+        if (avaliacoes.length === 0) {
+          media.textContent = '';
+          lista.innerHTML = '<p class="pd-sem-avaliacoes">Este produto ainda não tem avaliações aprovadas.</p>';
+          return;
+        }
+
+        const somaNotas = avaliacoes.reduce((s, avaliacao) => s + Number(avaliacao.nota), 0);
+        const mediaNota = (somaNotas / avaliacoes.length).toFixed(1);
+        media.innerHTML = `${renderEstrelas(Math.round(mediaNota))} <strong>${mediaNota}</strong> (${avaliacoes.length} avaliação${avaliacoes.length > 1 ? 'ões' : ''})`;
+
+        lista.replaceChildren();
+        avaliacoes.forEach(avaliacao => {
+          const item = document.createElement('article');
+          item.className = 'avaliacao-item';
+          item.innerHTML = renderEstrelas(Number(avaliacao.nota));
+
+          const autor = document.createElement('strong');
+          autor.textContent = avaliacao.autor;
+          const comentario = document.createElement('p');
+          comentario.textContent = avaliacao.comentario;
+          item.append(autor, comentario);
+          lista.appendChild(item);
+        });
+      } catch (erro) {
         media.innerHTML = '';
-        lista.innerHTML = '<p class="pd-sem-avaliacoes">Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>';
-        return;
+        lista.textContent = erro.message;
       }
-
-      const somaNotas = avaliacoes.reduce((s, a) => s + a.nota, 0);
-      const mediaNota = (somaNotas / avaliacoes.length).toFixed(1);
-
-      media.innerHTML = `${renderEstrelas(Math.round(mediaNota))} <strong>${mediaNota}</strong> (${avaliacoes.length} avaliação${avaliacoes.length > 1 ? 'ões' : ''})`;
-
-      lista.innerHTML = avaliacoes.map(a => `
-        <div class="avaliacao-item">
-          ${renderEstrelas(a.nota)}
-          <strong>${a.autor}</strong>
-          <p>${a.texto}</p>
-        </div>
-      `).join('');
     }
 
     let notaSelecionada = 0;
 
-    function montarFormAvaliacao(produtoNome) {
+    function montarFormAvaliacao(produtoId) {
       const container = document.getElementById('pd-nova-avaliacao');
       notaSelecionada = 0;
 
       if (!usuarioLogado) {
-        container.innerHTML = `<div class="pd-aviso-compra">Entre na sua conta e compre este produto para deixar sua avaliação.</div>`;
-        return;
-      }
-
-      if (!comprouProduto(produtoNome)) {
-        container.innerHTML = `<div class="pd-aviso-compra">Você poderá avaliar este produto depois de comprá-lo.</div>`;
+        container.innerHTML = '<div class="pd-aviso-compra">Entre na sua conta para enviar uma avaliação.</div>';
         return;
       }
 
@@ -512,7 +524,7 @@
             <span data-valor="5">★</span>
           </div>
           <textarea id="textoAvaliacao" placeholder="Conte como foi sua experiência com o produto..."></textarea>
-          <button onclick="enviarAvaliacao('${produtoNome.replace(/'/g, "\\'")}')">Enviar avaliação</button>
+          <button onclick="enviarAvaliacao(${Number(produtoId)})">Enviar avaliação</button>
         </div>
       `;
 
@@ -530,7 +542,7 @@
       });
     }
 
-    function enviarAvaliacao(produtoNome) {
+    async function enviarAvaliacao(produtoId) {
       const texto = document.getElementById('textoAvaliacao').value.trim();
 
       if (notaSelecionada === 0) {
@@ -542,15 +554,29 @@
         return;
       }
 
-      salvarAvaliacao(produtoNome, {
-        nota: notaSelecionada,
-        texto,
-        autor: usuarioLogado.nome
-      });
+      const botao = document.querySelector('.pd-nova-avaliacao-form button');
+      botao.disabled = true;
+      try {
+        const resposta = await fetch('api/avaliacao.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': window.csrfToken
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ produto_id: produtoId, nota: notaSelecionada, comentario: texto })
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.erro || 'Não foi possível enviar sua avaliação.');
+        }
 
-      alert('✅ Avaliação enviada, obrigado pelo feedback!');
-      renderAvaliacoesSecao(produtoNome);
-      montarFormAvaliacao(produtoNome);
+        document.getElementById('pd-nova-avaliacao').innerHTML =
+          '<p class="pd-aviso-compra">Avaliação enviada! Ela ficará visível após a aprovação da equipe.</p>';
+      } catch (erro) {
+        alert(erro.message);
+        botao.disabled = false;
+      }
     }
 
     // MENU HAMBÚRGUER
@@ -563,10 +589,23 @@
     // fecha o menu ao clicar em qualquer link
     document.querySelectorAll('#navMenu a').forEach(link => {
       link.addEventListener('click', () => {
+        if (link.hash) {
+          document.querySelectorAll('#navMenu a.ativo').forEach(item => item.classList.remove('ativo'));
+          link.classList.add('ativo');
+        }
         document.getElementById('menuHamburguer').classList.remove('aberto');
         document.getElementById('navMenu').classList.remove('aberto');
       });
     });
+
+    function atualizarLinkAtivo() {
+      const hash = window.location.hash || '#inicio';
+      document.querySelectorAll('#navMenu a[href^="#"]').forEach(link => {
+        link.classList.toggle('ativo', link.getAttribute('href') === hash);
+      });
+    }
+    window.addEventListener('hashchange', atualizarLinkAtivo);
+    atualizarLinkAtivo();
 
     // CONTATO - máscara de telefone
 function mascaraTelefoneContato(input) {

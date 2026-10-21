@@ -18,7 +18,7 @@ $paginaAtual = $paginaAtual ?? '';
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet"
-      href="<?= BASE_URL ?>/css/admin.css?v=2">
+      href="<?= BASE_URL ?>/css/admin.css?v=3">
 </head>
 <body>
 <div class="lp-app">
@@ -31,6 +31,7 @@ $paginaAtual = $paginaAtual ?? '';
 
             <li><a href="<?= BASE_URL ?>/index.php" class="<?= $paginaAtual === 'dashboard' ? 'active' : '' ?>"> Dashboard</a></li>
             <li><a href="<?= BASE_URL ?>/produtos.php" class="<?= $paginaAtual === 'produtos' ? 'active' : '' ?>"> Produtos</a></li>
+            <li><a href="<?= BASE_URL ?>/avaliacoes.php" class="<?= $paginaAtual === 'avaliacoes' ? 'active' : '' ?>"> Avaliações</a></li>
             <li><a href="<?= BASE_URL ?>/ongs.php" class="<?= $paginaAtual === 'ongs' ? 'active' : '' ?>"> ONGs parceiras</a></li>
             <li><a href="<?= BASE_URL ?>/animais.php" class="<?= $paginaAtual === 'animais' ? 'active' : '' ?>"> Animais</a></li>
             <li class="lp-nav-sair"><a href="<?= BASE_URL ?>/includes/logout.php">Sair</a></li>

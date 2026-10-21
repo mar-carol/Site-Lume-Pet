@@ -179,7 +179,7 @@
 
             <nav class="site-footer-coluna" aria-label="Institucional">
                 <h2>Institucional</h2>
-                <a href="ong.php">ONGs parceiras</a>
+                <a href="ongpage.php">ONGs parceiras</a>
                 <a href="politica.php">Política de privacidade</a>
                 <a href="conta.php">Minha conta</a>
             </nav>
