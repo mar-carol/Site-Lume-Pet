@@ -28,12 +28,15 @@
         higiene: ['higiene'],
         alimento: ['alimento', 'alimentos', 'comida', 'ração', 'racao'],
         brinquedo: ['brinquedo', 'brinquedos'],
-        conforto: ['conforto']
+        conforto: ['conforto'],
+        remedios: ['remedio', 'remedios', 'medicamento', 'medicamentos']
       };
       let produtosVisiveis = 0;
 
       cards.forEach(card => {
-        const categoria = card.dataset.categoria;
+        const categoria = (card.dataset.categoria || '')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
         const nome = card.dataset.nome.toLowerCase();
         const descricao = (card.dataset.descricao || '').toLowerCase();
         const passaPesquisa = nome.includes(texto) || descricao.includes(texto);
@@ -460,6 +463,83 @@
       return html;
     }
 
+    async function carregarAvaliacoesDestaque() {
+      const viewport = document.getElementById('avaliacoesCarrossel');
+      const trilho = document.getElementById('avaliacoesTrilho');
+      if (!viewport || !trilho) return;
+
+      trilho.setAttribute('aria-busy', 'true');
+      try {
+        const resposta = await fetch(new URL('api/avaliacao.php', siteProjetoUrl), {
+          credentials: 'same-origin'
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.erro || 'Não foi possível carregar as avaliações.');
+        }
+
+        trilho.replaceChildren();
+        if (resultado.avaliacoes.length === 0) {
+          const vazio = document.createElement('p');
+          vazio.className = 'avaliacoes-status';
+          vazio.setAttribute('role', 'status');
+          vazio.textContent = 'Ainda não há avaliações de produtos. Seja o primeiro a avaliar!';
+          trilho.appendChild(vazio);
+          return;
+        }
+
+        const criarGrupo = (avaliacoes, duplicado = false) => {
+          const grupo = document.createElement('div');
+          grupo.className = 'avaliacoes-grupo';
+          if (duplicado) grupo.setAttribute('aria-hidden', 'true');
+
+          avaliacoes.forEach(avaliacao => {
+            const card = document.createElement('article');
+            card.className = 'avaliacao-produto-card';
+
+            const estrelas = document.createElement('span');
+            estrelas.className = 'avaliacao-estrelas';
+            estrelas.textContent = `${'★'.repeat(Number(avaliacao.nota))}${'☆'.repeat(5 - Number(avaliacao.nota))}`;
+            estrelas.setAttribute('aria-label', `${Number(avaliacao.nota)} de 5 estrelas`);
+
+            const comentario = document.createElement('p');
+            comentario.textContent = avaliacao.comentario;
+
+            const produto = document.createElement('strong');
+            produto.className = 'avaliacao-produto-nome';
+            produto.textContent = avaliacao.produto;
+
+            const autor = document.createElement('span');
+            autor.className = 'avaliacao-autor';
+            autor.textContent = avaliacao.autor;
+
+            card.append(estrelas, comentario, produto, autor);
+            grupo.appendChild(card);
+          });
+          return grupo;
+        };
+
+        trilho.appendChild(criarGrupo(resultado.avaliacoes));
+        if (resultado.avaliacoes.length > 1) {
+          trilho.appendChild(criarGrupo(resultado.avaliacoes, true));
+        }
+        trilho.classList.toggle('avaliacoes-trilho-estatico', resultado.avaliacoes.length === 1);
+      } catch (erro) {
+        console.error('Não foi possível carregar as avaliações recentes.', erro);
+        trilho.replaceChildren();
+        const mensagemErro = document.createElement('p');
+        mensagemErro.className = 'avaliacoes-status';
+        mensagemErro.setAttribute('role', 'status');
+        mensagemErro.textContent = 'Não foi possível carregar as avaliações agora.';
+        trilho.appendChild(mensagemErro);
+      } finally {
+        trilho.setAttribute('aria-busy', 'false');
+      }
+    }
+
+    carregarAvaliacoesDestaque();
+    window.setInterval(carregarAvaliacoesDestaque, 60000);
+
     async function comprouProduto(produtoId, produtoNome) {
       if (!usuarioLogado) return false;
       try {
@@ -609,6 +689,7 @@
         notaSelecionada = 0;
         atualizarEstrelasInput();
         await renderAvaliacoesSecao(produtoId);
+        await carregarAvaliacoesDestaque();
         alert('Avaliação salva na sua conta. Obrigado pelo feedback!');
       } catch (erro) {
         alert(erro.message);

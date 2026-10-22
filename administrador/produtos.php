@@ -107,6 +107,20 @@ $produtos = $pdo->query(
      ORDER BY p.criado_em DESC'
 )->fetchAll();
 
+$categoriasProduto = [
+    'higiene' => 'Higiene',
+    'alimento' => 'Alimentos',
+    'brinquedo' => 'Brinquedos',
+    'conforto' => 'Conforto',
+    'remedios' => 'Remédios',
+];
+$categoriaAtual = strtolower(trim($editando['categoria'] ?? ''));
+$categoriaAtualNormalizada = strtr($categoriaAtual, [
+    'á' => 'a', 'ã' => 'a', 'â' => 'a',
+    'é' => 'e', 'ê' => 'e', 'í' => 'i',
+    'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ú' => 'u',
+]);
+
 $tituloPagina = 'Produtos';
 $paginaAtual  = 'produtos';
 require __DIR__ . '/../includes/admin_header.php';
@@ -147,7 +161,17 @@ require __DIR__ . '/../includes/admin_header.php';
         <textarea name="descricao"><?= limpar($editando['descricao'] ?? '') ?></textarea>
 
         <label>Categoria</label>
-        <input type="text" name="categoria" value="<?= limpar($editando['categoria'] ?? '') ?>">
+        <select name="categoria">
+            <option value="">Selecione...</option>
+            <?php foreach ($categoriasProduto as $valorCategoria => $rotuloCategoria): ?>
+                <option value="<?= limpar($valorCategoria) ?>" <?= $categoriaAtualNormalizada === $valorCategoria ? 'selected' : '' ?>>
+                    <?= limpar($rotuloCategoria) ?>
+                </option>
+            <?php endforeach; ?>
+            <?php if ($categoriaAtual !== '' && !isset($categoriasProduto[$categoriaAtualNormalizada])): ?>
+                <option value="<?= limpar($editando['categoria']) ?>" selected><?= limpar($editando['categoria']) ?></option>
+            <?php endif; ?>
+        </select>
 
         <label>Preço (R$)</label>
         <input type="number" step="0.01" name="preco" value="<?= $editando['preco'] ?? '' ?>" required>

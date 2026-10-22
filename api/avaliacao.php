@@ -14,6 +14,19 @@ function responderAvaliacao(array $dados, int $status = 200): void
 $pdo = getConexao();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (!isset($_GET['produto_id'])) {
+        $stmt = $pdo->query(
+            'SELECT a.nota, a.comentario, a.criado_em, u.nome AS autor, p.nome AS produto
+             FROM avaliacoes a
+             JOIN usuarios u ON u.id = a.usuario_id
+             JOIN produtos p ON p.id = a.produto_id
+             WHERE p.status = \'ativo\'
+             ORDER BY a.criado_em DESC
+             LIMIT 30'
+        );
+        responderAvaliacao(['sucesso' => true, 'avaliacoes' => $stmt->fetchAll()]);
+    }
+
     $produtoId = filter_input(INPUT_GET, 'produto_id', FILTER_VALIDATE_INT);
     if (!$produtoId || $produtoId < 1) {
         responderAvaliacao(['sucesso' => false, 'erro' => 'Produto inválido.'], 400);

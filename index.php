@@ -48,7 +48,7 @@ $produtos = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lume Pet</title>
     <link rel="icon" href="assets/images/imgicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css?v=20261021-cards">
+    <link rel="stylesheet" href="css/style.css?v=20261022-review-carousel">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=pets" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -357,6 +357,7 @@ $produtos = $stmt->fetchAll();
             <button class="categoria-btn" onclick="filtrarCategoria('alimento', event)">Alimentos</button>
             <button class="categoria-btn" onclick="filtrarCategoria('brinquedo', event)">Brinquedos</button>
             <button class="categoria-btn" onclick="filtrarCategoria('conforto', event)">Conforto</button>
+            <button class="categoria-btn" onclick="filtrarCategoria('remedios', event)">Remédios</button>
         </div>
 
         <div class="loja-grade" id="lojaGrade">
@@ -383,16 +384,22 @@ $produtos = $stmt->fetchAll();
             if ($imagem !== '' && is_file($arquivoImagem)) {
                 $caminhoImagem = 'uploads/produtos/' . basename($imagem);
             } else {
-                $categoriaImagem = strtolower($categoria);
+                $categoriaImagem = strtr(strtolower($categoria), [
+                    'á' => 'a', 'ã' => 'a', 'â' => 'a',
+                    'é' => 'e', 'ê' => 'e', 'í' => 'i',
+                    'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ú' => 'u',
+                ]);
                 $imagemFallback = str_contains($categoriaImagem, 'higiene')
                     ? 'kit higiene.jpg'
                     : (str_contains($categoriaImagem, 'brinquedo')
                         ? 'bolinhapet.jpg'
                         : (str_contains($categoriaImagem, 'conforto')
                             ? 'camapet.jpg'
-                            : (str_contains($categoriaImagem, 'comida') || str_contains($categoriaImagem, 'alimento') || str_contains($categoriaImagem, 'ração') || str_contains($categoriaImagem, 'racao')
-                                ? 'raçãopremierspitz.jpg'
-                                : 'marcad.png')));
+                            : (str_contains($categoriaImagem, 'remedio') || str_contains($categoriaImagem, 'medicamento')
+                                ? 'suplementovitaminico.jpg'
+                                : (str_contains($categoriaImagem, 'comida') || str_contains($categoriaImagem, 'alimento') || str_contains($categoriaImagem, 'ração') || str_contains($categoriaImagem, 'racao')
+                                    ? 'raçãopremierspitz.jpg'
+                                    : 'marcad.png'))));
                 $caminhoImagem = 'assets/images/' . $imagemFallback;
             }
 
@@ -678,28 +685,12 @@ $produtos = $stmt->fetchAll();
 
     <section class="avaliacao" id="avaliacao">
         <h2>Avaliações</h2>
-        <p>Feedbacks que ilumina nossa jornada!</p>
+        <p>Avaliações reais de quem já comprou nossos produtos.</p>
 
-        <div class="container-card">
-
-            <div class="card">
-                <p>"Meu cachorro simplesmente ama a comida da Lume Pet! É feita com ingredientes naturais e dá pra ver a diferença na energia e na saúde dele. Saber que é uma receita própria, pensada com carinho, me deixa muito mais confiante."</p>
-                <strong>Luiza Souza</strong>
-                <span>Tutora do "Thor"</span>
+        <div class="avaliacoes-viewport" id="avaliacoesCarrossel" aria-label="Avaliações recentes de produtos">
+            <div class="avaliacoes-trilho" id="avaliacoesTrilho" aria-live="off" aria-busy="true">
+                <p class="avaliacoes-status" role="status">Carregando avaliações...</p>
             </div>
-
-            <div class="card">
-                <p>"O kit de higiene da Lume Pet é incrível! Shampoo suave, escova prática e tudo com um cheirinho agradável. Meu pet fica limpo e feliz, e eu sinto que estou cuidando dele com produtos seguros e de confiança."</p>
-                <strong>Yuri Alberto</strong>
-                <span>Tutor da "Mel"</span>
-            </div>
-
-            <div class="card">
-                <p>"Meu gato é exigente, mas a ração natural da Lume Pet conquistou ele de primeira! Ingredientes frescos e balanceados deixaram o pelo mais macio e brilhante. É bom saber que ofereço algo saudável e feito com carinho."</p>
-                <strong>Ana Paula Braga</strong>
-                <span>Tutora da "Sol"</span>
-            </div>
-
         </div>
     </section>
 
@@ -847,7 +838,7 @@ $produtos = $stmt->fetchAll();
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261022-orders"></script>
     <script src="js/commerce.js?v=20261022-orders"></script>
-    <script src="js/site.js?v=20261022-orders"></script>
+    <script src="js/site.js?v=20261022-review-carousel"></script>
 </body>
 </html>
 
