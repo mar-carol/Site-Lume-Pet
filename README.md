@@ -5,7 +5,7 @@ A Lume Pet é uma marca fictícia criada para representar a plataforma digital d
 Site em PHP contém catálogo, conta de cliente, painel administrativo e
 cadastro de produtos, ONGs e animais.
 
-##Desenvolvedoras
+## Desenvolvedoras
 
 - Lorena Gomes 
 - Maria Carolina 
