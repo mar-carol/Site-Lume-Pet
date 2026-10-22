@@ -435,9 +435,9 @@
       }
     }
 
-    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar) // - TÁ ABRINDO SIM, MAS PRECISA DO BANCO DE DADOS FUNCIONANDO
+    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar) // php ok
 
-    
+
     const lojaGrade = document.getElementById('lojaGrade');
     if (lojaGrade) {
       lojaGrade.addEventListener('click', function (e) {
