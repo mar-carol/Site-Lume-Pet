@@ -12,5 +12,9 @@
 </head>
 <body>
     
+ <main class="politica-privacidade">
+        <h1>Em processo</h1>
+ </main>
+
 </body>
 </html>
