@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p style="color:red;"><?= limpar($erro) ?></p>
 <?php endforeach; ?>
 
-<form method="post" action="cadastro.php">
+<form method="post" action="<?= BASE_URL ?>/includes/cadastro.php">
     <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
 
     <label>Nome completo</label>
@@ -93,6 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit">Cadastrar</button>
 </form>
 
-<p>Já possui uma conta? <a href="login.php">Entrar</a></p>
+<p>Já possui uma conta? <a href="<?= BASE_URL ?>/includes/login.php">Entrar</a></p>
 </body>
 </html>

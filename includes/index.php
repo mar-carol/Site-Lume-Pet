@@ -27,17 +27,17 @@ $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE s
 
 <nav>
 	<a href="<?= BASE_URL ?>/includes/index.php">Dashboard</a> |
-	<a href="<?= BASE_URL ?>/produtos.php">Produtos</a> |
-	<a href="<?= BASE_URL ?>/avaliacoes.php">Avaliações</a> |
-	<a href="<?= BASE_URL ?>/ongs.php">ONGs</a> |
-	<a href="<?= BASE_URL ?>/animais.php">Animais</a> |
+	<a href="<?= BASE_URL ?>/administrador/produtos.php">Produtos</a> |
+	<a href="<?= BASE_URL ?>/administrador/avaliacoes.php">Avaliações</a> |
+	<a href="<?= BASE_URL ?>/usuario/ongs.php">ONGs</a> |
+	<a href="<?= BASE_URL ?>/administrador/animais.php">Animais</a> |
 	<a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
 </nav>
 
 <ul>
 	<li>Usuários cadastrados: <?= (int) $totalUsuarios ?></li>
 	<li>Produtos cadastrados: <?= (int) $totalProdutos ?></li>
-	<li><a href="<?= BASE_URL ?>/avaliacoes.php">Avaliações recebidas: <?= (int) $totalAvaliacoes ?> (ver e remover)</a></li>
+	<li><a href="<?= BASE_URL ?>/administrador/avaliacoes.php">Avaliações recebidas: <?= (int) $totalAvaliacoes ?> (ver e remover)</a></li>
 	<li>ONGs parceiras: <?= (int) $totalOngs ?></li>
 	<li>Animais disponíveis: <?= (int) $totalAnimais ?></li>
 	<li>Animais já adotados: <?= (int) $totalAdotados ?></li>

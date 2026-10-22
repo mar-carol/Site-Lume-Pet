@@ -1,5 +1,6 @@
     // LOJA - FILTROS (pesquisa em todas as categorias)
 
+    const siteProjetoUrl = new URL('../', document.currentScript.src);
 
     let categoriaAtiva = 'geral';
 
@@ -481,7 +482,7 @@
       lista.textContent = 'Carregando avaliações...';
 
       try {
-        const resposta = await fetch(`api/avaliacao.php?produto_id=${encodeURIComponent(produtoId)}`, {
+        const resposta = await fetch(new URL(`api/avaliacao.php?produto_id=${encodeURIComponent(produtoId)}`, siteProjetoUrl), {
           credentials: 'same-origin'
         });
         const resultado = await resposta.json();
@@ -590,7 +591,7 @@
       }
 
       try {
-        const resposta = await fetch('api/avaliacao.php', {
+        const resposta = await fetch(new URL('api/avaliacao.php', siteProjetoUrl), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -681,7 +682,7 @@ async function enviarContato() {
   if (botao) botao.disabled = true;
 
   try {
-    const resposta = await fetch('api/contato.php', {
+    const resposta = await fetch(new URL('api/contato.php', siteProjetoUrl), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',

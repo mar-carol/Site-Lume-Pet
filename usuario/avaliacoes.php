@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/functions.php';
 
 exigirLogin();
 if (usuarioEhAdmin()) {
-    redirecionar(BASE_URL . '/avaliacoes.php');
+    redirecionar(BASE_URL . '/administrador/avaliacoes.php');
 }
 
 $pdo = getConexao();
@@ -35,18 +35,18 @@ $tituloPagina = 'Minhas avaliações';
 <div class="lp-app">
     <aside class="lp-sidebar">
         <a class="lp-brand user-brand" href="<?= BASE_URL ?>/index.php">
-            <span class="lp-brand-mark">L</span>
-            Lume Pet <small>minha conta</small>
+            <img class="user-brand-logo" src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet" width="90" height="50">
+            <small>minha conta</small>
         </a>
         <nav aria-label="Menu da conta">
             <ul class="lp-nav">
                 <li><a href="<?= BASE_URL ?>/usuario/dashboard.php">Visão geral</a></li>
-                <li><a href="<?= BASE_URL ?>/perfil.php">Meu perfil</a></li>
-                <li><a href="<?= BASE_URL ?>/compras.php">Minhas compras</a></li>
-                <li><a href="<?= BASE_URL ?>/doacoes.php">Minhas doações</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/perfil.php">Meu perfil</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/compras.php">Minhas compras</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/doacoes.php">Minhas doações</a></li>
                 <li><a class="active" href="<?= BASE_URL ?>/usuario/avaliacoes.php">Minhas avaliações</a></li>
-                <li><a href="<?= BASE_URL ?>/pontos.php">Meus pontos</a></li>
-                <li><a href="<?= BASE_URL ?>/cartoes.php">Meus cartões</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/pontos.php">Meus pontos</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/cartoes.php">Meus cartões</a></li>
                 <li class="lp-nav-sair"><a href="<?= BASE_URL ?>/includes/logout.php">Sair</a></li>
             </ul>
         </nav>

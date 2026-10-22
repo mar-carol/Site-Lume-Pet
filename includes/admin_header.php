@@ -29,11 +29,11 @@ $paginaAtual = $paginaAtual ?? '';
         </div>
         <ul class="lp-nav">
 
-            <li><a href="<?= BASE_URL ?>/index.php" class="<?= $paginaAtual === 'dashboard' ? 'active' : '' ?>"> Dashboard</a></li>
-            <li><a href="<?= BASE_URL ?>/produtos.php" class="<?= $paginaAtual === 'produtos' ? 'active' : '' ?>"> Produtos</a></li>
-            <li><a href="<?= BASE_URL ?>/avaliacoes.php" class="<?= $paginaAtual === 'avaliacoes' ? 'active' : '' ?>"> Avaliações</a></li>
-            <li><a href="<?= BASE_URL ?>/ongs.php" class="<?= $paginaAtual === 'ongs' ? 'active' : '' ?>"> ONGs parceiras</a></li>
-            <li><a href="<?= BASE_URL ?>/animais.php" class="<?= $paginaAtual === 'animais' ? 'active' : '' ?>"> Animais</a></li>
+            <li><a href="<?= BASE_URL ?>/includes/index.php" class="<?= $paginaAtual === 'dashboard' ? 'active' : '' ?>"> Dashboard</a></li>
+            <li><a href="<?= BASE_URL ?>/administrador/produtos.php" class="<?= $paginaAtual === 'produtos' ? 'active' : '' ?>"> Produtos</a></li>
+            <li><a href="<?= BASE_URL ?>/administrador/avaliacoes.php" class="<?= $paginaAtual === 'avaliacoes' ? 'active' : '' ?>"> Avaliações</a></li>
+            <li><a href="<?= BASE_URL ?>/usuario/ongs.php" class="<?= $paginaAtual === 'ongs' ? 'active' : '' ?>"> ONGs parceiras</a></li>
+            <li><a href="<?= BASE_URL ?>/administrador/animais.php" class="<?= $paginaAtual === 'animais' ? 'active' : '' ?>"> Animais</a></li>
             <li class="lp-nav-sair"><a href="<?= BASE_URL ?>/includes/logout.php">Sair</a></li>
         </ul>
     </aside>

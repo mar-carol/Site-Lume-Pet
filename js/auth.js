@@ -22,7 +22,7 @@
     dados.append('senha', senha);
 
     try {
-        const resposta = await fetch('api/login.php', {
+        const resposta = await fetch(new URL('api/login.php', raizProjetoUrl), {
             method: 'POST',
             body: dados,
             credentials: 'same-origin'
@@ -80,7 +80,7 @@
       dados.append('senha2', senha2);
 
       try {
-        const resposta = await fetch('api/cadastro.php', {
+        const resposta = await fetch(new URL('api/cadastro.php', raizProjetoUrl), {
           method: 'POST',
           body: dados,
           credentials: 'same-origin'
@@ -180,7 +180,7 @@
       if (!confirmar) return;
 
       try {
-        const resposta = await fetch('api/logout.php', {
+        const resposta = await fetch(new URL('api/logout.php', raizProjetoUrl), {
           method: 'POST',
           credentials: 'same-origin'
         });

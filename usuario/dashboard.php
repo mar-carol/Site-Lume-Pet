@@ -52,18 +52,18 @@ $paginaAtual = 'dashboard';
 <div class="lp-app">
     <aside class="lp-sidebar">
         <a class="lp-brand user-brand" href="<?= BASE_URL ?>/index.php">
-            <span class="lp-brand-mark">L</span>
-            Lume Pet <small>minha conta</small>
+            <img class="user-brand-logo" src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet" width="90" height="50">
+            <small>minha conta</small>
         </a>
         <nav aria-label="Menu da conta">
             <ul class="lp-nav">
                 <li><a class="active" href="<?= BASE_URL ?>/usuario/dashboard.php">Visão geral</a></li>
-                <li><a href="<?= BASE_URL ?>/perfil.php">Meu perfil</a></li>
-                <li><a href="<?= BASE_URL ?>/compras.php">Minhas compras</a></li>
-                <li><a href="<?= BASE_URL ?>/doacoes.php">Minhas doações</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/perfil.php">Meu perfil</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/compras.php">Minhas compras</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/doacoes.php">Minhas doações</a></li>
                 <li><a href="<?= BASE_URL ?>/usuario/avaliacoes.php">Minhas avaliações</a></li>
-                <li><a href="<?= BASE_URL ?>/pontos.php">Meus pontos</a></li>
-                <li><a href="<?= BASE_URL ?>/cartoes.php">Meus cartões</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/pontos.php">Meus pontos</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/cartoes.php">Meus cartões</a></li>
                 <li class="lp-nav-sair"><a href="<?= BASE_URL ?>/includes/logout.php">Sair</a></li>
             </ul>
         </nav>
@@ -82,22 +82,22 @@ $paginaAtual = 'dashboard';
         </header>
 
         <section class="user-stats" aria-label="Resumo da conta">
-            <a class="user-stat" href="<?= BASE_URL ?>/pontos.php">
+            <a class="user-stat" href="<?= BASE_URL ?>/usuario/pontos.php">
                 <span class="user-stat-label">Meus pontos</span>
                 <strong><?= number_format((int) $usuario['pontos'], 0, ',', '.') ?></strong>
                 <span>Ver histórico de pontos</span>
             </a>
-            <a class="user-stat" href="<?= BASE_URL ?>/cartoes.php">
+            <a class="user-stat" href="<?= BASE_URL ?>/usuario/cartoes.php">
                 <span class="user-stat-label">Cartões salvos</span>
                 <strong><?= $contadores['cartoes'] ?></strong>
                 <span>Gerenciar cartões</span>
             </a>
-            <a class="user-stat" href="<?= BASE_URL ?>/compras.php">
+            <a class="user-stat" href="<?= BASE_URL ?>/usuario/compras.php">
                 <span class="user-stat-label">Compras</span>
                 <strong><?= $contadores['compras'] ?></strong>
                 <span>Acompanhar pedidos</span>
             </a>
-            <a class="user-stat" href="<?= BASE_URL ?>/doacoes.php">
+            <a class="user-stat" href="<?= BASE_URL ?>/usuario/doacoes.php">
                 <span class="user-stat-label">Doações</span>
                 <strong><?= $contadores['doacoes'] ?></strong>
                 <span>Ver minhas doações</span>
@@ -112,9 +112,9 @@ $paginaAtual = 'dashboard';
         <section class="lp-panel user-account-panel">
             <h2>Atalhos da conta</h2>
             <div class="user-shortcuts">
-                <a href="<?= BASE_URL ?>/perfil.php">Atualizar meus dados</a>
-                <a href="<?= BASE_URL ?>/pontos.php">Consultar meus pontos</a>
-                <a href="<?= BASE_URL ?>/cartoes.php">Ver meus cartões</a>
+                <a href="<?= BASE_URL ?>/usuario/perfil.php">Atualizar meus dados</a>
+                <a href="<?= BASE_URL ?>/usuario/pontos.php">Consultar meus pontos</a>
+                <a href="<?= BASE_URL ?>/usuario/cartoes.php">Ver meus cartões</a>
                 <a href="<?= BASE_URL ?>/usuario/avaliacoes.php">Rever minhas avaliações</a>
                 <a href="<?= BASE_URL ?>/index.php">Voltar para a loja</a>
             </div>

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p style="color:red;"><?= limpar($erro) ?></p>
 <?php endif; ?>
 
-<form method="post" action="login.php">
+<form method="post" action="<?= BASE_URL ?>/includes/login.php">
     <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
 
     <label>E-mail</label>
@@ -57,6 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit">Entrar</button>
 </form>
 
-<p>Não tem conta? <a href="cadastro.php">Cadastre-se</a></p>
+<p>Não tem conta? <a href="<?= BASE_URL ?>/includes/cadastro.php">Cadastre-se</a></p>
 </body>
 </html>

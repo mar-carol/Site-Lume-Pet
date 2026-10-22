@@ -27,24 +27,23 @@ if (session_status() === PHP_SESSION_NONE) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=20261022-header-logo">
 </head>
 
-<body class="lp-public">
+<body class="lp-public lp-cards-page">
 
 <header class="lp-topnav">
-    <div class="lp-brand">
-        <span class="lp-brand-mark"> </span>
-        <span>Lume Pet</span>
-    </div>
+    <a class="lp-home-link" href="<?= BASE_URL ?>/index.php" aria-label="Voltar para o início do site Lume Pet">
+        <img src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet" width="52" height="32">
+    </a>
 
     <nav aria-label="Navegação principal">
         <a href="<?= BASE_URL ?>/usuario/dashboard.php">Minha conta</a>
-        <a href="<?= BASE_URL ?>/perfil.php">Perfil</a>
-        <a href="<?= BASE_URL ?>/compras.php">Compras</a>
-        <a href="<?= BASE_URL ?>/doacoes.php">Doações</a>
-        <a href="<?= BASE_URL ?>/pontos.php">Pontos</a>
-        <a href="<?= BASE_URL ?>/cartoes.php">Cartões</a>
+        <a href="<?= BASE_URL ?>/usuario/perfil.php">Perfil</a>
+        <a href="<?= BASE_URL ?>/usuario/compras.php">Compras</a>
+        <a href="<?= BASE_URL ?>/usuario/doacoes.php">Doações</a>
+        <a href="<?= BASE_URL ?>/usuario/pontos.php">Pontos</a>
+        <a href="<?= BASE_URL ?>/usuario/cartoes.php">Cartões</a>
         <a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
     </nav>
 </header>

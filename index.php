@@ -124,7 +124,7 @@ $produtos = $stmt->fetchAll();
                 </li>
                 <?php if (usuarioEhAdmin()): ?>
                     <li id="adminPanelNavItem">
-                        <a href="includes/index.php">Painel Administrativo</a>
+                        <a href="<?= BASE_URL ?>/includes/index.php">Painel Administrativo</a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -160,7 +160,7 @@ $produtos = $stmt->fetchAll();
                     <label>Senha</label>
                     <input type="password" id="login-senha" placeholder="Sua senha">
                 </div>
-                  <a href="recuperar.php" class="esqueci-senha">Esqueci minha senha</a>
+                  <a href="<?= BASE_URL ?>/pages/recuperar.php" class="esqueci-senha">Esqueci minha senha</a>
 
                 <span class="erro" id="erro-login"></span>
                 <button class="btn-confirmar-login" onclick="fazerLogin()">Entrar</button>
@@ -190,7 +190,7 @@ $produtos = $stmt->fetchAll();
                 <div class="politica-privacidade">
                     <input type="checkbox" id="cad-aceito" name="cad-aceito"required>
                     <label for="cad-aceito">
-                    Li e concordo com a <a href="politica.php" target="_blank">Política de Privacidade</a>
+                    Li e concordo com a <a href="<?= BASE_URL ?>/pages/politica.php" target="_blank">Política de Privacidade</a>
                 </label>
                 </div>
                 <span class="erro" id="erro-cadastro"></span>
@@ -321,19 +321,19 @@ $produtos = $stmt->fetchAll();
          <div class="servico-carrossel" id="servicoCarrossel">
             <div class="servico-slide active">
                 <img src="assets/images/viralataviraamg.jpeg" alt="Ong 1">
-                <a href="ongpage.php" class="ong-tag">Saiba mais</a>
+                <a href="<?= BASE_URL ?>/pages/ongpage.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong2">
                 <img src="assets/images/caramelhoong.jpg" alt="ong 2">
-                <a href="ongpage.php" class="ong-tag">Saiba mais</a>
+                <a href="<?= BASE_URL ?>/pages/ongpage.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong3">
                 <img src="assets/images/salvagato.jpg" alt="ong 3">
-                <a href="ongpage.php" class="ong-tag">Saiba mais</a>
+                <a href="<?= BASE_URL ?>/pages/ongpage.php" class="ong-tag">Saiba mais</a>
             </div>
             <div class="servico-slide" id="servicoong4">
                 <img src="assets/images/viralata10.jpg" alt="ong 4">
-                <a href="ongpage.php" class="ong-tag">Saiba Mais</a>
+                <a href="<?= BASE_URL ?>/pages/ongpage.php" class="ong-tag">Saiba Mais</a>
             </div>
             
             <div class="servico-dots" id="servicoDots"></div>
@@ -455,7 +455,7 @@ $produtos = $stmt->fetchAll();
                 <h3 id="bannerPontosTitulo">Doe e acumule pontos</h3>
                 <p>Ganhe 1 ponto por real inteiro doado e acompanhe seu saldo no histórico.</p>
             </div>
-            <a href="pontos.php">Conheça seus pontos</a>
+            <a href="<?= BASE_URL ?>/usuario/pontos.php">Conheça seus pontos</a>
         </aside>
     </section>
 
@@ -807,8 +807,8 @@ $produtos = $stmt->fetchAll();
 
             <nav class="site-footer-coluna" aria-label="Institucional">
                 <h2>Institucional</h2>
-                <a href="ongpage.php">ONGs parceiras</a>
-                <a href="politica.php">Política de privacidade</a>
+                <a href="<?= BASE_URL ?>/pages/ongpage.php">ONGs parceiras</a>
+                <a href="<?= BASE_URL ?>/pages/politica.php">Política de privacidade</a>
                
             </nav>
 

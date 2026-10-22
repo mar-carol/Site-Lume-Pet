@@ -44,29 +44,35 @@ sem duplicar contas pelo e-mail.
 
 ## Estrutura atual
 
-As URLs públicas antigas permanecem na raiz para evitar quebrar links
-existentes. O código compartilhado e as áreas privadas estão agrupados por
-responsabilidade:
+As páginas e áreas privadas estão agrupadas por responsabilidade. Os links
+internos usam `BASE_URL` e refletem esta estrutura. Os endereços antigos na
+raiz continuam disponíveis como compatibilidade e carregam a página movida
+para seu diretório atual:
 
 ```text
 /
 ├── index.php                 Loja e catálogo
 ├── conta.php                 Roteia a conta conforme o tipo da sessão
-├── perfil.php                Dados do cliente
-├── compras.php               Compras do cliente
-├── doacoes.php               Doações do cliente
-├── pontos.php                Saldo e histórico de pontos
-├── cartoes.php               Cartões tokenizados
-├── produtos.php              Gerenciamento administrativo de produtos
-├── avaliacoes.php            Consulta e remoção administrativa de avaliações
-├── ongs.php                  Gerenciamento administrativo de ONGs
-├── animais.php               Gerenciamento administrativo de animais
+├── includes/                 Autenticação, utilitários e layouts PHP
+├── administrador/
+│   ├── produtos.php          Gerenciamento administrativo de produtos
+│   ├── avaliacoes.php        Consulta e remoção administrativa de avaliações
+│   └── animais.php           Gerenciamento administrativo de animais
 ├── usuario/
 │   ├── dashboard.php         Resumo da conta do cliente
-│   └── avaliacoes.php        Histórico de avaliações do cliente
+│   ├── perfil.php            Dados do cliente
+│   ├── compras.php           Compras do cliente
+│   ├── doacoes.php           Doações do cliente
+│   ├── pontos.php            Saldo e histórico de pontos
+│   ├── cartoes.php           Cartões tokenizados
+│   ├── avaliacoes.php        Histórico de avaliações do cliente
+│   └── ongs.php              Gerenciamento administrativo de ONGs
+├── pages/
+│   ├── ongpage.php           Informações das ONGs parceiras
+│   ├── politica.php          Política de privacidade
+│   └── recuperar.php         Recuperação de senha
 ├── api/                      Endpoints JSON usados pelo navegador
 ├── config/                   Configuração de banco e URL base
-├── includes/                 Autenticação, utilitários e layouts PHP
 ├── assets/
 │   └── images/               Imagens estáticas do site e da interface
 ├── css/                      Folhas de estilo

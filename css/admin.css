@@ -82,6 +82,14 @@ a:hover {
     height: 50px;
 }
 
+.user-brand .user-brand-logo {
+    display: block;
+    width: 90px;
+    height: 50px;
+    max-width: 90px;
+    object-fit: contain;
+}
+
 .lp-nav {
     display: flex;
     flex-direction: column;
