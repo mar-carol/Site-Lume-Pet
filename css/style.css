@@ -456,6 +456,33 @@ body {
   padding-top: 8px;
 }
 
+.pedido-status {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #fff1db;
+  color: #805000;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pedido-detalhes {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0;
+  color: #555;
+  font-size: 12px;
+}
+
+.pedido-observacao {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #fff8e8;
+  color: #79541b;
+  font-size: 12px;
+}
+
 /* CARRINHO - PAINEL */
 .carrinho-painel {
   display: none;

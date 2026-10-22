@@ -91,17 +91,25 @@ CREATE TABLE avaliacoes (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------
--- COMPRAS
+-- COMPRAS -- original, mas em acompanhamento de pedidos foi alterado!
 -- ---------------------------------------------------------
 CREATE TABLE compras (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     cartao_id INT DEFAULT NULL,
+    chave_externa CHAR(64) DEFAULT NULL,
+    origem ENUM('checkout_simulado','historico_local') NOT NULL DEFAULT 'checkout_simulado',
+    subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    frete DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    desconto DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     total DECIMAL(10,2) NOT NULL,
     status ENUM('pendente','pago','enviado','entregue','cancelado') NOT NULL DEFAULT 'pendente',
-    endereco_entrega VARCHAR(255) DEFAULT NULL,
+    metodo_pagamento VARCHAR(40) NOT NULL DEFAULT 'Não informado',
+    endereco_entrega VARCHAR(500) DEFAULT NULL,
+    pago_em DATETIME DEFAULT NULL,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_compras_chave_externa (chave_externa),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (cartao_id) REFERENCES cartoes(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
@@ -109,7 +117,8 @@ CREATE TABLE compras (
 CREATE TABLE compra_itens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     compra_id INT NOT NULL,
-    produto_id INT NOT NULL,
+    produto_id INT DEFAULT NULL,
+    nome_produto VARCHAR(150) DEFAULT NULL,
     quantidade INT NOT NULL DEFAULT 1,
     preco_unitario DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (compra_id) REFERENCES compras(id) ON DELETE CASCADE,

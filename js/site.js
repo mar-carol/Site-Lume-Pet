@@ -457,14 +457,18 @@
       return html;
     }
 
-    function comprouProduto(produtoNome) {
+    async function comprouProduto(produtoId, produtoNome) {
       if (!usuarioLogado) return false;
       try {
-        const compras = JSON.parse(localStorage.getItem('lumepet_compras_' + usuarioLogado.email) || '[]');
-        return Array.isArray(compras) && compras.includes(produtoNome);
+        const compras = await window.carregarPedidosCliente();
+        return compras.some(compra =>
+          compra.status !== 'cancelado' && compra.itens.some(item =>
+            Number(item.produto_id) === Number(produtoId) || item.nome === produtoNome
+          )
+        );
       } catch (erro) {
         console.error('Não foi possível verificar as compras salvas.', erro);
-        return false;
+        throw erro;
       }
     }
 
@@ -514,7 +518,7 @@
 
     let notaSelecionada = 0;
 
-    function montarFormAvaliacao(produtoId, produtoNome) {
+    async function montarFormAvaliacao(produtoId, produtoNome) {
       const container = document.getElementById('pd-nova-avaliacao');
       notaSelecionada = 0;
 
@@ -523,7 +527,20 @@
         return;
       }
 
-      if (!comprouProduto(produtoNome)) {
+      container.textContent = 'Verificando seu histórico de compras...';
+      try {
+        if (!await comprouProduto(produtoId, produtoNome)) {
+          container.innerHTML = '<div class="pd-aviso-compra">Você poderá avaliar este produto depois de comprá-lo.</div>';
+          return;
+        }
+      } catch (erro) {
+        container.textContent = 'Não foi possível verificar seu histórico de compras. Tente novamente mais tarde.';
+        return;
+      }
+
+      if (!produtoAtual || Number(produtoAtual.id) !== Number(produtoId)) return;
+
+      if (!usuarioLogado) {
         container.innerHTML = '<div class="pd-aviso-compra">Você poderá avaliar este produto depois de comprá-lo.</div>';
         return;
       }

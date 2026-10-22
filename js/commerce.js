@@ -89,6 +89,7 @@
 
     let freteAtual = 0;
     let cepValidado = false;
+    let cepEndereco = null;
     let cupomAtual = null; // { codigo, tipo: 'percentual' | 'fixo' | 'frete', valor, desc }
 
     const CUPONS = {
@@ -110,10 +111,6 @@
     };
     const FRETE_PADRAO = { valor: 29.90, prazo: '5 a 9 dias úteis' };
 
-    // controle do temporizador do PIX
-    const PIX_DURACAO_MS = 15 * 60 * 1000; // 15 minutos
-    let pixTimerInterval = null;
-    let pixExpiraEm = null;
     let pixCodigo = '';
 
     function abrirPagamento() {
@@ -134,6 +131,7 @@
       // reseta o estado de frete/cupom/endereço cada vez que o checkout abre
       freteAtual = 0;
       cepValidado = false;
+      cepEndereco = null;
       cupomAtual = null;
       document.getElementById('cepInput').value = '';
       document.getElementById('cepResultado').innerHTML = '';
@@ -155,7 +153,6 @@
 
     function fecharPagamento() {
       document.getElementById('pagamentoOverlay').classList.remove('aberto');
-      pararTimerPix();
     }
 
     function mascaraCep(input) {
@@ -195,6 +192,12 @@
         const info = TABELA_FRETE[dados.uf] || FRETE_PADRAO;
         freteAtual = info.valor;
         cepValidado = true;
+        cepEndereco = {
+          uf: dados.uf,
+          logradouro: dados.logradouro || '',
+          bairro: dados.bairro || '',
+          localidade: dados.localidade || ''
+        };
 
         resultado.innerHTML = `
           <span class="frete-ok">
@@ -246,7 +249,7 @@
         if (cupomAtual.tipo === 'percentual') {
           desconto = subtotal * (cupomAtual.valor / 100);
         } else if (cupomAtual.tipo === 'fixo') {
-          desconto = cupomAtual.valor;
+          desconto = Math.min(subtotal, cupomAtual.valor);
         } else if (cupomAtual.tipo === 'frete') {
           frete = 0;
         }
@@ -287,12 +290,9 @@
       const metodo = metodoEl ? metodoEl.value : 'pix';
       const extra = document.getElementById('pagamento-extra');
 
-      pararTimerPix();
-
       if (metodo === 'pix') {
         extra.innerHTML = renderPix();
         desenharPixPedido();
-        iniciarTimerPix();
       } else {
         extra.innerHTML = renderCartao();
       }
@@ -301,7 +301,7 @@
         function renderPix() {
       return `
         <div class="pix-bloco">
-          <p class="pix-aviso"> Pague em até <strong id="pixTempo">15:00</strong> ou o pedido será cancelado automaticamente.</p>
+          <p class="pix-aviso">Checkout demonstrativo: o QR Code não processa pagamentos. Ao confirmar, o pedido ficará pendente.</p>
           <div id="pixContainerPedido"></div>
         </div>
       `;
@@ -316,56 +316,19 @@
     }
 
 
-    function iniciarTimerPix() {
-      pixExpiraEm = Date.now() + PIX_DURACAO_MS;
-      atualizarTimerPix();
-      pixTimerInterval = setInterval(atualizarTimerPix, 1000);
-    }
-
-    function pararTimerPix() {
-      if (pixTimerInterval) {
-        clearInterval(pixTimerInterval);
-        pixTimerInterval = null;
-      }
-    }
-
-    function atualizarTimerPix() {
-      const tempoEl = document.getElementById('pixTempo');
-      const restante = pixExpiraEm - Date.now();
-
-      if (restante <= 0) {
-        pararTimerPix();
-        alert('⏱ O tempo para pagamento via PIX expirou. Seu pedido foi cancelado.');
-        esvaziarCarrinho();
-        fecharPagamento();
-        return;
-      }
-
-      if (tempoEl) {
-        const min = Math.floor(restante / 60000);
-        const seg = Math.floor((restante % 60000) / 1000);
-        tempoEl.textContent = `${String(min).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
-      }
-    }
-
     function renderCartao() {
       return `
         <div class="cartao-bloco">
+          <p class="pix-aviso">Checkout demonstrativo: nenhum dado de cartão é solicitado ou processado.</p>
           <div class="cartao-tipo">
             <label><input type="radio" name="tipoCartao" value="credito" checked> Crédito</label>
             <label><input type="radio" name="tipoCartao" value="debito"> Débito</label>
-          </div>
-          <input type="text" id="cartaoNome" placeholder="Nome do titular (como no cartão)">
-          <input type="text" id="cartaoNumero" placeholder="Número do cartão" maxlength="19" oninput="mascaraCartao(this)">
-          <div class="cartao-linha">
-            <input type="text" id="cartaoValidade" placeholder="Validade (MM/AA)" maxlength="5" oninput="mascaraValidade(this)">
-            <input type="text" id="cartaoCvv" placeholder="CVV" maxlength="3" oninput="this.value = this.value.replace(/\\D/g, '').slice(0, 3)">
           </div>
         </div>
       `;
     }
 
-    function confirmarPedido() {
+    async function confirmarPedido() {
       if (!usuarioLogado) {
         alert('Você precisa entrar na sua conta para finalizar a compra.');
         return;
@@ -388,66 +351,63 @@
       if (metodo === 'cartao') {
         const tipoCartaoEl = document.querySelector('input[name="tipoCartao"]:checked');
         const tipoCartao = tipoCartaoEl ? tipoCartaoEl.value : 'credito';
-        const nomeCartao = (document.getElementById('cartaoNome') || {}).value?.trim();
-        const numeroCartao = (document.getElementById('cartaoNumero') || {}).value?.trim();
-        const validade = (document.getElementById('cartaoValidade') || {}).value?.trim();
-        const cvv = (document.getElementById('cartaoCvv') || {}).value?.trim();
-
-        if (!nomeCartao || !numeroCartao || !validade || !cvv) {
-          alert('Preencha todos os dados do cartão.');
-          return;
-        }
-        if (numeroCartao.replace(/\s/g, '').length < 13) {
-          alert('Número do cartão inválido.');
-          return;
-        }
-        if (!/^\d{2}\/\d{2}$/.test(validade)) {
-          alert('Validade inválida. Use o formato MM/AA.');
-          return;
-        }
-        if (cvv.length < 3) {
-          alert('CVV inválido.');
-          return;
-        }
-
-        const nomeTipo = tipoCartao === 'credito' ? 'Cartão de Crédito' : 'Cartão de Débito';
-        alert(`✅ Pedido confirmado via ${nomeTipo}!\nObrigado pela compra!`);
-        finalizarPedido(nomeTipo);
+        await finalizarPedido(tipoCartao);
         return;
       }
 
-      // PIX
-      alert('✅ Pagamento via PIX confirmado!\nObrigado pela compra!');
-      finalizarPedido('PIX');
+      await finalizarPedido('pix');
     }
 
-    function finalizarPedido(metodoNome) {
-      if (usuarioLogado) {
-        const chave = 'lumepet_compras_' + usuarioLogado.email;
-        const compras = JSON.parse(localStorage.getItem(chave) || '[]');
-        itensCarrinho.forEach(item => {
-          if (!compras.includes(item.nome)) compras.push(item.nome);
-        });
-        localStorage.setItem(chave, JSON.stringify(compras));
+    let enviandoPedido = false;
 
-        const totais = calcularTotaisPagamento();
-        const pedido = {
-          id: Date.now().toString().slice(-6),
-          data: new Date().toLocaleDateString('pt-BR'),
-          itens: itensCarrinho.map(i => ({ nome: i.nome, qtd: i.qtd, preco: i.preco })),
-          subtotal: totais.subtotal,
-          frete: totais.frete,
-          desconto: totais.desconto,
-          total: totais.total,
-          metodo: metodoNome || 'PIX'
-        };
-        salvarPedido(usuarioLogado.email, pedido);
+    async function finalizarPedido(metodo) {
+      if (enviandoPedido) return;
+      enviandoPedido = true;
+      const botao = document.querySelector('.btn-confirmar');
+      if (botao) {
+        botao.disabled = true;
+        botao.textContent = 'Registrando pedido...';
       }
 
-      pararTimerPix();
-      esvaziarCarrinho();
-      fecharPagamento();
-      document.getElementById('numeroCasa').value = '';
-      document.getElementById('complemento').value = '';
-    }
+      try {
+        const resposta = await fetch(window.pedidosApiUrl, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': window.csrfToken || ''
+          },
+          body: JSON.stringify({
+            acao: 'finalizar',
+            itens: itensCarrinho.map(item => ({ id: item.id, qtd: item.qtd })),
+            metodo,
+            cep: document.getElementById('cepInput').value.replace(/\D/g, ''),
+            uf: cepEndereco?.uf || '',
+            logradouro: cepEndereco?.logradouro || '',
+            bairro: cepEndereco?.bairro || '',
+            localidade: cepEndereco?.localidade || '',
+            numero: document.getElementById('numeroCasa').value.trim(),
+            complemento: document.getElementById('complemento').value.trim(),
+            cupom: cupomAtual?.codigo || ''
+          })
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.erro || 'Não foi possível registrar o pedido.');
+        }
 
+        esvaziarCarrinho();
+        fecharPagamento();
+        document.getElementById('numeroCasa').value = '';
+        document.getElementById('complemento').value = '';
+        alert(`Pedido #${resultado.compra_id} registrado.\nO checkout é uma simulação; nenhum pagamento foi processado. O pedido está pendente de confirmação.`);
+      } catch (erro) {
+        alert(erro.message || 'Não foi possível registrar o pedido. Seus itens continuam no carrinho.');
+      } finally {
+        enviandoPedido = false;
+        if (botao) {
+          botao.disabled = false;
+          botao.textContent = '✅ Confirmar pedido';
+        }
+      }
+    }

@@ -14,7 +14,7 @@ cadastro de produtos, ONGs e animais.
 1. Coloque o projeto em `C:\xampp\htdocs\Site-Lume-Pet`.
 2. Inicie Apache e MySQL pelo painel do XAMPP.
 3. No phpMyAdmin, importe `database/tabelas.sql`.
-4. Se o banco já existe, selecione `lume_pet` no phpMyAdmin, abra **SQL** e execute `database/migrations/avaliacoes.sql`.
+4. Se o banco já existe, selecione `lume_pet` no phpMyAdmin, abra **SQL** e execute `database/migrations/avaliacoes.sql` e `database/migrations/acompanhamento_pedidos.sql`.
 5. Importe `database/mensagens_contato.sql` e `database/seeds/admins.sql`.
 6. Configure o banco no ambiente ou confira os valores locais em
    `config/database.php`.
@@ -63,6 +63,7 @@ responsabilidade:
 ├── js/
 │   ├── auth.js               Login, cadastro, conta e sessão visual
 │   ├── commerce.js           Carrinho, checkout e pagamentos
+│   ├── pedidos.js            Histórico compartilhado e importação de pedidos
 │   ├── site.js               Catálogo, carrosséis, contato e avaliações
 │   └── cep-perfil.js         Busca de endereço por CEP no perfil do cliente
 ├── database/                 Schema e scripts SQL
@@ -78,9 +79,9 @@ responsabilidade:
   raiz apenas encaminha para a implementação compartilhada por compatibilidade.
 - As imagens enviadas ficam em `uploads/`; os subdiretórios são criados quando
   um arquivo é enviado.
-- `js/` usa scripts clássicos carregados na ordem `auth.js`, `commerce.js`,
-  `site.js`; essa ordem mantém disponíveis as funções usadas pelos handlers
-  HTML e o estado compartilhado da sessão.
+- `js/` usa scripts clássicos carregados na ordem `pedidos.js`, `auth.js`,
+  `commerce.js`, `site.js`; essa ordem mantém disponíveis as funções usadas
+  pelos handlers HTML e o estado compartilhado da sessão.
 
 ## Observações para manutenção
 
@@ -90,7 +91,15 @@ responsabilidade:
   handlers HTML ao adicionar novas interações.
 - Avaliações ficam salvas no banco, vinculadas ao cliente e ao produto. Clientes
   podem consultá-las na conta; administradores podem removê-las no painel.
-- `api/finalizar-compra.php` ainda não deve ser usado como endpoint funcional.
+- `api/finalizar-compra.php` armazena os pedidos e oferece o histórico comum ao
+  modal e à conta. Para bancos existentes, execute
+  `database/migrations/acompanhamento_pedidos.sql` pelo phpMyAdmin antes de
+  utilizar o checkout.
+- O histórico antigo do navegador é importado uma única vez para a conta ativa.
+  Como os registros antigos não têm dados verificáveis de cobrança, eles são
+  marcados como pendentes e não como pagamentos confirmados. O checkout também
+  permanece simulado até a integração de um gateway; nenhum dado de cartão é
+  salvo.
 
 
 ## FINALIZAÇÃO DO SITE: ......

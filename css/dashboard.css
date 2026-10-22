@@ -117,6 +117,241 @@ body > ul li {
 	font-weight: 600;
 }
 
+.compras-page {
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+.compras-page-header,
+.compra-detalhe-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+}
+
+.compras-page-header {
+	margin-bottom: 24px;
+}
+
+.compras-page-header p {
+	margin-bottom: 0;
+	color: #647786;
+}
+
+.compras-vazio,
+.pedido-sync-aviso {
+	padding: 20px;
+	border: 1px solid var(--borda);
+	border-radius: 10px;
+	background: #fff;
+}
+
+.pedido-sync-aviso {
+	color: #8a4b00;
+}
+
+.compra-detalhe {
+	margin-bottom: 20px;
+	padding: clamp(18px, 3vw, 26px);
+	border: 1px solid var(--borda);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--sombra);
+}
+
+.compra-detalhe-header {
+	padding-bottom: 16px;
+	border-bottom: 1px solid var(--borda);
+}
+
+.compra-detalhe-header > div {
+	display: grid;
+	gap: 4px;
+}
+
+.compra-detalhe-header > div strong {
+	color: var(--azul);
+	font-size: 1.05rem;
+}
+
+.compra-detalhe-header > div span,
+.compra-detalhe-bloco,
+.compra-informacoes p {
+	color: #526575;
+	font-size: 0.9rem;
+}
+
+.compra-status {
+	padding: 6px 11px;
+	border-radius: 999px;
+	background: #fff1db;
+	color: #8a4b00;
+	font-size: 0.8rem;
+	font-weight: 700;
+}
+
+.status-pago,
+.status-entregue {
+	background: #e4f5e9;
+	color: #23643a;
+}
+
+.status-enviado {
+	background: #e5f1fa;
+	color: #245a81;
+}
+
+.status-cancelado {
+	background: #fce8e7;
+	color: #9b3028;
+}
+
+.pedido-observacao {
+	margin: 14px 0 0;
+	padding: 10px 12px;
+	border-radius: 7px;
+	background: #fff8e8;
+	color: #79541b;
+	font-size: 0.85rem;
+}
+
+.pedido-etapas {
+	display: flex;
+	gap: 0;
+	margin: 20px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pedido-etapas li {
+	position: relative;
+	flex: 1;
+	padding: 24px 8px 0;
+	color: #8a98a3;
+	font-size: 0.78rem;
+	text-align: center;
+}
+
+.pedido-etapas li::before {
+	position: absolute;
+	top: 7px;
+	left: 50%;
+	width: 12px;
+	height: 12px;
+	border: 2px solid #c7d2da;
+	border-radius: 50%;
+	background: #fff;
+	content: '';
+	transform: translateX(-50%);
+}
+
+.pedido-etapas li:not(:last-child)::after {
+	position: absolute;
+	top: 12px;
+	left: calc(50% + 8px);
+	width: calc(100% - 16px);
+	height: 2px;
+	background: #d7e5eb;
+	content: '';
+}
+
+.pedido-etapas li.concluida {
+	color: var(--azul);
+	font-weight: 700;
+}
+
+.pedido-etapas li.concluida::before {
+	border-color: var(--azul-claro);
+	background: var(--azul-claro);
+}
+
+.pedido-etapas li.concluida:not(:last-child)::after {
+	background: var(--azul-claro);
+}
+
+.pedido-cancelado {
+	margin: 18px 0;
+	color: #9b3028;
+	font-weight: 700;
+}
+
+.compra-detalhe-bloco {
+	padding: 15px 0;
+	border-bottom: 1px solid var(--borda);
+}
+
+.compra-detalhe h2 {
+	margin-bottom: 10px;
+	font-size: 1rem;
+}
+
+.compra-itens {
+	display: grid;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.compra-itens li,
+.compra-valores p {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.compra-itens li strong {
+	white-space: nowrap;
+}
+
+.compra-informacoes {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+	padding-top: 16px;
+}
+
+.compra-informacoes p {
+	margin-bottom: 7px;
+	overflow-wrap: anywhere;
+}
+
+.compra-valores {
+	grid-column: 1 / -1;
+	max-width: 440px;
+	width: 100%;
+	margin-left: auto;
+}
+
+.compra-total {
+	padding-top: 10px;
+	border-top: 1px solid var(--borda);
+	color: var(--azul);
+	font-size: 1rem;
+	font-weight: 700;
+}
+
+@media (max-width: 600px) {
+	.compras-page-header,
+	.compra-detalhe-header {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.compra-informacoes {
+		grid-template-columns: 1fr;
+	}
+
+	.compra-valores {
+		grid-column: auto;
+	}
+
+	.pedido-etapas li {
+		font-size: 0.66rem;
+	}
+}
+
 form {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));

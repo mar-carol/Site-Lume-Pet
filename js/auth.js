@@ -202,21 +202,66 @@
 
     // MEUS PEDIDOS / HISTÓRICO
 
-    function getPedidos(email) {
-      try {
-        return JSON.parse(localStorage.getItem('lumepet_pedidos_' + email) || '[]');
-      } catch (e) {
-        return [];
-      }
+    function escaparHtml(valor) {
+      return String(valor ?? '').replace(/[&<>"']/g, caractere => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[caractere]);
     }
 
-    function salvarPedido(email, pedido) {
-      const lista = getPedidos(email);
-      lista.unshift(pedido);
-      localStorage.setItem('lumepet_pedidos_' + email, JSON.stringify(lista));
+    function formatarDinheiro(valor) {
+      return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    function abrirPedidos(event) {
+    function rotuloStatusPedido(status) {
+      return ({
+        pendente: 'Pendente de confirmação',
+        pago: 'Pagamento confirmado',
+        enviado: 'Em transporte',
+        entregue: 'Entregue',
+        cancelado: 'Cancelado'
+      })[status] || 'Status indisponível';
+    }
+
+    function renderizarPedido(pedido) {
+      const data = pedido.criado_em
+        ? new Date(String(pedido.criado_em).replace(' ', 'T')).toLocaleString(
+          'pt-BR',
+          pedido.origem === 'historico_local' ? { dateStyle: 'short' } : {}
+        )
+        : 'Data indisponível';
+      const itens = pedido.itens.map(item =>
+        `<li>${Number(item.quantidade)}x ${escaparHtml(item.nome)} — ${formatarDinheiro(item.preco_unitario)} cada</li>`
+      ).join('');
+      const historicoLegado = pedido.origem === 'historico_local'
+        ? '<p class="pedido-observacao">Histórico importado do navegador; pagamento não confirmado.</p>'
+        : '';
+
+      return `
+        <div class="pedido-card">
+          <div class="pedido-card-topo">
+            <strong>Pedido #${Number(pedido.id)}</strong>
+            <span>${escaparHtml(data)}</span>
+          </div>
+          <p class="pedido-status">Status: ${escaparHtml(rotuloStatusPedido(pedido.status))}</p>
+          ${historicoLegado}
+          <ul>${itens}</ul>
+          <div class="pedido-detalhes">
+            <span>Pagamento: ${escaparHtml(pedido.metodo_pagamento || 'Não informado')}</span>
+            <span>Confirmação: ${pedido.pago_em ? escaparHtml(new Date(String(pedido.pago_em).replace(' ', 'T')).toLocaleString('pt-BR')) : 'Aguardando confirmação'}</span>
+            <span>Endereço: ${escaparHtml(pedido.endereco_entrega || 'Não informado no histórico antigo')}</span>
+            <span>Subtotal: ${formatarDinheiro(pedido.subtotal)}</span>
+            <span>Frete: ${formatarDinheiro(pedido.frete)}</span>
+            <span>Desconto: ${formatarDinheiro(pedido.desconto)}</span>
+          </div>
+          <div class="pedido-card-rodape">
+            <span>${pedido.pago_em ? 'Pagamento confirmado' : 'Pagamento não confirmado'}</span>
+            <strong>Total: ${formatarDinheiro(pedido.total)}</strong>
+          </div>
+        </div>
+      `;
+    }
+
+    async function abrirPedidos(event) {
       event.preventDefault();
       fecharDropdownsUsuario();
 
@@ -226,34 +271,21 @@
       }
     
 
-      const pedidos = getPedidos(usuarioLogado.email);
       const titulo = document.getElementById('pedidosTitulo');
       const lista = document.getElementById('pedidosLista');
 
       titulo.textContent = 'Meus Pedidos';
-
-    if (pedidos.length === 0) {
-      lista.innerHTML = '<p class="pedidos-vazio">Você ainda não fez nenhum pedido.</p>';
-    } else {
-      lista.innerHTML = pedidos.map(p => `
-        <div class="pedido-card">
-          <div class="pedido-card-topo">
-            <strong>Pedido #${p.id}</strong>
-            <span>${p.data}</span>
-          </div>
-          <ul>
-            ${p.itens.map(i => `<li>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</li>`).join('')}
-          </ul>
-          <div class="pedido-card-rodape">
-            <span>Pagamento: ${p.metodo}</span>
-            <strong>Total: R$ ${p.total.toFixed(2).replace('.', ',')}</strong>
-          </div>
-        </div>
-      `).join('');
+      lista.innerHTML = '<p class="pedidos-vazio">Carregando seus pedidos...</p>';
+      document.getElementById('pedidosOverlay').classList.add('aberto');
+      try {
+        const pedidos = await window.carregarPedidosCliente();
+        lista.innerHTML = pedidos.length
+          ? pedidos.map(renderizarPedido).join('')
+          : '<p class="pedidos-vazio">Você ainda não fez nenhum pedido.</p>';
+      } catch (erro) {
+        lista.innerHTML = `<p class="pedidos-vazio">${escaparHtml(erro.message)}</p>`;
+      }
     }
-
-    document.getElementById('pedidosOverlay').classList.add('aberto');
-  }
 
     function fecharPedidos() {
       document.getElementById('pedidosOverlay').classList.remove('aberto');
@@ -269,4 +301,3 @@
 
       window.location.href = new URL('conta.php', raizProjetoUrl).href;
     }
-

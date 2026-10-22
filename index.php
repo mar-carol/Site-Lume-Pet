@@ -840,12 +840,14 @@ $produtos = $stmt->fetchAll();
 
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script>window.csrfToken = <?= json_encode(gerarTokenCsrf(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <script>window.pedidosApiUrl = <?= json_encode(BASE_URL . '/api/finalizar-compra.php', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="js/pix.js"></script>
     <script src="js/senha.js?v=1"></script>
-    <script src="js/auth.js?v=20261018-organized-fix2"></script>
-    <script src="js/commerce.js?v=20261018-organized-fix2"></script>
-    <script src="js/site.js?v=20261021-db-reviews"></script>
+    <script src="js/pedidos.js?v=20261022-orders"></script>
+    <script src="js/auth.js?v=20261022-orders"></script>
+    <script src="js/commerce.js?v=20261022-orders"></script>
+    <script src="js/site.js?v=20261022-orders"></script>
 </body>
 </html>
 

@@ -12,7 +12,7 @@ if (usuarioEhAdmin()) {
 $pdo = getConexao();
 $usuarioId = (int) $_SESSION['usuario_id'];
 
-$stmt = $pdo->prepare('SELECT nome, pontos FROM usuarios WHERE id = :id LIMIT 1');
+$stmt = $pdo->prepare('SELECT nome, email, pontos FROM usuarios WHERE id = :id LIMIT 1');
 $stmt->execute(['id' => $usuarioId]);
 $usuario = $stmt->fetch();
 
@@ -121,5 +121,21 @@ $paginaAtual = 'dashboard';
         </section>
     </main>
 </div>
+<script>
+    window.usuarioSessao = <?= json_encode(
+        ['id' => $usuarioId, 'email' => $usuario['email']],
+        JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+    ) ?>;
+    window.csrfToken = <?= json_encode(gerarTokenCsrf(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    window.pedidosApiUrl = <?= json_encode(BASE_URL . '/api/finalizar-compra.php', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+</script>
+<script src="<?= BASE_URL ?>/js/pedidos.js?v=20261022-orders"></script>
+<script>
+    window.sincronizarPedidosLegados().then(importados => {
+        if (importados) window.location.reload();
+    }).catch(erro => {
+        console.error('Não foi possível sincronizar o histórico de pedidos.', erro);
+    });
+</script>
 </body>
 </html>
