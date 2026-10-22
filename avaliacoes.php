@@ -4,6 +4,8 @@ require_once __DIR__ . '/includes/functions.php';
 
 exigirAdmin();
 $pdo = getConexao();
+$produtoId = filter_input(INPUT_GET, 'produto_id', FILTER_VALIDATE_INT);
+$produtoId = $produtoId && $produtoId > 0 ? $produtoId : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!validarTokenCsrf($_POST['csrf_token'] ?? null)) {
@@ -12,57 +14,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $avaliacaoId = filter_var($_POST['avaliacao_id'] ?? null, FILTER_VALIDATE_INT);
-    $acao = $_POST['acao'] ?? '';
     if (!$avaliacaoId || $avaliacaoId < 1) {
         http_response_code(400);
         exit('Avaliação inválida.');
     }
 
-    if (in_array($acao, ['aprovar', 'rejeitar'], true)) {
-        $status = $acao === 'aprovar' ? 'aprovada' : 'rejeitada';
-        $stmt = $pdo->prepare('UPDATE avaliacoes SET status = :status WHERE id = :id');
-        $stmt->execute(['status' => $status, 'id' => $avaliacaoId]);
-    } elseif ($acao === 'excluir') {
-        $stmt = $pdo->prepare('DELETE FROM avaliacoes WHERE id = :id');
-        $stmt->execute(['id' => $avaliacaoId]);
-    } else {
-        http_response_code(400);
-        exit('Ação inválida.');
-    }
-
-    redirecionar(BASE_URL . '/avaliacoes.php');
+    $stmt = $pdo->prepare('DELETE FROM avaliacoes WHERE id = :id');
+    $stmt->execute(['id' => $avaliacaoId]);
+    redirecionar(BASE_URL . '/avaliacoes.php' . ($produtoId ? '?produto_id=' . $produtoId : ''));
 }
 
-$avaliacoes = $pdo->query(
-    'SELECT a.id, a.nota, a.comentario, a.status, a.criado_em,
-            p.nome AS produto_nome, u.nome AS usuario_nome, u.email AS usuario_email
-     FROM avaliacoes a
-     JOIN produtos p ON p.id = a.produto_id
-     JOIN usuarios u ON u.id = a.usuario_id
-     ORDER BY FIELD(a.status, "pendente", "aprovada", "rejeitada"), a.criado_em DESC'
-)->fetchAll();
+$sql = 'SELECT a.id, a.nota, a.comentario, a.criado_em,
+               p.id AS produto_id, p.nome AS produto_nome,
+               u.nome AS usuario_nome, u.email AS usuario_email
+        FROM avaliacoes a
+        JOIN produtos p ON p.id = a.produto_id
+        JOIN usuarios u ON u.id = a.usuario_id';
+if ($produtoId) {
+    $sql .= ' WHERE a.produto_id = :produto_id';
+}
+$sql .= ' ORDER BY a.criado_em DESC';
+$stmt = $pdo->prepare($sql);
+if ($produtoId) {
+    $stmt->bindValue('produto_id', $produtoId, PDO::PARAM_INT);
+}
+$stmt->execute();
+$avaliacoes = $stmt->fetchAll();
 
-$tituloPagina = 'Gerenciar avaliações';
+$totalAvaliacoes = (int) $pdo->query('SELECT COUNT(*) FROM avaliacoes')->fetchColumn();
+$tituloPagina = 'Avaliações';
 $paginaAtual = 'avaliacoes';
 require __DIR__ . '/includes/admin_header.php';
 ?>
 
 <section class="lp-panel">
-    <h2 style="margin-top:0;">Avaliações recebidas</h2>
-    <p>Aprove ou rejeite os comentários antes de exibi-los na loja.</p>
+    <h2 style="margin-top:0;">Avaliações recebidas: <?= $totalAvaliacoes ?></h2>
+    <p>As avaliações ficam visíveis imediatamente na loja. Remova apenas as que não devem permanecer publicadas.</p>
+
+    <?php if ($produtoId): ?>
+        <p><a href="<?= BASE_URL ?>/avaliacoes.php">&larr; Ver avaliações de todos os produtos</a></p>
+    <?php endif; ?>
 
     <?php if (!$avaliacoes): ?>
-        <p>Nenhuma avaliação recebida até o momento.</p>
+        <p>Nenhuma avaliação encontrada.</p>
     <?php else: ?>
         <table>
             <thead>
                 <tr>
                     <th>Produto</th>
                     <th>Cliente</th>
-                    <th>Avaliação</th>
+                    <th>Nota e comentário</th>
                     <th>Data</th>
-                    <th>Status</th>
-                    <th>Ações</th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,29 +81,12 @@ require __DIR__ . '/includes/admin_header.php';
                             <?= nl2br(limpar($avaliacao['comentario'])) ?>
                         </td>
                         <td><?= (new DateTime($avaliacao['criado_em']))->format('d/m/Y H:i') ?></td>
-                        <td><span class="lp-badge lp-badge-<?= limpar($avaliacao['status']) ?>"><?= limpar(ucfirst($avaliacao['status'])) ?></span></td>
-                        <td class="avaliacao-acoes">
-                            <?php if ($avaliacao['status'] !== 'aprovada'): ?>
-                                <form method="post" action="<?= BASE_URL ?>/avaliacoes.php">
-                                    <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
-                                    <input type="hidden" name="avaliacao_id" value="<?= (int) $avaliacao['id'] ?>">
-                                    <input type="hidden" name="acao" value="aprovar">
-                                    <button type="submit">Aprovar</button>
-                                </form>
-                            <?php endif; ?>
-                            <?php if ($avaliacao['status'] !== 'rejeitada'): ?>
-                                <form method="post" action="<?= BASE_URL ?>/avaliacoes.php">
-                                    <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
-                                    <input type="hidden" name="avaliacao_id" value="<?= (int) $avaliacao['id'] ?>">
-                                    <input type="hidden" name="acao" value="rejeitar">
-                                    <button type="submit" class="lp-cancel">Rejeitar</button>
-                                </form>
-                            <?php endif; ?>
-                            <form method="post" action="<?= BASE_URL ?>/avaliacoes.php" onsubmit="return confirm('Excluir esta avaliação permanentemente?')">
+                        <td>
+                            <form method="post" action="<?= BASE_URL ?>/avaliacoes.php<?= $produtoId ? '?produto_id=' . $produtoId : '' ?>"
+                                  onsubmit="return confirm('Remover esta avaliação da loja?')">
                                 <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
                                 <input type="hidden" name="avaliacao_id" value="<?= (int) $avaliacao['id'] ?>">
-                                <input type="hidden" name="acao" value="excluir">
-                                <button type="submit" class="lp-cancel">Excluir</button>
+                                <button type="submit" class="avaliacao-remover">Remover</button>
                             </form>
                         </td>
                     </tr>

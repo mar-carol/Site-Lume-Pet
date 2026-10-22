@@ -845,7 +845,7 @@ $produtos = $stmt->fetchAll();
     <script src="js/senha.js?v=1"></script>
     <script src="js/auth.js?v=20261018-organized-fix2"></script>
     <script src="js/commerce.js?v=20261018-organized-fix2"></script>
-    <script src="js/site.js?v=20261021-ui"></script>
+    <script src="js/site.js?v=20261021-db-reviews"></script>
 </body>
 </html>
 

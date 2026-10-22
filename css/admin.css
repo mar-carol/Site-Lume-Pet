@@ -331,6 +331,18 @@ tr:last-child td {
     border: 1px solid #f5c6d1;
 }
 
+.avaliacao-remover {
+    padding: 8px 12px;
+    background: #fde7ec;
+    color: var(--danger);
+    font-size: 12px;
+}
+
+.avaliacao-remover:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
 @media (max-width: 800px) {
     .lp-app {
         display: block;

@@ -11,12 +11,7 @@ function responderAvaliacao(array $dados, int $status = 200): void
     exit;
 }
 
-try {
-    $pdo = getConexao();
-} catch (PDOException $e) {
-    error_log('Falha ao conectar para avaliações: ' . $e->getMessage());
-    responderAvaliacao(['sucesso' => false, 'erro' => 'Não foi possível carregar as avaliações no momento.'], 500);
-}
+$pdo = getConexao();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $produtoId = filter_input(INPUT_GET, 'produto_id', FILTER_VALIDATE_INT);
@@ -24,20 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         responderAvaliacao(['sucesso' => false, 'erro' => 'Produto inválido.'], 400);
     }
 
-    try {
-        $stmt = $pdo->prepare(
-            'SELECT a.id, a.nota, a.comentario, a.criado_em, u.nome AS autor
-             FROM avaliacoes a
-             JOIN usuarios u ON u.id = a.usuario_id
-             WHERE a.produto_id = :produto_id AND a.status = "aprovada"
-             ORDER BY a.criado_em DESC'
-        );
-        $stmt->execute(['produto_id' => $produtoId]);
-        responderAvaliacao(['sucesso' => true, 'avaliacoes' => $stmt->fetchAll()]);
-    } catch (PDOException $e) {
-        error_log('Falha ao carregar avaliações: ' . $e->getMessage());
-        responderAvaliacao(['sucesso' => false, 'erro' => 'Não foi possível carregar as avaliações no momento.'], 500);
-    }
+    $stmt = $pdo->prepare(
+        'SELECT a.nota, a.comentario, a.criado_em, u.nome AS autor
+         FROM avaliacoes a
+         JOIN usuarios u ON u.id = a.usuario_id
+         WHERE a.produto_id = :produto_id
+         ORDER BY a.criado_em DESC'
+    );
+    $stmt->execute(['produto_id' => $produtoId]);
+    responderAvaliacao(['sucesso' => true, 'avaliacoes' => $stmt->fetchAll()]);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -45,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     responderAvaliacao(['sucesso' => false, 'erro' => 'Método não permitido.'], 405);
 }
 
-if (!usuarioEstaLogado()) {
-    responderAvaliacao(['sucesso' => false, 'erro' => 'Entre na sua conta para avaliar.'], 401);
+if (!usuarioEstaLogado() || usuarioEhAdmin()) {
+    responderAvaliacao(['sucesso' => false, 'erro' => 'Entre em uma conta de cliente para avaliar.'], 401);
 }
 
 if (!validarTokenCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
@@ -82,8 +72,12 @@ if (!$stmt->fetchColumn()) {
 
 try {
     $stmt = $pdo->prepare(
-        'INSERT INTO avaliacoes (produto_id, usuario_id, nota, comentario, status)
-         VALUES (:produto_id, :usuario_id, :nota, :comentario, "pendente")'
+        'INSERT INTO avaliacoes (produto_id, usuario_id, nota, comentario)
+         VALUES (:produto_id, :usuario_id, :nota, :comentario)
+         ON DUPLICATE KEY UPDATE
+            nota = VALUES(nota),
+            comentario = VALUES(comentario),
+            atualizado_em = CURRENT_TIMESTAMP'
     );
     $stmt->execute([
         'produto_id' => $produtoId,
@@ -92,14 +86,8 @@ try {
         'comentario' => $comentario,
     ]);
 } catch (PDOException $e) {
-    if ($e->getCode() === '23000') {
-        responderAvaliacao(['sucesso' => false, 'erro' => 'Você já enviou uma avaliação para este produto.'], 409);
-    }
     error_log('Falha ao salvar avaliação: ' . $e->getMessage());
     responderAvaliacao(['sucesso' => false, 'erro' => 'Não foi possível salvar sua avaliação. Tente novamente.'], 500);
 }
 
-responderAvaliacao([
-    'sucesso' => true,
-    'mensagem' => 'Avaliação enviada para aprovação.',
-], 201);
+responderAvaliacao(['sucesso' => true]);

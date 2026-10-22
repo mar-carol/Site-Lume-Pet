@@ -26,6 +26,7 @@ foreach ([
     'cartoes' => 'SELECT COUNT(*) FROM cartoes WHERE usuario_id = :id',
     'compras' => 'SELECT COUNT(*) FROM compras WHERE usuario_id = :id',
     'doacoes' => 'SELECT COUNT(*) FROM doacoes WHERE usuario_id = :id',
+    'avaliacoes' => 'SELECT COUNT(*) FROM avaliacoes WHERE usuario_id = :id',
 ] as $chave => $sql) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $usuarioId]);
@@ -45,7 +46,7 @@ $paginaAtual = 'dashboard';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/admin.css?v=2">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/usuario-dashboard.css?v=1">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/usuario-dashboard.css?v=2">
 </head>
 <body>
 <div class="lp-app">
@@ -60,6 +61,7 @@ $paginaAtual = 'dashboard';
                 <li><a href="<?= BASE_URL ?>/perfil.php">Meu perfil</a></li>
                 <li><a href="<?= BASE_URL ?>/compras.php">Minhas compras</a></li>
                 <li><a href="<?= BASE_URL ?>/doacoes.php">Minhas doações</a></li>
+                <li><a href="<?= BASE_URL ?>/usuario/avaliacoes.php">Minhas avaliações</a></li>
                 <li><a href="<?= BASE_URL ?>/pontos.php">Meus pontos</a></li>
                 <li><a href="<?= BASE_URL ?>/cartoes.php">Meus cartões</a></li>
                 <li class="lp-nav-sair"><a href="<?= BASE_URL ?>/includes/logout.php">Sair</a></li>
@@ -100,6 +102,11 @@ $paginaAtual = 'dashboard';
                 <strong><?= $contadores['doacoes'] ?></strong>
                 <span>Ver minhas doações</span>
             </a>
+            <a class="user-stat" href="<?= BASE_URL ?>/usuario/avaliacoes.php">
+                <span class="user-stat-label">Avaliações</span>
+                <strong><?= $contadores['avaliacoes'] ?></strong>
+                <span>Rever avaliações enviadas</span>
+            </a>
         </section>
 
         <section class="lp-panel user-account-panel">
@@ -108,6 +115,7 @@ $paginaAtual = 'dashboard';
                 <a href="<?= BASE_URL ?>/perfil.php">Atualizar meus dados</a>
                 <a href="<?= BASE_URL ?>/pontos.php">Consultar meus pontos</a>
                 <a href="<?= BASE_URL ?>/cartoes.php">Ver meus cartões</a>
+                <a href="<?= BASE_URL ?>/usuario/avaliacoes.php">Rever minhas avaliações</a>
                 <a href="<?= BASE_URL ?>/index.php">Voltar para a loja</a>
             </div>
         </section>

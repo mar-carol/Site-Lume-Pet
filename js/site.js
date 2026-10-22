@@ -408,7 +408,7 @@
 
       document.getElementById('produtoPagina').classList.add('aberta');
       renderAvaliacoesSecao(produtoAtual.id);
-      montarFormAvaliacao(produtoAtual.id);
+      montarFormAvaliacao(produtoAtual.id, nome);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -457,10 +457,21 @@
       return html;
     }
 
+    function comprouProduto(produtoNome) {
+      if (!usuarioLogado) return false;
+      try {
+        const compras = JSON.parse(localStorage.getItem('lumepet_compras_' + usuarioLogado.email) || '[]');
+        return Array.isArray(compras) && compras.includes(produtoNome);
+      } catch (erro) {
+        console.error('Não foi possível verificar as compras salvas.', erro);
+        return false;
+      }
+    }
+
     async function renderAvaliacoesSecao(produtoId) {
       const media = document.getElementById('pd-media');
       const lista = document.getElementById('pd-lista-avaliacoes');
-      media.textContent = '';
+      media.replaceChildren();
       lista.textContent = 'Carregando avaliações...';
 
       try {
@@ -474,12 +485,11 @@
 
         const avaliacoes = resultado.avaliacoes;
         if (avaliacoes.length === 0) {
-          media.textContent = '';
-          lista.innerHTML = '<p class="pd-sem-avaliacoes">Este produto ainda não tem avaliações aprovadas.</p>';
+          lista.innerHTML = '<p class="pd-sem-avaliacoes">Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>';
           return;
         }
 
-        const somaNotas = avaliacoes.reduce((s, avaliacao) => s + Number(avaliacao.nota), 0);
+        const somaNotas = avaliacoes.reduce((soma, avaliacao) => soma + Number(avaliacao.nota), 0);
         const mediaNota = (somaNotas / avaliacoes.length).toFixed(1);
         media.innerHTML = `${renderEstrelas(Math.round(mediaNota))} <strong>${mediaNota}</strong> (${avaliacoes.length} avaliação${avaliacoes.length > 1 ? 'ões' : ''})`;
 
@@ -497,19 +507,24 @@
           lista.appendChild(item);
         });
       } catch (erro) {
-        media.innerHTML = '';
+        media.replaceChildren();
         lista.textContent = erro.message;
       }
     }
 
     let notaSelecionada = 0;
 
-    function montarFormAvaliacao(produtoId) {
+    function montarFormAvaliacao(produtoId, produtoNome) {
       const container = document.getElementById('pd-nova-avaliacao');
       notaSelecionada = 0;
 
       if (!usuarioLogado) {
-        container.innerHTML = '<div class="pd-aviso-compra">Entre na sua conta para enviar uma avaliação.</div>';
+        container.innerHTML = '<div class="pd-aviso-compra">Entre na sua conta e compre este produto para deixar sua avaliação.</div>';
+        return;
+      }
+
+      if (!comprouProduto(produtoNome)) {
+        container.innerHTML = '<div class="pd-aviso-compra">Você poderá avaliar este produto depois de comprá-lo.</div>';
         return;
       }
 
@@ -524,10 +539,11 @@
             <span data-valor="5">★</span>
           </div>
           <textarea id="textoAvaliacao" placeholder="Conte como foi sua experiência com o produto..."></textarea>
-          <button onclick="enviarAvaliacao(${Number(produtoId)})">Enviar avaliação</button>
+          <button type="button">Enviar avaliação</button>
         </div>
       `;
 
+      container.querySelector('button').addEventListener('click', () => enviarAvaliacao(produtoId));
       document.querySelectorAll('#estrelasInput span').forEach(estrela => {
         estrela.addEventListener('click', function () {
           notaSelecionada = parseInt(this.dataset.valor);
@@ -554,8 +570,6 @@
         return;
       }
 
-      const botao = document.querySelector('.pd-nova-avaliacao-form button');
-      botao.disabled = true;
       try {
         const resposta = await fetch('api/avaliacao.php', {
           method: 'POST',
@@ -568,14 +582,16 @@
         });
         const resultado = await resposta.json();
         if (!resposta.ok || !resultado.sucesso) {
-          throw new Error(resultado.erro || 'Não foi possível enviar sua avaliação.');
+          throw new Error(resultado.erro || 'Não foi possível enviar a avaliação.');
         }
 
-        document.getElementById('pd-nova-avaliacao').innerHTML =
-          '<p class="pd-aviso-compra">Avaliação enviada! Ela ficará visível após a aprovação da equipe.</p>';
+        document.getElementById('textoAvaliacao').value = '';
+        notaSelecionada = 0;
+        atualizarEstrelasInput();
+        await renderAvaliacoesSecao(produtoId);
+        alert('Avaliação salva na sua conta. Obrigado pelo feedback!');
       } catch (erro) {
         alert(erro.message);
-        botao.disabled = false;
       }
     }
 

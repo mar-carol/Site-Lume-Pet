@@ -14,7 +14,7 @@ cadastro de produtos, ONGs e animais.
 1. Coloque o projeto em `C:\xampp\htdocs\Site-Lume-Pet`.
 2. Inicie Apache e MySQL pelo painel do XAMPP.
 3. No phpMyAdmin, importe `database/tabelas.sql`.
-4. Em bancos já existentes, importe `database/migrations/avaliacoes.sql` para criar a tabela de avaliações.
+4. Se o banco já existe, selecione `lume_pet` no phpMyAdmin, abra **SQL** e execute `database/migrations/avaliacoes.sql`.
 5. Importe `database/mensagens_contato.sql` e `database/seeds/admins.sql`.
 6. Configure o banco no ambiente ou confira os valores locais em
    `config/database.php`.
@@ -48,11 +48,12 @@ responsabilidade:
 ├── pontos.php                Saldo e histórico de pontos
 ├── cartoes.php               Cartões tokenizados
 ├── produtos.php              Gerenciamento administrativo de produtos
-├── avaliacoes.php            Moderação administrativa de avaliações
+├── avaliacoes.php            Consulta e remoção administrativa de avaliações
 ├── ongs.php                  Gerenciamento administrativo de ONGs
 ├── animais.php               Gerenciamento administrativo de animais
 ├── usuario/
-│   └── dashboard.php         Resumo da conta do cliente
+│   ├── dashboard.php         Resumo da conta do cliente
+│   └── avaliacoes.php        Histórico de avaliações do cliente
 ├── api/                      Endpoints JSON usados pelo navegador
 ├── config/                   Configuração de banco e URL base
 ├── includes/                 Autenticação, utilitários e layouts PHP
@@ -87,8 +88,8 @@ responsabilidade:
   `/lume_pet`, nomes de pastas em maiúsculas ou caminhos relativos à URL atual.
 - Mantenha a ordem de carregamento dos scripts e as funções chamadas pelos
   handlers HTML ao adicionar novas interações.
-- Avaliações de clientes ficam pendentes até a aprovação em `avaliacoes.php`;
-  somente as aprovadas aparecem na página pública do produto.
+- Avaliações ficam salvas no banco, vinculadas ao cliente e ao produto. Clientes
+  podem consultá-las na conta; administradores podem removê-las no painel.
 - `api/finalizar-compra.php` ainda não deve ser usado como endpoint funcional.
 
 

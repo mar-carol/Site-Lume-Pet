@@ -100,7 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$produtos = $pdo->query('SELECT * FROM produtos ORDER BY criado_em DESC')->fetchAll();
+$produtos = $pdo->query(
+    'SELECT p.*,
+            (SELECT COUNT(*) FROM avaliacoes a WHERE a.produto_id = p.id) AS total_avaliacoes
+     FROM produtos p
+     ORDER BY p.criado_em DESC'
+)->fetchAll();
 
 $tituloPagina = 'Produtos';
 $paginaAtual  = 'produtos';
@@ -169,7 +174,7 @@ require __DIR__ . '/includes/admin_header.php';
 
 <h2>Produtos cadastrados</h2>
 <table>
-<tr><th>ID</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th></tr>
+<tr><th>ID</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Avaliações</th><th>Status</th><th>Ações</th></tr>
 <?php foreach ($produtos as $p): ?>
 <tr>
     <td>#<?= $p['id'] ?></td>
@@ -177,6 +182,7 @@ require __DIR__ . '/includes/admin_header.php';
     <td><?= limpar($p['categoria']) ?></td>
     <td>R$ <?= number_format($p['preco'], 2, ',', '.') ?></td>
     <td><?= (int) $p['estoque'] ?></td>
+    <td><a href="<?= BASE_URL ?>/avaliacoes.php?produto_id=<?= (int) $p['id'] ?>"><?= (int) $p['total_avaliacoes'] ?> ver</a></td>
     <td><span class="lp-badge lp-badge-<?= limpar($p['status']) ?>"><?= limpar($p['status']) ?></span></td>
     <td>
         <a href="?acao=editar&id=<?= $p['id'] ?>">Editar</a> ·

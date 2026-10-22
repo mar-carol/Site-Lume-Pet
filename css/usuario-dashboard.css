@@ -76,6 +76,49 @@
     background: var(--surface);
 }
 
+.user-reviews {
+    display: grid;
+    gap: 14px;
+}
+
+.user-review {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+}
+
+.user-review-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.user-review-header h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.user-review-rating {
+    flex: 0 0 auto;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.user-review p {
+    margin: 0 0 10px;
+    white-space: normal;
+}
+
+.user-review time {
+    color: var(--muted);
+    font-size: 12px;
+}
+
 @media (max-width: 600px) {
     .user-stats,
     .user-shortcuts {

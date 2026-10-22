@@ -7,6 +7,7 @@ $pdo = getConexao();
 
 $totalUsuarios = $pdo->query('SELECT COUNT(*) FROM usuarios WHERE tipo="cliente"')->fetchColumn();
 $totalProdutos = $pdo->query('SELECT COUNT(*) FROM produtos')->fetchColumn();
+$totalAvaliacoes = $pdo->query('SELECT COUNT(*) FROM avaliacoes')->fetchColumn();
 $totalOngs     = $pdo->query('SELECT COUNT(*) FROM ongs WHERE status="parceira"')->fetchColumn();
 $totalAnimais  = $pdo->query('SELECT COUNT(*) FROM animais WHERE status="disponivel"')->fetchColumn();
 $totalAdotados = $pdo->query('SELECT COUNT(*) FROM animais WHERE status="adotado"')->fetchColumn();
@@ -27,6 +28,7 @@ $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE s
 <nav>
 	<a href="<?= BASE_URL ?>/includes/index.php">Dashboard</a> |
 	<a href="<?= BASE_URL ?>/produtos.php">Produtos</a> |
+	<a href="<?= BASE_URL ?>/avaliacoes.php">Avaliações</a> |
 	<a href="<?= BASE_URL ?>/ongs.php">ONGs</a> |
 	<a href="<?= BASE_URL ?>/animais.php">Animais</a> |
 	<a href="<?= BASE_URL ?>/includes/logout.php">Sair</a>
@@ -35,6 +37,7 @@ $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE s
 <ul>
 	<li>Usuários cadastrados: <?= (int) $totalUsuarios ?></li>
 	<li>Produtos cadastrados: <?= (int) $totalProdutos ?></li>
+	<li><a href="<?= BASE_URL ?>/avaliacoes.php">Avaliações recebidas: <?= (int) $totalAvaliacoes ?> (ver e remover)</a></li>
 	<li>ONGs parceiras: <?= (int) $totalOngs ?></li>
 	<li>Animais disponíveis: <?= (int) $totalAnimais ?></li>
 	<li>Animais já adotados: <?= (int) $totalAdotados ?></li>
