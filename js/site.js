@@ -435,7 +435,9 @@
       }
     }
 
-    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar) ARRUMAR ISSO QUE NAO TA ABRINDO 
+    // abre a página do produto ao clicar no card (menos quando o clique for no botão de adicionar) // - TÁ ABRINDO SIM, MAS PRECISA DO BANCO DE DADOS FUNCIONANDO
+
+    
     const lojaGrade = document.getElementById('lojaGrade');
     if (lojaGrade) {
       lojaGrade.addEventListener('click', function (e) {
