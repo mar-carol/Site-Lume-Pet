@@ -13,7 +13,7 @@
 <body>
 
     <main class="recuperar-senha">
-        <h1>R</h1>
+        <h1>Em processo</h1>
     </main>
 
 </body>
