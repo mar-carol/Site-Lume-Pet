@@ -45,9 +45,7 @@ sem duplicar contas pelo e-mail.
 ## Estrutura atual
 
 As páginas e áreas privadas estão agrupadas por responsabilidade. Os links
-internos usam `BASE_URL` e refletem esta estrutura. Os endereços antigos na
-raiz continuam disponíveis como compatibilidade e carregam a página movida
-para seu diretório atual:
+internos usam `BASE_URL` e refletem esta estrutura:
 
 ```text
 /
@@ -92,7 +90,7 @@ para seu diretório atual:
   `usuario/dashboard.php` e administradores para `includes/index.php`.
 - `includes/auth.php` concentra a autenticação e as verificações de acesso.
 - `includes/functions.php` concentra as funções comuns. `functions.php` na
-  raiz apenas encaminha para a implementação compartilhada por compatibilidade.
+  raiz apenas encaminha para a implementação compartilhada.
 - As imagens enviadas ficam em `uploads/`; os subdiretórios são criados quando
   um arquivo é enviado.
 - `js/` usa scripts clássicos carregados na ordem `pedidos.js`, `auth.js`,
