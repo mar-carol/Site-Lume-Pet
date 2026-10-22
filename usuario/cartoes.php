@@ -3,11 +3,11 @@
  * Cadastro de cartão do usuário.
  *
  * IMPORTANTE (segurança/PCI-DSS): mesmo com a nova aparência de "cartão
- * de banco", o número completo e o CVC digitados abaixo NUNCA são
+ * de banco", o número completo e o CVV digitados abaixo NUNCA são
  * enviados ao servidor PHP nem gravados no banco. O JavaScript desta
  * página só usa esses valores para desenhar o cartão animado e para
  * detectar a bandeira (Visa/Mastercard/Amex) — e então monta um payload
- * seguro (token + 4 últimos dígitos) que é o único enviado ao formulário.
+ * seguro (token + 3 últimos dígitos do número do cartão) que é o único enviado ao formulário.
  * Em produção, troque a função gerarTokenLocalDeDemonstracao() no script
  * abaixo pela chamada real ao SDK do seu gateway (Stripe.js, Pagar.me,
  * Mercado Pago etc.), que devolve o token de verdade.
@@ -36,26 +36,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'salvar'
     $gateway      = trim($_POST['gateway'] ?? '');
     $gatewayToken = trim($_POST['gateway_token'] ?? '');
     $bandeira     = trim($_POST['bandeira'] ?? '');
-    $ultimos4     = trim($_POST['ultimos_digitos'] ?? '');
+    $ultimosDigitos = trim($_POST['ultimos_digitos'] ?? '');
     $nomeTitular  = trim($_POST['nome_titular'] ?? '');
     $mes          = (int) ($_POST['validade_mes'] ?? 0);
     $ano          = (int) ($_POST['validade_ano'] ?? 0);
 
     if ($gatewayToken === '') $erros[] = 'Não foi possível gerar o token do cartão. Confira os dados e tente novamente.';
-    if (!preg_match('/^\d{4}$/', $ultimos4)) $erros[] = 'Número de cartão inválido.';
+    if (!preg_match('/^\d{3}$/', $ultimosDigitos)) $erros[] = 'Número de cartão inválido.';
     if ($nomeTitular === '') $erros[] = 'Informe o nome do titular.';
     if ($mes < 1 || $mes > 12) $erros[] = 'Mês de validade inválido.';
     if ($ano < (int) date('Y')) $erros[] = 'Ano de validade inválido.';
 
     if (!$erros) {
         $stmt = $pdo->prepare('INSERT INTO cartoes (usuario_id, gateway, gateway_token, bandeira, ultimos_digitos, nome_titular, validade_mes, validade_ano)
-                                VALUES (:usuario_id, :gateway, :token, :bandeira, :ultimos4, :titular, :mes, :ano)');
+                                VALUES (:usuario_id, :gateway, :token, :bandeira, :ultimos_digitos, :titular, :mes, :ano)');
         $stmt->execute([
             'usuario_id' => $usuarioId,
             'gateway'    => $gateway ?: 'demo',
             'token'      => $gatewayToken,
             'bandeira'   => $bandeira ?: 'desconhecida',
-            'ultimos4'   => $ultimos4,
+            'ultimos_digitos' => $ultimosDigitos,
             'titular'    => $nomeTitular,
             'mes'        => $mes,
             'ano'        => $ano,
@@ -162,7 +162,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="lp-input-icon">
                     <input type="text" id="numeroCartao" inputmode="numeric" autocomplete="off"
                            placeholder="1234 5678 9012 3456" maxlength="19" required>
-                    <span class="lp-icon">💳</span>
+                    <span class="lp-icon"></span>
                 </div>
 
                 <label>Nome do titular</label>
@@ -179,10 +179,10 @@ require_once __DIR__ . '/../includes/header.php';
                         <input type="text" id="ccAno" inputmode="numeric" placeholder="2028" maxlength="4" required>
                     </div>
                     <div>
-                        <label>CVC</label>
+                        <label for="ccCvv">CVV</label>
                         <div class="lp-input-icon">
-                            <input type="text" id="ccCvc" inputmode="numeric" placeholder="123" maxlength="4" required>
-                            <span class="lp-icon">🔒</span>
+                            <input type="text" id="ccCvv" inputmode="numeric" placeholder="123" maxlength="3" pattern="[0-9]{3}" autocomplete="off" required>
+                            <span class="lp-icon"></span>
                         </div>
                     </div>
                 </div>
@@ -193,8 +193,8 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             </form>
             <p class="lp-link-muted" style="margin-top:14px;">
-                O número completo e o CVC nunca são enviados ao nosso servidor, apenas ao gateway de pagamento. Gravamos no banco
-                apenas um token seguro do gateway de pagamento e os 4 últimos dígitos.
+                O número completo e o CVV nunca são enviados ao nosso servidor, apenas ao gateway de pagamento. Gravamos no banco
+                apenas um token seguro do gateway de pagamento e os 3 últimos dígitos.
             </p>
         </div>
     </div>
@@ -206,7 +206,7 @@ require_once __DIR__ . '/../includes/header.php';
     const nomeInput      = document.getElementById('nomeTitular');
     const mesInput       = document.getElementById('ccMes');
     const anoInput       = document.getElementById('ccAno');
-    const cvcInput       = document.getElementById('ccCvc');
+    const cvvInput       = document.getElementById('ccCvv');
 
     const ccNumero    = document.getElementById('ccNumero');
     const ccNome      = document.getElementById('ccNome');
@@ -241,8 +241,8 @@ require_once __DIR__ . '/../includes/header.php';
         this.value = this.value.replace(/\D/g, '').slice(0, 4);
         atualizarValidade();
     });
-    cvcInput.addEventListener('input', function () {
-        this.value = this.value.replace(/\D/g, '').slice(0, 4);
+    cvvInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 3);
     });
 
     function detectarBandeira(digits) {
@@ -256,12 +256,12 @@ require_once __DIR__ . '/../includes/header.php';
     /**
      * EM PRODUÇÃO: substitua esta função pela chamada real ao SDK do seu
      * gateway de pagamento (ex.: Stripe.js `stripe.createToken(cardElement)`),
-     * que envia o número/CVC direto para o gateway e devolve um token seguro.
+     * que envia o número/CVV direto para o gateway e devolve um token seguro.
      * Aqui geramos apenas um token de demonstração local, só para o CRUD
      * funcionar sem uma conta de gateway configurada.
      */
-    function gerarTokenLocalDeDemonstracao(ultimos4) {
-        return 'demo_tok_' + ultimos4 + '_' + Date.now();
+    function gerarTokenLocalDeDemonstracao(ultimos3) {
+        return 'demo_tok_' + ultimos3 + '_' + Date.now();
     }
 
     document.getElementById('formCartao').addEventListener('submit', function (e) {
@@ -272,25 +272,25 @@ require_once __DIR__ . '/../includes/header.php';
             alert('Número de cartão inválido.');
             return;
         }
-        if (!cvcInput.value || cvcInput.value.length < 3) {
+        if (!/^\d{3}$/.test(cvvInput.value)) {
             e.preventDefault();
-            alert('CVC inválido.');
+            alert('CVV inválido. Informe os 3 dígitos.');
             return;
         }
 
-        const ultimos4 = digits.slice(-4);
+        const ultimos3 = digits.slice(-3);
         const bandeira = detectarBandeira(digits);
 
-        // Só isto é enviado ao servidor — nunca o número completo nem o CVC.
-        document.getElementById('gateway_token').value      = gerarTokenLocalDeDemonstracao(ultimos4);
+        // Só isto é enviado ao servidor — nunca o número completo nem o CVV.
+        document.getElementById('gateway_token').value      = gerarTokenLocalDeDemonstracao(ultimos3);
         document.getElementById('bandeira_hidden').value     = bandeira;
-        document.getElementById('ultimos_digitos_hidden').value = ultimos4;
+        document.getElementById('ultimos_digitos_hidden').value = ultimos3;
         document.getElementById('validade_mes_hidden').value = mesInput.value.padStart(2, '0');
         document.getElementById('validade_ano_hidden').value = anoInput.value.length === 2 ? '20' + anoInput.value : anoInput.value;
 
-        // Impede que o número/CVC "brutos" sejam enviados no POST.
+        // Impede que o número/CVV "brutos" sejam enviados no POST.
         numeroInput.removeAttribute('name');
-        cvcInput.removeAttribute('name');
+        cvvInput.removeAttribute('name');
     });
 })();
 </script>

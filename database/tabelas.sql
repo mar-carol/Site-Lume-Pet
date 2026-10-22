@@ -25,7 +25,7 @@ CREATE TABLE usuarios (
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------------------------------------------------------------
--- CARTÕES (TOKENIZADOS — nunca número completo nem CVV) - foi feito um alter table pq o char ultimos digitos estava aceitando 4 e agora está aceitando somente os últimos 3 dígitos do cartão cvv 
+-- Cartões tokenizados: o CVV não é armazenado; ultimos_digitos guarda os 3 últimos dígitos do número do cartão.
 -- ------------------------------------------------------------------------------------------------------------
 CREATE TABLE cartoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
