@@ -3489,3 +3489,40 @@ body {
 #pixContainerPedido small {
   text-align: center;
 }
+
+/*POLÍTICA DE PRIVACIDADE E TERMOS*/
+
+.pagina-politicas { background: #F7FAFC; }
+
+.pagina-politicas .hero-politicas { background: #2d8bba; color: #fff; text-align: center; padding: 56px 20px 60px; }
+.pagina-politicas .hero-politicas h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); margin-bottom: 8px; }
+.pagina-politicas .hero-politicas p { max-width: 640px; margin: 0 auto; color: #FFFEEE; }
+
+.pagina-politicas .politicas-layout { max-width: 1000px; margin: -28px auto 60px; padding: 0 20px; display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start; }
+
+.pagina-politicas .indice { position: sticky; top: 104px; background: #fff; border-radius: 14px; padding: 22px; box-shadow: 0 4px 18px rgba(56, 90, 129, .10); }
+.pagina-politicas .indice h2 { font-size: 16px; color: #385A81; margin-bottom: 10px; }
+.pagina-politicas .indice ol { list-style: none; display: grid; gap: 6px; font-size: 14px; }
+.pagina-politicas .indice a { text-decoration: none; color: #555; }
+.pagina-politicas .indice a:hover { color: #FA8000; }
+
+.pagina-politicas .conteudo { background: #fff; border-radius: 14px; padding: 40px; box-shadow: 0 4px 18px rgba(56, 90, 129, .10); }
+.pagina-politicas .atualizado { font-size: 13px; color: #888; margin-bottom: 24px; }
+.pagina-politicas .aviso { background: #FFFEEE; border-left: 5px solid #FA8000; border-radius: 10px; padding: 14px 18px; margin-bottom: 28px; font-size: 14px; color: #555; }
+.pagina-politicas .conteudo section { margin-bottom: 30px; scroll-margin-top: 104px; }
+.pagina-politicas .conteudo h2 { color: #385A81; font-size: 20px; margin-bottom: 10px; }
+.pagina-politicas .conteudo p { font-size: 15px; line-height: 1.8; color: #555; margin-bottom: 10px; }
+.pagina-politicas .conteudo ul { margin: 0 0 10px 22px; font-size: 15px; line-height: 1.8; color: #555; }
+.pagina-politicas .conteudo li { margin-bottom: 4px; }
+.pagina-politicas .conteudo strong { color: #385A81; }
+.pagina-politicas .conteudo a { color: #2d8bba; font-weight: 600; }
+.pagina-politicas .conteudo a:hover { color: #FA8000; }
+
+.pagina-politicas .btn-politicas { display: inline-block; background: #FA8000; color: #fff !important; font-weight: 700; text-decoration: none; padding: 12px 28px; border-radius: 24px; margin-top: 8px; transition: background .3s; }
+.pagina-politicas .btn-politicas:hover { background: #385A81; }
+
+@media (max-width: 800px) {
+  .pagina-politicas .politicas-layout { grid-template-columns: 1fr; margin-top: -20px; }
+  .pagina-politicas .indice { position: static; }
+  .pagina-politicas .conteudo { padding: 26px 20px; }
+}

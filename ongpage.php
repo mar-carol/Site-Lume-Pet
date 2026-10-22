@@ -160,33 +160,35 @@
 
         </div>
      </section>
-          <footer class="footer site-footer">
+            <!--footer/mapa do site...-->
+
+    <footer class="footer site-footer">
         <div class="site-footer-conteudo">
             <div class="site-footer-apresentacao">
-                <a class="site-footer-logo" href="index.php#inicio">Lume Pet</a>
-                <p>Cuidado, carinho e bem-estar para o seu pet — e para muitos outros.</p>
+                <a class="site-footer-logo" href="#inicio">Lume Pet</a>
+                <p>Cuidado, carinho e bem-estar para o seu pet.</p>
             </div>
 
             <nav class="site-footer-coluna" aria-label="Mapa do site">
                 <h2>Mapa do site</h2>
-                <a href="index.php#inicio">Início</a>
-                <a href="index.php#loja">Produtos</a>
-                <a href="index.php#adote">Adoção</a>
-                <a href="index.php#doacao">Doação</a>
-                <a href="index.php#sobre">Sobre nós</a>
-                <a href="index.php#avaliacao">Avaliações</a>
+                <a href="#inicio">Início</a>
+                <a href="#loja">Produtos</a>
+                <a href="#adote">Adoção</a>
+                <a href="#doacao">Doação</a>
+                <a href="#sobre">Sobre nós</a>
+                <a href="#avaliacao">Avaliações</a>
             </nav>
 
             <nav class="site-footer-coluna" aria-label="Institucional">
                 <h2>Institucional</h2>
                 <a href="ongpage.php">ONGs parceiras</a>
                 <a href="politica.php">Política de privacidade</a>
-                <a href="conta.php">Minha conta</a>
+               
             </nav>
 
             <div class="site-footer-coluna">
-                <h2>Fale com a gente</h2>
-                <a href="index.php#contato">Formulário de contato</a>
+                <h2>Fale conosco</h2>
+                <a href="#contato">Formulário de contato</a>
                 <a href="tel:+551140028922">(11) 4002-8922</a>
                 <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 <a href="mailto:contato@lumepet.com.br">contato@lumepet.com.br</a>
@@ -194,8 +196,8 @@
         </div>
 
         <div class="site-footer-base">
-            <p>&copy; 2026 Lume Pet. Todos os direitos reservados.</p>
-            <a href="index.php#inicio">Voltar ao topo ↑</a>
+            <p>&copy; <?= date('Y') ?> Lume Pet. Todos os direitos reservados.</p>
+            <a href="#inicio">Voltar ao topo ↑</a>
         </div>
     </footer>
 
