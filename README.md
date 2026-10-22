@@ -1,7 +1,17 @@
 # Lume Pet
 
-Site PHP de pet shop com catálogo, conta de cliente, painel administrativo e
+A Lume Pet é uma marca fictícia criada para representar a plataforma digital desenvolvida neste trabalho de conclusão de curso.
+
+Site em PHP contém catálogo, conta de cliente, painel administrativo e
 cadastro de produtos, ONGs e animais.
+
+##Desenvolvedoras
+
+- Lorena Gomes 
+- Maria Carolina 
+- Maria Eduarda 
+- Mariana Couto
+- Stella Zambianco
 
 ## Requisitos
 
