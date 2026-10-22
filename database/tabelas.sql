@@ -24,9 +24,9 @@ CREATE TABLE usuarios (
     atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- ---------------------------------------------------------
--- CARTÕES (TOKENIZADOS — nunca número completo nem CVV)
--- ---------------------------------------------------------
+-- -----------------------------------------------------------------------------------------------------------
+-- CARTÕES (TOKENIZADOS — nunca número completo nem CVV) - foi feito um alter table pq o char ultimos digitos estava aceitando 4 e agora está aceitando somente os últimos 3 dígitos do cartão cvv 
+-- ------------------------------------------------------------------------------------------------------------
 CREATE TABLE cartoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE cartoes (
     gateway_customer_id VARCHAR(100) DEFAULT NULL,
     gateway_token VARCHAR(255) NOT NULL,
     bandeira VARCHAR(30) DEFAULT NULL,
-    ultimos_digitos CHAR(4) NOT NULL,
+    ultimos_digitos CHAR(3) NOT NULL,
     nome_titular VARCHAR(150) NOT NULL,
     validade_mes TINYINT DEFAULT NULL,
     validade_ano SMALLINT DEFAULT NULL,
