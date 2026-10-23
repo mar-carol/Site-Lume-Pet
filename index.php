@@ -723,6 +723,7 @@ $produtos = $stmt->fetchAll();
                 <input type="text" id="contato-telefone" placeholder="(11) 91234-5678" maxlength="15" oninput="mascaraTelefoneContato(this)">
             </div>
 
+
             <div class="campo-grupo">
                 <label>Assunto de interesse</label>
                 <select id="contato-assunto">
@@ -774,6 +775,14 @@ $produtos = $stmt->fetchAll();
                     <a href="mailto:contato@lumepet.com.br">contato@lumepet.com.br</a>
                 </div>
             </div>
+
+            <div class="contato-card">
+                <div class="contato-icone"><i class="fa-brands fa-instagram"></i></div>
+                <div>
+                    <h3>Instagram</h3>
+                    <a href="https://www.instagram.com/lumepet_oficial/" target="_blank" rel="noopener noreferrer">@lumepet_oficial</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -811,6 +820,7 @@ $produtos = $stmt->fetchAll();
                 <a href="tel:+551140028922">(11) 4002-8922</a>
                 <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 <a href="mailto:contato@lumepet.com.br">contato@lumepet.com.br</a>
+                <a href="https://www.instagram.com/lumepet_oficial/" target="_blank" rel="noopener noreferrer">Instagram</a>
             </div>
         </div>
 
