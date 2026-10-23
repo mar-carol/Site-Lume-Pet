@@ -461,6 +461,10 @@ $produtos = $stmt->fetchAll();
         <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
             <span class="banner-pontos-icone" aria-hidden="true">✦</span>
             <div>
+                <h3 id="bannerSaibaPontos">Saiba mais</h3>
+            </div>
+            <a href="<?= BASE_URL ?>/pages/sobrepontos.php">Sobre os pontos</a>
+            <div>
                 <h3 id="bannerPontosTitulo">Doe e acumule pontos</h3>
                 <p>Ganhe 1 ponto por real inteiro doado e acompanhe seu saldo no histórico.</p>
             </div>
