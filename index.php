@@ -459,6 +459,7 @@ $produtos = $stmt->fetchAll();
 </div>
 
         <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
+            
             <span class="banner-pontos-icone" aria-hidden="true">✦</span>
             <div>
                 <h3 id="bannerSaibaPontos">Saiba mais</h3>
