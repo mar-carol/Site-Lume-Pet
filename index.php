@@ -460,20 +460,33 @@ $produtos = $stmt->fetchAll();
 
 </div>
 
-        <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
-            
 
-            <span class="banner-pontos-icone" aria-hidden="true">✦</span>
-            <div>
-                <h3 id="bannerSaibaPontos">Saiba mais</h3>
-            </div>
-            <a href="<?= BASE_URL ?>/pages/sobrepontos.php">Sobre os pontos</a>
-            <div>
-                <h3 id="bannerPontosTitulo">Doe e acumule pontos</h3>
-                <p>Ganhe 1 ponto por real inteiro doado e acompanhe seu saldo no histórico.</p>
-            </div>
-            <a href="<?= BASE_URL ?>/usuario/pontos.php">Veja seus pontos</a>
-        </aside>
+<aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
+
+    <span class="banner-pontos-icone" aria-hidden="true">✦</span>
+
+    <div class="banner-pontos-saiba-mais">
+        <h3 id="bannerSaibaPontos">Saiba mais</h3>
+        <a href="<?= BASE_URL ?>/pages/sobrepontos.php">
+            Sobre os pontos
+        </a>
+    </div>
+
+    <div class="banner-pontos-conteudo">
+        <h3 id="bannerPontosTitulo">Doe e acumule pontos</h3>
+        <p>
+            Ganhe 1 ponto por real inteiro doado e acompanhe seu saldo
+            no histórico.
+        </p>
+    </div>
+
+    <a href="<?= BASE_URL ?>/usuario/pontos.php">
+        Veja seus pontos
+    </a>
+
+</aside>
+
+       
     </section>
 
     <!-- parte de adoção eu preciso mudar isso pq agora vai cadastrar os animais pelo dashboard -->
@@ -808,6 +821,7 @@ $produtos = $stmt->fetchAll();
             <nav class="site-footer-coluna" aria-label="Mapa do site">
                 <h2>Mapa do site</h2>
                 <a href="#inicio">Início</a>
+                <a href="#servico">Ongs</a>
                 <a href="#loja">Produtos</a>
                 <a href="#adote">Adoção</a>
                 <a href="#doacao">Doação</a>
