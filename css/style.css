@@ -1960,7 +1960,7 @@ transform: translateY(-50%) rotate(90deg); }
 /* AVALIAÇÕES */
 .avaliacao {
   background: #fff;
-  padding: 60px 40px;
+  padding: 160px 40px;
   text-align: center;
 }
  
@@ -2465,9 +2465,11 @@ transform: translateY(-50%) rotate(90deg); }
     padding: 10px;
   }
  
-  .menu, .adote, .doacao, .sobre, .avaliacao {
+  .menu, .adote, .doacao, .sobre {
     padding: 40px 20px;
   }
+
+  .avaliacao { padding: 72px 20px; }
  
   .container-card { flex-direction: column; align-items: center; }
 }

@@ -48,7 +48,7 @@ $produtos = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lume Pet</title>
     <link rel="icon" href="assets/images/imgicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css?v=20261022-review-carousel">
+    <link rel="stylesheet" href="css/style.css?v=20261022-review-carousel-spacing">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=pets" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -383,6 +383,8 @@ $produtos = $stmt->fetchAll();
             $arquivoImagem = __DIR__ . '/uploads/produtos/' . basename($imagem);
             if ($imagem !== '' && is_file($arquivoImagem)) {
                 $caminhoImagem = 'uploads/produtos/' . basename($imagem);
+            } elseif ($imagem !== '' && is_file(__DIR__ . '/administrador/uploads/produtos/' . basename($imagem))) {
+                $caminhoImagem = 'administrador/uploads/produtos/' . basename($imagem);
             } else {
                 $categoriaImagem = strtr(strtolower($categoria), [
                     'á' => 'a', 'ã' => 'a', 'â' => 'a',

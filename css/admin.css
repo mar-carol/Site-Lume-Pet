@@ -66,6 +66,18 @@ a:hover {
     font-weight: 10;
 }
 
+.admin-brand {
+    text-decoration: none;
+}
+
+.admin-brand-logo {
+    display: block;
+    width: 90px;
+    height: 50px;
+    max-width: 90px;
+    object-fit: contain;
+}
+
 .lp-brand-mark {
     display: grid;
     width: 36px;

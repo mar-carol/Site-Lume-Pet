@@ -18,15 +18,15 @@ $paginaAtual = $paginaAtual ?? '';
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet"
-      href="<?= BASE_URL ?>/css/admin.css?v=4">
+      href="<?= BASE_URL ?>/css/admin.css?v=5">
 </head>
 <body>
 <div class="lp-app">
     <aside class="lp-sidebar">
-        <div class="lp-brand">
-            <span class="lp-brand-mark"><img src="<?= BASE_URL ?>/assets/images/icon_branca.png" alt="Logo Branca"></span>
-            Lume Pet <small style="font-weight:400;opacity:.7;">admin</small>
-        </div>
+        <a class="lp-brand admin-brand" href="<?= BASE_URL ?>/index.php" aria-label="Voltar para o início do site Lume Pet">
+            <img class="admin-brand-logo" src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet" width="90" height="50">
+            <small>admin</small>
+        </a>
         <ul class="lp-nav">
 
             <li><a href="<?= BASE_URL ?>/includes/index.php" class="<?= $paginaAtual === 'dashboard' ? 'active' : '' ?>"> Dashboard</a></li>

@@ -7,17 +7,47 @@ $pdo = getConexao();
 $erros = [];
 $editando = null;
 
-// ---- EXCLUIR ----
-if (($_GET['acao'] ?? '') === 'excluir' && isset($_GET['id'])) {
-    $id = (int) $_GET['id'];
-    $stmt = $pdo->prepare('SELECT * FROM produtos WHERE id = :id');
-    $stmt->execute(['id' => $id]);
-    $produto = $stmt->fetch();
-
-    if ($produto) {
-        $pdo->prepare('DELETE FROM produtos WHERE id = :id')->execute(['id' => $id]);
-        registrarHistoricoProduto($id, $_SESSION['usuario_id'], 'excluido', 'Produto excluído', $produto, null);
+// ---- REMOVER DA LOJA ----
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'excluir') {
+    if (!validarTokenCsrf($_POST['csrf_token'] ?? null)) {
+        http_response_code(403);
+        exit('Sessão expirada. Atualize a página e tente novamente.');
     }
+
+    $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT);
+    if (!$id || $id < 1) {
+        http_response_code(400);
+        exit('Produto inválido.');
+    }
+
+    try {
+        $pdo->beginTransaction();
+        $stmt = $pdo->prepare('SELECT * FROM produtos WHERE id = :id FOR UPDATE');
+        $stmt->execute(['id' => $id]);
+        $produto = $stmt->fetch();
+
+        if ($produto && $produto['status'] !== 'inativo') {
+            $pdo->prepare("UPDATE produtos SET status = 'inativo' WHERE id = :id")
+                ->execute(['id' => $id]);
+            $depois = array_merge($produto, ['status' => 'inativo']);
+            registrarHistoricoProduto(
+                $id,
+                (int) $_SESSION['usuario_id'],
+                'editado',
+                'Produto removido da loja; histórico de pedidos preservado',
+                $produto,
+                $depois
+            );
+        }
+
+        $pdo->commit();
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $e;
+    }
+
     redirecionar(BASE_URL . '/administrador/produtos.php');
 }
 
@@ -58,9 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nomeImagem = null;
     try {
-        // (!) Sem "/../" — produtos.php já está na raiz do projeto,
-        // então a pasta de upload é só __DIR__ . '/uploads/produtos'.
-        $nomeImagem = salvarImagem($_FILES['imagem'] ?? [], __DIR__ . '/uploads/produtos');
+        $nomeImagem = salvarImagem($_FILES['imagem'] ?? [], dirname(__DIR__) . '/uploads/produtos');
     } catch (RuntimeException $e) {
         $erros[] = $e->getMessage();
     }
@@ -182,7 +210,19 @@ require __DIR__ . '/../includes/admin_header.php';
         <label>Imagem</label>
         <input type="file" name="imagem" accept="image/*">
         <?php if (!empty($editando['imagem'])): ?>
-            <img src="<?= BASE_URL ?>/uploads/produtos/<?= limpar($editando['imagem']) ?>" width="80" style="margin-top:8px;">
+            <?php
+                $nomeImagemAtual = basename($editando['imagem']);
+                $imagemNova = dirname(__DIR__) . '/uploads/produtos/' . $nomeImagemAtual;
+                $imagemAntiga = __DIR__ . '/uploads/produtos/' . $nomeImagemAtual;
+            ?>
+            <?php if (is_file($imagemNova) || is_file($imagemAntiga)): ?>
+                <?php
+                    $urlImagemAtual = is_file($imagemNova)
+                        ? BASE_URL . '/uploads/produtos/' . rawurlencode($nomeImagemAtual)
+                        : BASE_URL . '/administrador/uploads/produtos/' . rawurlencode($nomeImagemAtual);
+                ?>
+                <img src="<?= htmlspecialchars($urlImagemAtual, ENT_QUOTES, 'UTF-8') ?>" width="80" style="margin-top:8px;" alt="Imagem atual do produto">
+            <?php endif; ?>
         <?php endif; ?>
 
         <label>Status</label>
@@ -210,8 +250,16 @@ require __DIR__ . '/../includes/admin_header.php';
     <td><span class="lp-badge lp-badge-<?= limpar($p['status']) ?>"><?= limpar($p['status']) ?></span></td>
     <td>
         <a href="?acao=editar&id=<?= $p['id'] ?>">Editar</a> ·
-        <a href="?acao=historico&id=<?= $p['id'] ?>">Histórico</a> ·
-        <a href="?acao=excluir&id=<?= $p['id'] ?>" onclick="return confirm('Excluir este produto?')">Excluir</a>
+        <a href="?acao=historico&id=<?= $p['id'] ?>">Histórico</a>
+        <?php if ($p['status'] !== 'inativo'): ?> ·
+            <form method="post" action="<?= BASE_URL ?>/administrador/produtos.php" style="display:inline;"
+                  onsubmit="return confirm('Remover este produto da loja? O histórico de pedidos será preservado.')">
+                <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
+                <input type="hidden" name="acao" value="excluir">
+                <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+                <button type="submit">Remover</button>
+            </form>
+        <?php endif; ?>
     </td>
 </tr>
 <?php endforeach; ?>
