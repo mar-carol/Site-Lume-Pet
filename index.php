@@ -103,6 +103,7 @@ $produtos = $stmt->fetchAll();
         <nav id="navMenu">
             <ul>
                 <li><a href="#inicio">Início</a></li>
+                <li><a href="#servico">Ongs</a></li>
                 <li><a href="#loja">Produtos</a></li>
                 <li><a href="#adote">Adote</a></li>
                 <li><a href="#doacao">Doação</a></li>
@@ -112,7 +113,7 @@ $produtos = $stmt->fetchAll();
                 <li class="nav-search">
                     <form role="search" onsubmit="pesquisarPeloMenu(event)">
                         <label class="sr-only" for="menuPesquisa">Pesquisar produtos</label>
-                        <input type="search" id="menuPesquisa" placeholder="Buscar produtos..." oninput="sincronizarPesquisaMenu()">
+                        <input type="search" id="menuPesquisa" placeholder="Buscar no site..." oninput="sincronizarPesquisaMenu()">
                         <button type="submit" aria-label="Buscar produtos">⌕</button>
                     </form>
                 </li>
@@ -303,6 +304,7 @@ $produtos = $stmt->fetchAll();
     </section>
 
     <!-- serviço -->
+     
     <section class="servico">
         <h1>Mais que um pet shop, uma missão!</h1>
         <div class="servico-wrapper">
@@ -460,6 +462,7 @@ $produtos = $stmt->fetchAll();
 
         <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
             
+
             <span class="banner-pontos-icone" aria-hidden="true">✦</span>
             <div>
                 <h3 id="bannerSaibaPontos">Saiba mais</h3>
