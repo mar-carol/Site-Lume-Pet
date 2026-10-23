@@ -19,7 +19,7 @@ $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE s
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Painel administrativo - Lume Pet</title>
-	<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
+	<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
 	<link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css">
 </head>
 <body>

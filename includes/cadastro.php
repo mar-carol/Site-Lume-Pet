@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cadastro - Lume Pet</title>
-<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=2">
+<link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
 </head>
 <body>
 <h1>Criar conta</h1>

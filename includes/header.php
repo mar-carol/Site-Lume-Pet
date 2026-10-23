@@ -26,7 +26,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/dashboard.css?v=20261022-header-logo">
 </head>
 
