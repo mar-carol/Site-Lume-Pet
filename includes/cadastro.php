@@ -62,37 +62,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Cadastro - Lume Pet</title>
 <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
 </head>
-<body>
-<h1>Criar conta</h1>
+<body class="pagina-login">
+<main class="login-pagina-conteudo">
+<a class="login-pagina-logo" href="<?= BASE_URL ?>/index.php" aria-label="Voltar para a página inicial da Lume Pet">
+    <img src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet">
+</a>
+<section class="login-pagina-card" aria-labelledby="cadastroTitulo">
+<h1 id="cadastroTitulo">Criar conta</h1>
 
 <?php foreach ($erros as $erro): ?>
-    <p style="color:red;"><?= limpar($erro) ?></p>
+    <p class="login-pagina-erro" role="alert"><?= limpar($erro) ?></p>
 <?php endforeach; ?>
 
-<form method="post" action="<?= BASE_URL ?>/includes/cadastro.php">
+<form class="login-pagina-form" method="post" action="<?= BASE_URL ?>/includes/cadastro.php">
     <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
 
-    <label>Nome completo</label>
-    <input type="text" name="nome" value="<?= limpar($dados['nome']) ?>" required>
+    <label for="cadastroNome">Nome completo</label>
+    <input id="cadastroNome" type="text" name="nome" value="<?= limpar($dados['nome']) ?>" autocomplete="name" required>
 
-    <label>E-mail</label>
-    <input type="email" name="email" value="<?= limpar($dados['email']) ?>" required>
+    <label for="cadastroEmail">E-mail</label>
+    <input id="cadastroEmail" type="email" name="email" value="<?= limpar($dados['email']) ?>" autocomplete="email" required>
 
-    <label>Telefone</label>
-    <input type="text" name="telefone" value="<?= limpar($dados['telefone']) ?>" required>
+    <label for="cadastroTelefone">Telefone</label>
+    <input id="cadastroTelefone" type="text" name="telefone" value="<?= limpar($dados['telefone']) ?>" autocomplete="tel" required>
 
-    <label>Endereço</label>
-    <input type="text" name="endereco" value="<?= limpar($dados['endereco']) ?>" required>
+    <label for="cadastroEndereco">Endereço</label>
+    <input id="cadastroEndereco" type="text" name="endereco" value="<?= limpar($dados['endereco']) ?>" autocomplete="street-address" required>
 
-    <label>Senha</label>
-    <input type="password" name="senha" required minlength="6">
+    <label for="cadastroSenha">Senha</label>
+    <input id="cadastroSenha" type="password" name="senha" autocomplete="new-password" required minlength="6">
 
-    <label>Confirmar senha</label>
-    <input type="password" name="confirmar_senha" required minlength="6">
+    <label for="cadastroConfirmarSenha">Confirmar senha</label>
+    <input id="cadastroConfirmarSenha" type="password" name="confirmar_senha" autocomplete="new-password" required minlength="6">
 
     <button type="submit">Cadastrar</button>
 </form>
 
 <p>Já possui uma conta? <a href="<?= BASE_URL ?>/includes/login.php">Entrar</a></p>
+</section>
+</main>
 </body>
 </html>

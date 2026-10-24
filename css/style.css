@@ -196,7 +196,9 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  padding: 20px;
+  background: rgba(32, 48, 64, 0.56);
+  backdrop-filter: blur(4px);
   z-index: 2100;
   justify-content: center;
   align-items: center;
@@ -207,81 +209,171 @@ body {
 }
 
 .login-modal {
-  background: #FFFEEE;
-  border-radius: 14px;
-  padding: 28px;
+  position: relative;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #e1ebf2;
+  border-radius: 18px;
+  padding: 30px;
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  max-width: 440px;
+  box-shadow: 0 16px 48px rgba(34, 58, 80, 0.24);
 }
 
 .login-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .login-header h3 {
   color: #385A81;
-  font-size: 18px;
+  font-size: 24px;
 }
 
 .login-header button {
-  background: none;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f1f6f9;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   color: #385A81;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.login-header button:hover {
+  background: #385A81;
+  color: #fff;
 }
 
 .login-abas {
   display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
+  gap: 6px;
+  margin-bottom: 22px;
+  padding: 5px;
+  border-radius: 12px;
+  background: #f1f6f9;
 }
 
 .aba-btn {
   flex: 1;
-  padding: 9px;
-  border: 2px solid #2d8bba;
-  border-radius: 8px;
-  background: #fff;
-  color: #385A81;
-  font-size: 13px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #617384;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.aba-btn.ativo,
+.aba-btn.ativo {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(56, 90, 129, 0.12);
+  color: #385A81;
+}
+
 .aba-btn:hover {
-  background: #2d8bba;
+  color: #FA8000;
+}
+
+.aba-btn.ativo:hover {
   color: #fff;
+  background: #385A81;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+}
+
+.login-modal .campo-grupo {
+  gap: 7px;
+  margin: 0;
+}
+
+.login-modal .campo-grupo label {
+  color: #385A81;
+  font-size: 13px;
+}
+
+.login-modal .campo-grupo input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid #c7d8e4;
+  border-radius: 10px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-modal .campo-grupo input:focus {
+  border-color: #FA8000;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(250, 128, 0, 0.14);
+}
+
+.login-modal .campo-grupo small {
+  color: #6b7a89 !important;
+  font-size: 11px !important;
+  line-height: 1.5;
+}
+
+.login-modal .politica-privacidade {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  text-align: left;
+}
+
+.login-modal .politica-privacidade input {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: #385A81;
+}
+
+.login-modal .politica-privacidade label {
+  color: #5f6d79;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.login-modal .politica-privacidade a {
+  color: #385A81;
+  font-weight: 600;
 }
 
 .btn-confirmar-login {
   width: 100%;
+  min-height: 46px;
+  margin-top: 4px;
   background: #385A81;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 20px;
-  padding: 12px;
-  font-size: 15px;
+  border-radius: 24px;
+  padding: 12px 18px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
-  margin-top: 4px;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .btn-confirmar-login:hover {
   background: #FA8000;
+  transform: translateY(-1px);
 }
 
 .esqueci-senha {
@@ -292,6 +384,12 @@ body {
   cursor: pointer;
   display: block;
   text-align: center;
+}
+
+.login-modal .erro {
+  color: #a52828;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .pagina-login {
