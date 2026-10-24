@@ -2381,17 +2381,17 @@ transform: translateY(-50%) rotate(90deg); }
   margin-bottom: 10px;
 }
 
-/* FORMULÁRIO */
+/* FORMULÁRIO PAGAMENTO DOAÇÃO*/
 .doacao-form {
   flex: 1;
-  background: #FFFEEE;
+  background: #fffeeee6;
   border-radius: 14px;
   padding: 32px;
   text-align: left;
 }
 
 .doacao-form h3 {
-  font-size: 20px;
+  font-size: 24px;
   color: #385A81;
   margin-bottom: 20px;
   font-weight: 700;
@@ -2432,7 +2432,7 @@ transform: translateY(-50%) rotate(90deg); }
   min-height: 16px;
 }
 
-/* VALORES RÁPIDOS */
+/* VALORES RÁPIDOS DOAÇÃO*/
 .valores-rapidos {
   display: flex;
   gap: 8px;
@@ -4380,9 +4380,9 @@ body {
   max-width: 1120px;
   margin: 40px auto 0;
   padding: 22px 26px;
-  border: 1px solid #f5d5b0;
+  border: 1px solid #f7d1a6;
   border-radius: 16px;
-  background: linear-gradient(110deg, #fff7eb, #fff);
+  background: linear-gradient(110deg, #fff7eb, #c7f2fe);
   color: #385A81;
   text-align: left;
 }
