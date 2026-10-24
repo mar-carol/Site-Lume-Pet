@@ -143,6 +143,9 @@ require_once __DIR__ . '/../includes/header.php';
 
         <!-- Formulário -->
         <div class="lp-card-panel lp-pay-form">
+            <div class="lp-alert lp-alert-erro" role="note">
+                Este site ainda não está integrado a uma operadora de pagamento. Os cartões salvos são demonstrações e não podem ser usados nem cobrados no checkout. Não informe dados de um cartão real.
+            </div>
             <!--
               Envia o POST para a URL atual, para manter a página funcionando
               independentemente da pasta onde o projeto estiver instalado.
@@ -193,8 +196,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             </form>
             <p class="lp-link-muted" style="margin-top:14px;">
-                O número completo e o CVV nunca são enviados ao nosso servidor, apenas ao gateway de pagamento. Gravamos no banco
-                apenas um token seguro do gateway de pagamento e os 3 últimos dígitos.
+                O formulário não usa um gateway: o token salvo é apenas de demonstração e não habilita pagamentos.
             </p>
         </div>
     </div>

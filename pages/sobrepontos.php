@@ -178,7 +178,7 @@ $tituloPagina = 'Sobre os Pontos | Lume Pet';
         </section>
 
         <section class="sp-cta">
-            <span aria-hidden="true">🐶 🐱</span>
+            <span aria-hidden="true"></span>
 
             <h2>Faça parte do universo Lume Pet!</h2>
 
@@ -197,3 +197,45 @@ $tituloPagina = 'Sobre os Pontos | Lume Pet';
 
 </body>
 </html>
+
+  <!--footer/mapa do site...-->
+
+    <footer class="footer site-footer">
+        <div class="site-footer-conteudo">
+            <div class="site-footer-apresentacao">
+                <a class="site-footer-logo" href="#inicio">Lume Pet</a>
+                <p>Cuidado, carinho e bem-estar para o seu pet.</p>
+            </div>
+
+            <nav class="site-footer-coluna" aria-label="Mapa do site">
+                <h2>Mapa do site</h2>
+                <a href="#inicio">Início</a>
+                <a href="#servico">Ongs</a>
+                <a href="#loja">Produtos</a>
+                <a href="#adote">Adoção</a>
+                <a href="#doacao">Doação</a>
+                <a href="#sobre">Sobre nós</a>
+                <a href="#avaliacao">Avaliações</a>
+            </nav>
+
+            <nav class="site-footer-coluna" aria-label="Institucional">
+                <h2>Institucional</h2>
+                <a href="<?= BASE_URL ?>/pages/ongpage.php">ONGs parceiras</a>
+                <a href="<?= BASE_URL ?>/pages/politica.php">Política de privacidade</a>
+            </nav>
+
+            <div class="site-footer-coluna">
+                <h2>Fale conosco</h2>
+                <a href="#contato">Formulário de contato</a>
+                <a href="tel:+551140028922">(11) 4002-8922</a>
+                <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a href="mailto:contato@lumepet.com.br">contato@lumepet.com.br</a>
+                <a href="https://www.instagram.com/lumepet_oficial/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            </div>
+        </div>
+
+        <div class="site-footer-base">
+            <p>&copy; <?= date('Y') ?> Lume Pet. Todos os direitos reservados.</p>
+            <a href="#inicio">Voltar ao topo ↑</a>
+        </div>
+    </footer>

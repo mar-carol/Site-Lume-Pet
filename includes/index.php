@@ -12,6 +12,8 @@ $totalOngs     = $pdo->query('SELECT COUNT(*) FROM ongs WHERE status="parceira"'
 $totalAnimais  = $pdo->query('SELECT COUNT(*) FROM animais WHERE status="disponivel"')->fetchColumn();
 $totalAdotados = $pdo->query('SELECT COUNT(*) FROM animais WHERE status="adotado"')->fetchColumn();
 $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE status="confirmada"')->fetchColumn();
+$doacoesPendentes = $pdo->query('SELECT COUNT(*) FROM doacoes WHERE status="pendente"')->fetchColumn();
+$pedidosPendentes = $pdo->query('SELECT COUNT(*) FROM compras WHERE status="pendente"')->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -41,7 +43,9 @@ $totalDoado    = $pdo->query('SELECT COALESCE(SUM(valor),0) FROM doacoes WHERE s
 	<li>ONGs parceiras: <?= (int) $totalOngs ?></li>
 	<li>Animais disponíveis: <?= (int) $totalAnimais ?></li>
 	<li>Animais já adotados: <?= (int) $totalAdotados ?></li>
-	<li>Total doado: R$ <?= number_format($totalDoado, 2, ',', '.') ?></li>
+	<li>Total marcado como confirmado (revise registros antigos): R$ <?= number_format($totalDoado, 2, ',', '.') ?></li>
+	<li><a href="<?= BASE_URL ?>/administrador/doacoes.php">Doações aguardando conferência: <?= (int) $doacoesPendentes ?> (ver valores por ONG)</a></li>
+	<li><a href="<?= BASE_URL ?>/administrador/pedidos.php">Pedidos pendentes: <?= (int) $pedidosPendentes ?> (acompanhar e atualizar)</a></li>
 </ul>
 </body>
 </html>

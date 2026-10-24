@@ -132,7 +132,7 @@ $produtos = $stmt->fetchAll();
         </nav>
 
         <div class="header-direita">
-            <a href="#" class="carrinho-icon" onclick="toggleCarrinho(event)">
+            <a href="#" class="carrinho-icon" id="carrinhoAbrir" aria-controls="carrinhoPainel" aria-expanded="false" onclick="toggleCarrinho(event)">
                 🛒 <span class="carrinho-count">0</span>
             </a>
         </div>
@@ -213,22 +213,28 @@ $produtos = $stmt->fetchAll();
      </div>
 
     <!-- PAINEL DO CARRINHO -->
-    <div class="carrinho-painel" id="carrinhoPainel">
+    <button class="carrinho-overlay" id="carrinhoOverlay" type="button" aria-label="Fechar carrinho" onclick="fecharCarrinho()"></button>
+    <aside class="carrinho-painel" id="carrinhoPainel" role="dialog" aria-modal="true" aria-labelledby="carrinhoTitulo" aria-hidden="true" tabindex="-1">
         <div class="carrinho-header">
-            <h3>🛒 Seu Carrinho</h3>
-            <button class="carrinho-fechar" onclick="toggleCarrinho(event)">✕</button>
+            <h3 id="carrinhoTitulo">🛒 Seu Carrinho</h3>
+            <button class="carrinho-fechar" id="carrinhoFechar" type="button" aria-label="Fechar carrinho" onclick="toggleCarrinho(event)">✕</button>
         </div>
 
         <ul id="carrinho-lista">
             <li class="carrinho-vazio">Nenhum item ainda.</li>
         </ul>
 
+        <h4 class="carrinho-salvos-titulo">Guardados para depois</h4>
+        <ul id="carrinho-salvos">
+            <li class="carrinho-vazio">Nenhum produto guardado.</li>
+        </ul>
+
         <div class="carrinho-rodape">
-            <p class="carrinho-total">Total: <strong id="carrinho-valor">R$ 0,00</strong></p>
+            <p class="carrinho-total">Selecionados: <strong id="carrinho-valor">R$ 0,00</strong></p>
             <button class="btn-esvaziar" onclick="esvaziarCarrinho()">Esvaziar</button>
-            <button class="btn-pagar" onclick="abrirPagamento()">Finalizar compra</button>
+            <button class="btn-pagar" onclick="abrirPagamento()">Comprar selecionados</button>
         </div>
-    </div>
+    </aside>
 
     <!-- MODAL DE PAGAMENTO -->
     <div class="pagamento-overlay" id="pagamentoOverlay">
@@ -268,7 +274,7 @@ $produtos = $stmt->fetchAll();
             <div class="pagamento-metodos">
                 <p><strong>Forma de pagamento:</strong></p>
                 <label><input type="radio" name="pagamento" value="pix" checked onchange="atualizarMetodoPagamento()"> PIX</label>
-                <label><input type="radio" name="pagamento" value="cartao" onchange="atualizarMetodoPagamento()"> Cartão (Crédito ou Débito)</label>
+                <label><input type="radio" name="pagamento" value="cartao" disabled> Cartão (indisponível)</label>
             </div>
 
             <div id="pagamento-extra"></div>
@@ -463,6 +469,9 @@ $produtos = $stmt->fetchAll();
 
         <button class="loja-ver-mais" id="lojaVerMais" type="button" onclick="mostrarMaisProdutos()" hidden>
             Ver mais produtos
+        </button>
+        <button class="loja-ver-menos" id="lojaVerMenos" type="button" onclick="mostrarMenosProdutos()" hidden>
+            Ver menos produtos
         </button>
 
 <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
@@ -873,8 +882,8 @@ $produtos = $stmt->fetchAll();
     <script src="js/senha.js?v=1"></script>
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261024-registration-policy"></script>
-    <script src="js/commerce.js?v=20261022-orders"></script>
-    <script src="js/site.js?v=20261024-ong-carousel"></script>
+    <script src="js/commerce.js?v=20261024-cart-and-payment-status"></script>
+    <script src="js/site.js?v=20261024-show-less"></script>
 </body>
 </html>
 

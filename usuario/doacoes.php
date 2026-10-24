@@ -13,37 +13,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'doar') 
         $erros[] = 'Sessão expirada, tente novamente.';
     }
 
-    $ongId    = (int) ($_POST['ong_id'] ?? 0);
-    $valor    = (float) str_replace(',', '.', $_POST['valor'] ?? '0');
-    $cartaoId = !empty($_POST['cartao_id']) ? (int) $_POST['cartao_id'] : null;
+    $ongId = filter_var($_POST['ong_id'] ?? null, FILTER_VALIDATE_INT);
+    $valorTexto = str_replace(',', '.', trim((string) ($_POST['valor'] ?? '')));
+    $valor = is_numeric($valorTexto) ? (float) $valorTexto : 0.0;
 
-    if ($ongId <= 0) $erros[] = 'Selecione uma ONG.';
-    if ($valor <= 0) $erros[] = 'Informe um valor de doação válido.';
+    if (!$ongId || $ongId <= 0) $erros[] = 'Selecione uma ONG.';
+    if (!is_finite($valor) || $valor < 1 || $valor > 1000000) $erros[] = 'Informe um valor de doação válido.';
 
     if (!$erros) {
-        $pdo->beginTransaction();
-        try {
-            $pontos = calcularPontosPorDoacao($valor);
-
-            $stmt = $pdo->prepare('INSERT INTO doacoes (usuario_id, ong_id, cartao_id, valor, pontos_gerados, status)
-                                    VALUES (:usuario_id, :ong_id, :cartao_id, :valor, :pontos, "confirmada")');
-            $stmt->execute([
-                'usuario_id' => $usuarioId,
-                'ong_id'     => $ongId,
-                'cartao_id'  => $cartaoId,
-                'valor'      => $valor,
-                'pontos'     => $pontos,
-            ]);
-            $doacaoId = (int) $pdo->lastInsertId();
-
-            concederPontos($usuarioId, $pontos, 'doacao', $doacaoId, 'Cashback por doação #' . $doacaoId);
-
-            $pdo->commit();
-            redirecionar(BASE_URL . '/usuario/doacoes.php');
-        } catch (Throwable $e) {
-            $pdo->rollBack();
-            $erros[] = 'Não foi possível registrar a doação. Tente novamente.';
+        $stmt = $pdo->prepare('SELECT id FROM ongs WHERE id = :id AND status = "parceira"');
+        $stmt->execute(['id' => $ongId]);
+        if (!$stmt->fetchColumn()) {
+            $erros[] = 'A ONG selecionada não está disponível.';
         }
+    }
+
+    if (!$erros) {
+        $stmt = $pdo->prepare('INSERT INTO doacoes (usuario_id, ong_id, valor, pontos_gerados, status)
+                                VALUES (:usuario_id, :ong_id, :valor, 0, "pendente")');
+        $stmt->execute([
+            'usuario_id' => $usuarioId,
+            'ong_id'     => $ongId,
+            'valor'      => round($valor, 2),
+        ]);
+        redirecionar(BASE_URL . '/usuario/doacoes.php?registrada=1');
     }
 }
 
@@ -55,9 +48,6 @@ $stmt = $pdo->prepare('SELECT d.*, o.nome AS ong_nome
 $stmt->execute(['uid' => $usuarioId]);
 $doacoes = $stmt->fetchAll();
 
-$stmt = $pdo->prepare('SELECT * FROM cartoes WHERE usuario_id = :uid');
-$stmt->execute(['uid' => $usuarioId]);
-$cartoes = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -72,9 +62,14 @@ $cartoes = $stmt->fetchAll();
 <h1>Minhas doações</h1>
 <p><a href="<?= BASE_URL ?>/usuario/dashboard.php">&larr; Voltar à minha conta</a></p>
 
+<?php if (isset($_GET['registrada'])): ?>
+    <p role="status">Sua intenção de doação foi registrada. Ela ficará pendente até a equipe confirmar o recebimento.</p>
+<?php endif; ?>
+
 <?php foreach ($erros as $erro): ?><p style="color:red;"><?= limpar($erro) ?></p><?php endforeach; ?>
 
-<h2>Fazer uma doação</h2>
+<h2>Registrar uma doação</h2>
+<p>Este site ainda não processa pagamentos. Registre a ONG e o valor; a equipe confirmará a doação após verificar o recebimento por fora do site.</p>
 <form method="post" action="<?= BASE_URL ?>/usuario/doacoes.php">
     <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
     <input type="hidden" name="acao" value="doar">
@@ -90,25 +85,18 @@ $cartoes = $stmt->fetchAll();
     <label>Valor (R$)</label>
     <input type="number" step="0.01" min="1" name="valor" required>
 
-    <label>Cartão</label>
-    <select name="cartao_id">
-        <option value="">Selecione um cartão salvo</option>
-        <?php foreach ($cartoes as $c): ?>
-            <option value="<?= $c['id'] ?>"><?= limpar($c['bandeira']) ?> final <?= limpar($c['ultimos_digitos']) ?></option>
-        <?php endforeach; ?>
-    </select>
-    <p>adicionar um novo cartão em <a href="<?= BASE_URL ?>/usuario/cartoes.php">Meus cartões</a>.</p>
-
-    <button type="submit">Doar</button>
+    <button type="submit">Registrar intenção de doação</button>
 </form>
-<p><small>Você ganha 1 ponto de cashback para cada R$ 1,00 doado.</small></p>
+<p><small>Após a confirmação do recebimento, você recebe 1 ponto por real inteiro doado.</small></p>
 
 <h2>Histórico</h2>
 <ul>
 <?php foreach ($doacoes as $d): ?>
     <li>
         R$ <?= number_format($d['valor'], 2, ',', '.') ?> para <?= limpar($d['ong_nome']) ?>
-        — <?= (int) $d['pontos_gerados'] ?> pontos —
+        — <?= $d['status'] === 'confirmada'
+            ? (int) $d['pontos_gerados'] . ' pontos creditados'
+            : number_format(calcularPontosPorDoacao((float) $d['valor']), 0, ',', '.') . ' pontos após confirmação' ?> —
         <?= (new DateTime($d['criado_em']))->format('d/m/Y H:i') ?>
         (<?= limpar($d['status']) ?>)
     </li>

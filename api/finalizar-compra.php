@@ -220,8 +220,6 @@ try {
 
     $metodos = [
         'pix' => 'PIX',
-        'credito' => 'Cartão de Crédito',
-        'debito' => 'Cartão de Débito',
     ];
     $metodo = $metodos[$dados['metodo'] ?? ''] ?? null;
     $cep = preg_replace('/\D/', '', (string) ($dados['cep'] ?? ''));

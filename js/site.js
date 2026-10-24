@@ -73,6 +73,12 @@
         botaoVerMais.hidden = produtosVisiveis >= totalResultados;
       }
 
+      const botaoVerMenos = document.getElementById('lojaVerMenos');
+      if (botaoVerMenos) {
+        botaoVerMenos.hidden = limiteProdutosVisiveis <= produtosPorPagina
+          || totalResultados <= produtosPorPagina;
+      }
+
       if (vazio) {
         vazio.style.display = totalResultados > 0 ? 'none' : 'flex';
       }
@@ -85,6 +91,12 @@
     function mostrarMaisProdutos() {
       limiteProdutosVisiveis += produtosPorPagina;
       filtrarProdutos(false);
+    }
+
+    function mostrarMenosProdutos() {
+      limiteProdutosVisiveis = produtosPorPagina;
+      filtrarProdutos(false);
+      document.getElementById('loja')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
 

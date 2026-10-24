@@ -732,25 +732,55 @@ body {
   font-size: 12px;
 }
 
-/* CARRINHO - PAINEL */
-.carrinho-painel {
-  display: none;
+/* CARRINHO - BARRA LATERAL */
+.carrinho-overlay {
   position: fixed;
-  top: 80px;
-  right: 20px;
+  inset: 0;
+  z-index: 1098;
+  display: block;
+  border: 0;
+  background: rgba(19, 31, 43, 0.48);
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.carrinho-overlay.aberto {
+  opacity: 1;
+  visibility: visible;
+}
+
+.carrinho-painel {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 1099;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100vw);
+  height: 100vh;
+  height: 100dvh;
   background: #FFFEEE;
-  border: 2px solid #385A81;
-  border-radius: 12px;
-  padding: 20px;
-  width: 320px;
-  max-height: 80vh;
+  padding: 24px;
   overflow-y: auto;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  z-index: 999;
+  box-shadow: -8px 0 28px rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+  transform: translateX(100%);
+  transition: transform 0.3s ease, visibility 0.3s ease;
+}
+
+.carrinho-painel.aberto {
+  visibility: visible;
+  transform: translateX(0);
+}
+
+body.carrinho-aberto {
+  overflow: hidden;
 }
 
 .carrinho-header {
   display: flex;
+  flex: 0 0 auto;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
@@ -764,13 +794,29 @@ body {
 .carrinho-fechar {
   background: none;
   border: none;
-  font-size: 16px;
+  padding: 8px;
+  font-size: 20px;
   cursor: pointer;
   color: #385A81;
 }
 
+.carrinho-rodape {
+  position: sticky;
+  bottom: -24px;
+  margin: auto -24px -24px;
+  padding: 16px 24px 24px;
+  background: #FFFEEE;
+  border-top: 1px solid #e5e0d3;
+}
+
 /* LISTA DE ITENS */
 #carrinho-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+#carrinho-salvos {
   list-style: none;
   padding: 0;
   margin: 0 0 14px;
@@ -785,6 +831,63 @@ body {
   font-size: 13px;
   color: #333;
   gap: 6px;
+}
+
+#carrinho-lista li.carrinho-item,
+#carrinho-salvos li.carrinho-item {
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+
+.carrinho-item-selecao {
+  display: flex;
+  align-items: center;
+  flex: 1 1 100%;
+  gap: 8px;
+  min-width: 0;
+}
+
+.carrinho-item-selecao input {
+  flex: 0 0 auto;
+  accent-color: #385A81;
+}
+
+.carrinho-item-selecao span {
+  overflow-wrap: anywhere;
+}
+
+.carrinho-item-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.item-guardar {
+  padding: 4px 8px;
+  border: 1px solid #385A81;
+  border-radius: 12px;
+  background: transparent;
+  color: #385A81;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.item-guardar:hover {
+  background: #385A81;
+  color: #fff;
+}
+
+.carrinho-salvos-titulo {
+  margin: 16px 0 4px;
+  color: #385A81;
+  font-size: 13px;
+}
+
+.carrinho-aviso-storage {
+  margin: 0 0 8px;
+  color: #a52828;
+  font-size: 12px;
 }
 
 .carrinho-vazio {
@@ -819,11 +922,22 @@ body {
 
 /* BOTÃO REMOVER */
 .item-remover {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
   background: none;
   border: none;
-  color: #e74c3c;
-  font-size: 15px;
   cursor: pointer;
+}
+
+.item-remover img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 /* RODAPÉ DO CARRINHO */
@@ -1604,6 +1718,7 @@ transform: translateY(-50%) rotate(90deg); }
   align-items: stretch;
 }
 
+/* BOTÃO VER MAIS PRODUTOS */
 .loja-ver-mais {
   margin: 28px auto 0;
   padding: 12px 24px;
@@ -1623,6 +1738,34 @@ transform: translateY(-50%) rotate(90deg); }
 }
 
 .loja-ver-mais[hidden] {
+  display: none;
+}
+
+/* BOTÃO VER MENOS PRODUTOS */
+
+.loja-ver-menos {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 24px;
+  background: #FA8000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.loja-ver-menos:hover {
+  background: #385A81;
+  transform: translateY(-2px);
+}
+
+.loja-ver-menos[hidden] {
   display: none;
 }
 
@@ -3490,6 +3633,7 @@ border-radius: 30px;
 /* Ajustes de navegação, escala visual e consistência do catálogo */
 html {
   font-size: 16px;
+  overflow-x: clip;
 }
 
 body {

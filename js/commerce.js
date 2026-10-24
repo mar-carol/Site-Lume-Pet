@@ -1,86 +1,249 @@
     // CARRINHO
 
 
-    let itensCarrinho = [];
+    function lerListaSalva(chave) {
+      try {
+        const dados = JSON.parse(localStorage.getItem(chave) || '[]');
+        if (!Array.isArray(dados)) throw new TypeError('O conteúdo salvo não é uma lista.');
+        return dados.filter(item =>
+          item && Number.isInteger(Number(item.id)) && Number(item.id) > 0
+          && typeof item.nome === 'string' && Number.isFinite(Number(item.preco))
+          && Number(item.preco) >= 0
+        ).map(item => ({
+          id: Number(item.id),
+          nome: item.nome,
+          preco: Number(item.preco),
+          qtd: Math.min(100, Math.max(1, Number.parseInt(item.qtd, 10) || 1)),
+          selecionado: item.selecionado !== false
+        }));
+      } catch (erro) {
+        console.error(`Não foi possível carregar a lista "${chave}".`, erro);
+        return [];
+      }
+    }
+
+    let itensCarrinho = lerListaSalva('lumepet_carrinho_v1');
+    let itensSalvos = lerListaSalva('lumepet_salvos_v1');
+
+    function persistirListasCarrinho() {
+      try {
+        localStorage.setItem('lumepet_carrinho_v1', JSON.stringify(itensCarrinho));
+        localStorage.setItem('lumepet_salvos_v1', JSON.stringify(itensSalvos));
+      } catch (erro) {
+        console.error('Não foi possível salvar o carrinho neste navegador.', erro);
+        const lista = document.getElementById('carrinho-lista');
+        if (lista && !document.getElementById('carrinhoAvisoStorage')) {
+          lista.insertAdjacentHTML('beforebegin', '<p class="carrinho-aviso-storage" id="carrinhoAvisoStorage" role="status">Não foi possível salvar as alterações neste navegador.</p>');
+        }
+      }
+    }
+
+    function escaparTextoHTML(valor) {
+      return String(valor).replace(/[&<>"']/g, caractere => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[caractere]);
+    }
 
     function toggleCarrinho(event) {
       event.preventDefault();
       const painel = document.getElementById('carrinhoPainel');
-      painel.style.display = painel.style.display === 'block' ? 'none' : 'block';
+      if (painel.classList.contains('aberto')) {
+        fecharCarrinho();
+        return;
+      }
+
+      painel.classList.add('aberto');
+      painel.setAttribute('aria-hidden', 'false');
+      document.getElementById('carrinhoOverlay').classList.add('aberto');
+      document.getElementById('carrinhoAbrir').setAttribute('aria-expanded', 'true');
+      document.body.classList.add('carrinho-aberto');
+      document.getElementById('carrinhoFechar').focus();
     }
 
-    // O carrinho só fecha quando o usuário clicar para fechar
+    function fecharCarrinho() {
+      const painel = document.getElementById('carrinhoPainel');
+      if (!painel.classList.contains('aberto')) return;
+
+      painel.classList.remove('aberto');
+      painel.setAttribute('aria-hidden', 'true');
+      document.getElementById('carrinhoOverlay').classList.remove('aberto');
+      document.getElementById('carrinhoAbrir').setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('carrinho-aberto');
+      document.getElementById('carrinhoAbrir').focus();
+    }
+
+    document.addEventListener('keydown', event => {
+      const painel = document.getElementById('carrinhoPainel');
+      if (!painel.classList.contains('aberto')) return;
+
+      if (event.key === 'Escape') {
+        fecharCarrinho();
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        const focaveis = painel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex="0"]');
+        const primeiro = focaveis[0];
+        const ultimo = focaveis[focaveis.length - 1];
+
+        if (event.shiftKey && document.activeElement === primeiro) {
+          event.preventDefault();
+          ultimo.focus();
+        } else if (!event.shiftKey && document.activeElement === ultimo) {
+          event.preventDefault();
+          primeiro.focus();
+        }
+      }
+    });
 
    function adicionarAoCarrinho(id, nome, preco) {
     const precoNum = Number(preco);
 
-    const existente = itensCarrinho.find(
-        item => item.id === id
-    );
+    id = Number(id);
+    const existente = itensCarrinho.find(item => item.id === id);
 
     if (existente) {
-        existente.qtd++;
+        existente.qtd = Math.min(100, existente.qtd + 1);
+        existente.selecionado = true;
     } else {
         itensCarrinho.push({
             id: id,
             nome: nome,
             preco: precoNum,
-            qtd: 1
+            qtd: 1,
+            selecionado: true
         });
     }
 
     atualizarCarrinho();
+    persistirListasCarrinho();
     mostrarToast(nome);
 }
 
-    function alterarQtd(nome, delta) {
-      const item = itensCarrinho.find(i => i.nome === nome);
+    function alterarQtd(id, delta) {
+      const item = itensCarrinho.find(i => i.id === Number(id));
       if (!item) return;
-      item.qtd += delta;
+      item.qtd = Math.min(100, item.qtd + delta);
       if (item.qtd <= 0) {
-        itensCarrinho = itensCarrinho.filter(i => i.nome !== nome);
+        itensCarrinho = itensCarrinho.filter(i => i.id !== Number(id));
       }
       atualizarCarrinho();
+      persistirListasCarrinho();
     }
 
-    function removerItem(nome) {
-      itensCarrinho = itensCarrinho.filter(i => i.nome !== nome);
+    function alternarSelecaoCarrinho(id, selecionado) {
+      const item = itensCarrinho.find(i => i.id === Number(id));
+      if (!item) return;
+      item.selecionado = Boolean(selecionado);
       atualizarCarrinho();
+      persistirListasCarrinho();
+    }
+
+    function guardarParaDepois(id) {
+      const item = itensCarrinho.find(i => i.id === Number(id));
+      if (!item) return;
+      itensCarrinho = itensCarrinho.filter(i => i.id !== Number(id));
+      const existente = itensSalvos.find(i => i.id === Number(id));
+      if (existente) {
+        existente.qtd = Math.min(100, existente.qtd + item.qtd);
+      } else {
+        itensSalvos.push({ ...item, selecionado: false });
+      }
+      atualizarCarrinho();
+      persistirListasCarrinho();
+    }
+
+    function moverParaCarrinho(id) {
+      const item = itensSalvos.find(i => i.id === Number(id));
+      if (!item) return;
+      itensSalvos = itensSalvos.filter(i => i.id !== Number(id));
+      const existente = itensCarrinho.find(i => i.id === Number(id));
+      if (existente) {
+        existente.qtd = Math.min(100, existente.qtd + item.qtd);
+      } else {
+        itensCarrinho.push({ ...item, selecionado: true });
+      }
+      atualizarCarrinho();
+      persistirListasCarrinho();
+    }
+
+    function removerItem(id) {
+      itensCarrinho = itensCarrinho.filter(i => i.id !== Number(id));
+      atualizarCarrinho();
+      persistirListasCarrinho();
+    }
+
+    function removerItemSalvo(id) {
+      itensSalvos = itensSalvos.filter(i => i.id !== Number(id));
+      atualizarCarrinho();
+      persistirListasCarrinho();
     }
 
     function esvaziarCarrinho() {
       itensCarrinho = [];
       atualizarCarrinho();
+      persistirListasCarrinho();
     }
 
     function atualizarCarrinho() {
       const lista = document.getElementById('carrinho-lista');
+      const listaSalvos = document.getElementById('carrinho-salvos');
       const count = document.querySelector('.carrinho-count');
       const total = document.getElementById('carrinho-valor');
 
       const totalItens = itensCarrinho.reduce((s, i) => s + i.qtd, 0);
-      count.textContent = totalItens;
+      if (count) count.textContent = totalItens;
 
-      if (itensCarrinho.length === 0) {
-        lista.innerHTML = '<li class="carrinho-vazio">Nenhum item ainda.</li>';
-      } else {
-        lista.innerHTML = itensCarrinho.map(item => `
-          <li>
-            <span style="flex:1">${item.nome}</span>
+      if (lista) {
+        lista.innerHTML = itensCarrinho.length === 0
+          ? '<li class="carrinho-vazio">Nenhum item ainda.</li>'
+          : itensCarrinho.map(item => `
+          <li class="carrinho-item">
+            <label class="carrinho-item-selecao">
+              <input type="checkbox" ${item.selecionado ? 'checked' : ''}
+                     onchange="alternarSelecaoCarrinho(${item.id}, this.checked)"
+                     aria-label="Selecionar ${escaparTextoHTML(item.nome)} para comprar">
+              <span>${escaparTextoHTML(item.nome)}</span>
+            </label>
             <div class="item-qtd">
-              <button onclick="alterarQtd('${item.nome}', -1)">−</button>
+              <button type="button" onclick="alterarQtd(${item.id}, -1)" aria-label="Diminuir quantidade">−</button>
               <span>${item.qtd}</span>
-              <button onclick="alterarQtd('${item.nome}', 1)">+</button>
+              <button type="button" onclick="alterarQtd(${item.id}, 1)" aria-label="Aumentar quantidade">+</button>
             </div>
             <span>R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}</span>
-            <button class="item-remover" onclick="removerItem('${item.nome}')">🗑️</button>
+            <div class="carrinho-item-acoes">
+              <button type="button" class="item-guardar" onclick="guardarParaDepois(${item.id})">Guardar</button>
+              <button type="button" class="item-remover" onclick="removerItem(${item.id})" aria-label="Remover ${escaparTextoHTML(item.nome)}"><img src="https://img.icons8.com/?size=100&id=uAIm4KlVQ4e5&format=png&color=000000" alt="" aria-hidden="true"></button>
+            </div>
           </li>
         `).join('');
       }
 
-      const soma = itensCarrinho.reduce((s, i) => s + i.preco * i.qtd, 0);
-      total.textContent = `R$ ${soma.toFixed(2).replace('.', ',')}`;
+      if (listaSalvos) {
+        listaSalvos.innerHTML = itensSalvos.length === 0
+          ? '<li class="carrinho-vazio">Nenhum produto guardado.</li>'
+          : itensSalvos.map(item => `
+          <li class="carrinho-item carrinho-item-salvo">
+            <span>${escaparTextoHTML(item.nome)}</span>
+            <span>R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}</span>
+            <div class="carrinho-item-acoes">
+              <button type="button" class="item-guardar" onclick="moverParaCarrinho(${item.id})">Mover para o carrinho</button>
+              <button type="button" class="item-remover" onclick="removerItemSalvo(${item.id})" aria-label="Remover ${escaparTextoHTML(item.nome)} dos salvos"><img src="https://img.icons8.com/?size=100&id=uAIm4KlVQ4e5&format=png&color=000000" alt="" aria-hidden="true"></button>
+            </div>
+          </li>
+        `).join('');
+      }
+
+      const selecionados = itensCarrinho.filter(item => item.selecionado);
+      const soma = selecionados.reduce((s, i) => s + i.preco * i.qtd, 0);
+      if (total) total.textContent = `R$ ${soma.toFixed(2).replace('.', ',')}`;
     }
+
+    atualizarCarrinho();
 
 
 
@@ -114,14 +277,15 @@
     let pixCodigo = '';
 
     function abrirPagamento() {
-      if (itensCarrinho.length === 0) {
-        alert('Seu carrinho está vazio!');
+      const itensSelecionados = itensCarrinho.filter(item => item.selecionado);
+      if (itensSelecionados.length === 0) {
+        alert(itensCarrinho.length ? 'Selecione pelo menos um produto para comprar.' : 'Seu carrinho está vazio!');
         return;
       }
 
       // exige login antes de permitir o pagamento
       if (!usuarioLogado) {
-        document.getElementById('carrinhoPainel').style.display = 'none';
+        fecharCarrinho();
         alert('Você precisa entrar na sua conta para finalizar a compra.');
         mudarAba('login');
         document.getElementById('loginOverlay').classList.add('aberto');
@@ -148,7 +312,7 @@
       atualizarMetodoPagamento();
 
       document.getElementById('pagamentoOverlay').classList.add('aberto');
-      document.getElementById('carrinhoPainel').style.display = 'none';
+      fecharCarrinho();
     }
 
     function fecharPagamento() {
@@ -241,7 +405,9 @@
     }
 
     function calcularTotaisPagamento() {
-      const subtotal = itensCarrinho.reduce((s, i) => s + i.preco * i.qtd, 0);
+      const subtotal = itensCarrinho
+        .filter(item => item.selecionado)
+        .reduce((s, i) => s + i.preco * i.qtd, 0);
       let frete = cepValidado ? freteAtual : 0;
       let desconto = 0;
 
@@ -265,8 +431,8 @@
 
       const { subtotal, frete, desconto, total } = calcularTotaisPagamento();
 
-      let html = itensCarrinho.map(i =>
-        `<p>${i.nome} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</p>`
+      let html = itensCarrinho.filter(i => i.selecionado).map(i =>
+        `<p>${escaparTextoHTML(i.nome)} x${i.qtd} — R$ ${(i.preco * i.qtd).toFixed(2).replace('.', ',')}</p>`
       ).join('');
 
       html += `<hr><p>Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}</p>`;
@@ -319,11 +485,7 @@
     function renderCartao() {
       return `
         <div class="cartao-bloco">
-          <p class="pix-aviso">Checkout demonstrativo: nenhum dado de cartão é solicitado ou processado.</p>
-          <div class="cartao-tipo">
-            <label><input type="radio" name="tipoCartao" value="credito" checked> Crédito</label>
-            <label><input type="radio" name="tipoCartao" value="debito"> Débito</label>
-          </div>
+          <p class="pix-aviso">Pagamento com cartão indisponível: ainda não há integração com uma operadora. Os cartões salvos são apenas dados de demonstração e não serão cobrados.</p>
         </div>
       `;
     }
@@ -331,6 +493,11 @@
     async function confirmarPedido() {
       if (!usuarioLogado) {
         alert('Você precisa entrar na sua conta para finalizar a compra.');
+        return;
+      }
+
+      if (!itensCarrinho.some(item => item.selecionado)) {
+        alert('Selecione pelo menos um produto para finalizar o pedido.');
         return;
       }
 
@@ -379,7 +546,8 @@
           },
           body: JSON.stringify({
             acao: 'finalizar',
-            itens: itensCarrinho.map(item => ({ id: item.id, qtd: item.qtd })),
+            itens: itensCarrinho.filter(item => item.selecionado)
+              .map(item => ({ id: item.id, qtd: item.qtd })),
             metodo,
             cep: document.getElementById('cepInput').value.replace(/\D/g, ''),
             uf: cepEndereco?.uf || '',
@@ -396,7 +564,9 @@
           throw new Error(resultado.erro || 'Não foi possível registrar o pedido.');
         }
 
-        esvaziarCarrinho();
+        itensCarrinho = itensCarrinho.filter(item => !item.selecionado);
+        atualizarCarrinho();
+        persistirListasCarrinho();
         fecharPagamento();
         document.getElementById('numeroCasa').value = '';
         document.getElementById('complemento').value = '';
