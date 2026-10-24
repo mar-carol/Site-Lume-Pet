@@ -218,10 +218,63 @@ try {
         responderPedidos(['sucesso' => false, 'erro' => 'O carrinho está vazio ou contém itens demais.'], 400);
     }
 
+    $metodoSolicitado = is_string($dados['metodo'] ?? null) ? $dados['metodo'] : '';
     $metodos = [
         'pix' => 'PIX',
+        'credito' => 'Cartão de Crédito',
+        'debito' => 'Cartão de Débito',
     ];
-    $metodo = $metodos[$dados['metodo'] ?? ''] ?? null;
+    $metodo = $metodos[$metodoSolicitado] ?? null;
+    $cartaoId = filter_var($dados['cartao_id'] ?? null, FILTER_VALIDATE_INT);
+    $cartaoSalvoId = null;
+    if (in_array($metodoSolicitado, ['credito', 'debito'], true)) {
+        if (!$cartaoId || $cartaoId < 1) {
+            responderPedidos(['sucesso' => false, 'erro' => 'Selecione um cartão salvo compatível.'], 400);
+        }
+        $stmt = $pdo->prepare(
+            'SELECT id FROM cartoes
+             WHERE id = :id AND usuario_id = :usuario_id
+               AND (tipo_uso = :tipo OR tipo_uso = "ambos")'
+        );
+        $stmt->execute([
+            'id' => $cartaoId,
+            'usuario_id' => $usuarioId,
+            'tipo' => $metodoSolicitado,
+        ]);
+        $cartaoSalvoId = $stmt->fetchColumn();
+        if (!$cartaoSalvoId) {
+            responderPedidos(['sucesso' => false, 'erro' => 'O cartão selecionado não pertence à sua conta ou não aceita essa modalidade.'], 400);
+        }
+    } elseif ($metodoSolicitado === 'pix') {
+        $cartaoSalvoId = null;
+    }
+
+    $stmt = $pdo->prepare(
+        'SELECT u.nome, u.telefone,
+                EXISTS(SELECT 1 FROM enderecos e WHERE e.usuario_id = u.id AND e.padrao = 1) AS tem_endereco_padrao
+         FROM usuarios u WHERE u.id = :id AND u.tipo = "cliente" AND u.status = "ativo"'
+    );
+    $stmt->execute(['id' => $usuarioId]);
+    $perfil = $stmt->fetch();
+    if (!$perfil || trim((string) $perfil['nome']) === '' || trim((string) $perfil['telefone']) === '' || !(int) $perfil['tem_endereco_padrao']) {
+        responderPedidos(['sucesso' => false, 'erro' => 'Complete seu nome, telefone e endereço padrão no perfil antes de finalizar a compra.'], 409);
+    }
+
+    $enderecoId = filter_var($dados['endereco_id'] ?? null, FILTER_VALIDATE_INT);
+    $salvarEnderecoPadrao = !empty($dados['salvar_endereco_padrao']);
+    $enderecoSalvo = null;
+    if ($enderecoId && $enderecoId > 0) {
+        $stmt = $pdo->prepare(
+            'SELECT id, cep, logradouro, numero, complemento, bairro, cidade, estado
+             FROM enderecos WHERE id = :id AND usuario_id = :usuario_id'
+        );
+        $stmt->execute(['id' => $enderecoId, 'usuario_id' => $usuarioId]);
+        $enderecoSalvo = $stmt->fetch();
+        if (!$enderecoSalvo) {
+            responderPedidos(['sucesso' => false, 'erro' => 'O endereço selecionado não pertence à sua conta.'], 400);
+        }
+    }
+
     $cep = preg_replace('/\D/', '', (string) ($dados['cep'] ?? ''));
     $numero = trim((string) ($dados['numero'] ?? ''));
     $complemento = trim((string) ($dados['complemento'] ?? ''));
@@ -230,6 +283,16 @@ try {
     $logradouro = trim((string) ($dados['logradouro'] ?? ''));
     $bairro = trim((string) ($dados['bairro'] ?? ''));
     $localidade = trim((string) ($dados['localidade'] ?? ''));
+    if ($enderecoSalvo) {
+        $cep = preg_replace('/\D/', '', $enderecoSalvo['cep']);
+        $numero = trim($enderecoSalvo['numero']);
+        $complemento = trim((string) ($enderecoSalvo['complemento'] ?? ''));
+        $uf = strtoupper($enderecoSalvo['estado']);
+        $logradouro = trim($enderecoSalvo['logradouro']);
+        $bairro = trim((string) ($enderecoSalvo['bairro'] ?? ''));
+        $localidade = trim($enderecoSalvo['cidade']);
+        $salvarEnderecoPadrao = false;
+    }
     $fretesPorUf = [
         'SP' => 12.90, 'RJ' => 18.90, 'MG' => 18.90, 'ES' => 18.90,
         'PR' => 22.90, 'SC' => 22.90, 'RS' => 24.90,
@@ -321,14 +384,46 @@ try {
     $endereco = implode(', ', $partesEndereco);
 
     $pdo->beginTransaction();
+    if (!$enderecoSalvo && $salvarEnderecoPadrao) {
+        $stmt = $pdo->prepare('UPDATE enderecos SET padrao = 0 WHERE usuario_id = :usuario_id');
+        $stmt->execute(['usuario_id' => $usuarioId]);
+        $stmt = $pdo->prepare(
+            'INSERT INTO enderecos
+                (usuario_id, apelido, cep, logradouro, numero, complemento, bairro, cidade, estado, padrao)
+             VALUES
+                (:usuario_id, "Meu endereço", :cep, :logradouro, :numero, :complemento, :bairro, :cidade, :estado, 1)'
+        );
+        $stmt->execute([
+            'usuario_id' => $usuarioId,
+            'cep' => $cep,
+            'logradouro' => $logradouro !== '' ? $logradouro : 'Endereço informado pelo CEP',
+            'numero' => $numero,
+            'complemento' => $complemento ?: null,
+            'bairro' => $bairro ?: null,
+            'cidade' => $localidade,
+            'estado' => $uf,
+        ]);
+        $stmt = $pdo->prepare(
+            'UPDATE usuarios SET cep = :cep, endereco = :endereco, cidade = :cidade, estado = :estado
+             WHERE id = :usuario_id'
+        );
+        $stmt->execute([
+            'cep' => substr($cep, 0, 5) . '-' . substr($cep, 5),
+            'endereco' => $logradouro !== '' ? $logradouro : 'Endereço informado pelo CEP',
+            'cidade' => $localidade,
+            'estado' => $uf,
+            'usuario_id' => $usuarioId,
+        ]);
+    }
     $stmt = $pdo->prepare(
         'INSERT INTO compras
-            (usuario_id, origem, subtotal, frete, desconto, total, status, metodo_pagamento, endereco_entrega)
+            (usuario_id, cartao_id, origem, subtotal, frete, desconto, total, status, metodo_pagamento, endereco_entrega)
          VALUES
-            (:usuario_id, "checkout_simulado", :subtotal, :frete, :desconto, :total, "pendente", :metodo, :endereco)'
+            (:usuario_id, :cartao_id, "checkout_simulado", :subtotal, :frete, :desconto, :total, "pendente", :metodo, :endereco)'
     );
     $stmt->execute([
         'usuario_id' => $usuarioId,
+        'cartao_id' => $cartaoSalvoId,
         'subtotal' => $subtotal,
         'frete' => $frete,
         'desconto' => $desconto,

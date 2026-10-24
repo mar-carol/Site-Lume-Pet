@@ -34,6 +34,7 @@ $paginaAtual = $paginaAtual ?? '';
             <li><a href="<?= BASE_URL ?>/administrador/pedidos.php" class="<?= $paginaAtual === 'pedidos' ? 'active' : '' ?>"> Pedidos</a></li>
             <li><a href="<?= BASE_URL ?>/administrador/avaliacoes.php" class="<?= $paginaAtual === 'avaliacoes' ? 'active' : '' ?>"> Avaliações</a></li>
             <li><a href="<?= BASE_URL ?>/administrador/doacoes.php" class="<?= $paginaAtual === 'doacoes' ? 'active' : '' ?>"> Doações</a></li>
+            <li><a href="<?= BASE_URL ?>/administrador/emails.php" class="<?= $paginaAtual === 'emails' ? 'active' : '' ?>"> Verificação de e-mails</a></li>
             <li><a href="<?= BASE_URL ?>/usuario/ongs.php" class="<?= $paginaAtual === 'ongs' ? 'active' : '' ?>"> ONGs parceiras</a></li>
             <li><a href="<?= BASE_URL ?>/administrador/animais.php" class="<?= $paginaAtual === 'animais' ? 'active' : '' ?>"> Animais</a></li>
             <li class="lp-nav-sair"><a href="<?= BASE_URL ?>/includes/logout.php">Sair</a></li>

@@ -15,7 +15,7 @@ cadastro de produtos, ONGs e animais.
 
 ## Requisitos
 
-- PHP 8.0 ou superior, com PDO MySQL e `mbstring`
+- PHP 8.0 ou superior, com PDO MySQL, `mbstring`, `curl` e `openssl`
 - MySQL ou MariaDB
 - Apache (XAMPP é suportado para desenvolvimento local)
 
@@ -24,7 +24,7 @@ cadastro de produtos, ONGs e animais.
 1. Coloque o projeto em `C:\xampp\htdocs\Site-Lume-Pet`.
 2. Inicie Apache e MySQL pelo painel do XAMPP.
 3. No phpMyAdmin, importe `database/tabelas.sql`.
-4. Se o banco já existe, selecione `lume_pet` no phpMyAdmin, abra **SQL** e execute `database/migrations/avaliacoes.sql` e `database/migrations/acompanhamento_pedidos.sql`.
+4. Se o banco já existe, selecione `lume_pet` no phpMyAdmin, abra **SQL** e execute `database/migrations/avaliacoes.sql`, `database/migrations/acompanhamento_pedidos.sql`, `database/migrations/recuperacao_senha.sql`, `database/migrations/verificacao_email.sql` e `database/migrations/cartoes_enderecos.sql`.
 5. Importe `database/mensagens_contato.sql` e `database/seeds/admins.sql`.
 6. Configure o banco no ambiente ou confira os valores locais em
    `config/database.php`.
@@ -37,6 +37,22 @@ servidor web.
 Em produção, configure `LUME_PET_DB_HOST`, `LUME_PET_DB_NAME`,
 `LUME_PET_DB_USER`, `LUME_PET_DB_PASS` e, se necessário,
 `LUME_PET_DB_CHARSET` como variáveis de ambiente.
+
+Para enviar códigos de confirmação de cadastro e links de recuperação, crie
+uma chave de API na Resend, valide o domínio do remetente no serviço e configure
+`LUME_PET_RESEND_API_KEY` com a chave privada e `LUME_PET_MAIL_FROM` com o
+endereço remetente validado. Nunca coloque a chave no código ou no Git.
+Defina também `LUME_PET_PUBLIC_URL` com a URL pública completa do site
+(por exemplo, `https://exemplo.com` ou `http://localhost/Site-Lume-Pet`).
+Os códigos de confirmação expiram em 15 minutos e permitem até cinco tentativas;
+os links de recuperação expiram em uma hora e só podem ser usados uma vez.
+O painel administrativo **Verificação de e-mails** mostra quais contas já
+confirmaram o endereço, sem revelar códigos.
+
+Os cadastros de cartão deste projeto são apenas demonstrativos: não há
+operadora conectada, portanto nenhum cartão pode ser cobrado. Não digite dados
+reais. No checkout e nas doações, um cartão salvo só identifica a modalidade
+escolhida e deixa o pedido/doação pendente para conferência externa.
 
 O schema não inclui dados de demonstração; os administradores iniciais ficam
 separados em `database/seeds/admins.sql`. O seed pode ser importado novamente
@@ -55,21 +71,23 @@ internos usam `BASE_URL` e refletem esta estrutura:
 ├── administrador/
 │   ├── produtos.php          Gerenciamento administrativo de produtos
 │   ├── avaliacoes.php        Consulta e remoção administrativa de avaliações
+│   ├── emails.php            Situação da confirmação de e-mail dos clientes
 │   └── animais.php           Gerenciamento administrativo de animais
 ├── usuario/
 │   ├── dashboard.php         Resumo da conta do cliente
-│   ├── perfil.php            Dados do cliente
+│   ├── perfil.php            Dados e endereços salvos do cliente
 │   ├── compras.php           Compras do cliente
 │   ├── doacoes.php           Doações do cliente
 │   ├── pontos.php            Saldo e histórico de pontos
-│   ├── cartoes.php           Cartões tokenizados
+│   ├── cartoes.php           Cartões salvos e modalidade de uso
 │   ├── avaliacoes.php        Histórico de avaliações do cliente
 │   └── ongs.php              Gerenciamento administrativo de ONGs
 ├── pages/
 │   ├── ongpage.php           Informações das ONGs parceiras
 │   ├── politica.php          Política de privacidade
-│   └── recuperar.php         Recuperação de senha
-├── api/                      Endpoints JSON usados pelo navegador
+│   ├── recuperar.php         Recuperação de senha
+│   └── verificar-email.php   Confirmação do e-mail no cadastro
+├── api/                      Endpoints JSON de login, pedidos, cartões e doações
 ├── config/                   Configuração de banco e URL base
 ├── assets/
 │   └── images/               Imagens estáticas do site e da interface

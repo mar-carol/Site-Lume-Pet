@@ -22,13 +22,24 @@
       }
     }
 
-    let itensCarrinho = lerListaSalva('lumepet_carrinho_v1');
-    let itensSalvos = lerListaSalva('lumepet_salvos_v1');
+    const escopoCarrinho = window.usuarioSessao?.id
+      ? `usuario_${Number(window.usuarioSessao.id)}`
+      : 'visitante';
+    const chaveCarrinho = `lumepet_carrinho_v2_${escopoCarrinho}`;
+    const chaveSalvos = `lumepet_salvos_v2_${escopoCarrinho}`;
+    try {
+      localStorage.removeItem('lumepet_carrinho_v1');
+      localStorage.removeItem('lumepet_salvos_v1');
+    } catch (erro) {
+      console.error('Não foi possível remover o carrinho antigo compartilhado.', erro);
+    }
+    let itensCarrinho = lerListaSalva(chaveCarrinho);
+    let itensSalvos = lerListaSalva(chaveSalvos);
 
     function persistirListasCarrinho() {
       try {
-        localStorage.setItem('lumepet_carrinho_v1', JSON.stringify(itensCarrinho));
-        localStorage.setItem('lumepet_salvos_v1', JSON.stringify(itensSalvos));
+        localStorage.setItem(chaveCarrinho, JSON.stringify(itensCarrinho));
+        localStorage.setItem(chaveSalvos, JSON.stringify(itensSalvos));
       } catch (erro) {
         console.error('Não foi possível salvar o carrinho neste navegador.', erro);
         const lista = document.getElementById('carrinho-lista');
@@ -196,7 +207,7 @@
       const total = document.getElementById('carrinho-valor');
 
       const totalItens = itensCarrinho.reduce((s, i) => s + i.qtd, 0);
-      if (count) count.textContent = totalItens;
+      if (count) count.textContent = totalItens > 9 ? '9+' : String(totalItens);
 
       if (lista) {
         lista.innerHTML = itensCarrinho.length === 0
@@ -253,6 +264,7 @@
     let freteAtual = 0;
     let cepValidado = false;
     let cepEndereco = null;
+    let enderecoSelecionadoSalvo = null;
     let cupomAtual = null; // { codigo, tipo: 'percentual' | 'fixo' | 'frete', valor, desc }
 
     const CUPONS = {
@@ -291,11 +303,17 @@
         document.getElementById('loginOverlay').classList.add('aberto');
         return;
       }
+      if (!window.checkoutDados?.perfilCompleto) {
+        alert('Antes de comprar, complete seu nome, telefone e endereço padrão no perfil. Seu carrinho continuará salvo.');
+        window.location.href = window.checkoutDados?.perfilUrl || 'usuario/perfil.php';
+        return;
+      }
 
       // reseta o estado de frete/cupom/endereço cada vez que o checkout abre
       freteAtual = 0;
       cepValidado = false;
       cepEndereco = null;
+      enderecoSelecionadoSalvo = null;
       cupomAtual = null;
       document.getElementById('cepInput').value = '';
       document.getElementById('cepResultado').innerHTML = '';
@@ -303,7 +321,15 @@
       document.getElementById('cupomResultado').innerHTML = '';
       document.getElementById('numeroCasa').value = '';
       document.getElementById('complemento').value = '';
+      document.getElementById('logradouroEntrega').value = '';
+      document.getElementById('salvarEnderecoPadrao').checked = false;
       document.getElementById('enderecoDetalhes').style.display = 'none';
+      const enderecoSalvo = document.getElementById('enderecoSalvo');
+      const enderecoPadrao = window.checkoutDados?.enderecos?.find(endereco => Number(endereco.padrao) === 1);
+      if (enderecoSalvo) {
+        enderecoSalvo.value = enderecoPadrao ? String(enderecoPadrao.id) : 'novo';
+        selecionarEnderecoCheckout(Boolean(enderecoPadrao));
+      }
 
       // volta a forma de pagamento para PIX por padrão
       document.querySelector('input[name="pagamento"][value="pix"]').checked = true;
@@ -313,6 +339,50 @@
 
       document.getElementById('pagamentoOverlay').classList.add('aberto');
       fecharCarrinho();
+    }
+
+    function selecionarEnderecoCheckout(recalcular = true) {
+      const seletor = document.getElementById('enderecoSalvo');
+      const detalhes = document.getElementById('enderecoDetalhes');
+      const campos = ['cepInput', 'logradouroEntrega', 'numeroCasa', 'complemento'];
+      if (!seletor || !detalhes) return;
+
+      const endereco = window.checkoutDados?.enderecos?.find(item => String(item.id) === seletor.value);
+      enderecoSelecionadoSalvo = endereco || null;
+      const somenteLeitura = Boolean(endereco);
+      campos.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) campo.readOnly = somenteLeitura;
+      });
+
+      if (!endereco) {
+        document.getElementById('cepInput').value = '';
+        document.getElementById('logradouroEntrega').value = '';
+        document.getElementById('numeroCasa').value = '';
+        document.getElementById('complemento').value = '';
+        document.getElementById('cepResultado').innerHTML = '';
+        detalhes.style.display = 'none';
+        document.getElementById('salvarEnderecoPadrao').checked = false;
+        freteAtual = 0;
+        cepValidado = false;
+        cepEndereco = null;
+        atualizarResumoPagamento();
+        return;
+      }
+
+      document.getElementById('cepInput').value = endereco.cep;
+      document.getElementById('logradouroEntrega').value = endereco.logradouro;
+      document.getElementById('numeroCasa').value = endereco.numero;
+      document.getElementById('complemento').value = endereco.complemento || '';
+      document.getElementById('salvarEnderecoPadrao').checked = false;
+      detalhes.style.display = 'flex';
+      cepEndereco = {
+        uf: endereco.estado,
+        logradouro: endereco.logradouro,
+        bairro: endereco.bairro || '',
+        localidade: endereco.cidade
+      };
+      if (recalcular) calcularFrete();
     }
 
     function fecharPagamento() {
@@ -358,10 +428,11 @@
         cepValidado = true;
         cepEndereco = {
           uf: dados.uf,
-          logradouro: dados.logradouro || '',
-          bairro: dados.bairro || '',
-          localidade: dados.localidade || ''
+          logradouro: enderecoSelecionadoSalvo?.logradouro || dados.logradouro || '',
+          bairro: enderecoSelecionadoSalvo?.bairro || dados.bairro || '',
+          localidade: enderecoSelecionadoSalvo?.cidade || dados.localidade || ''
         };
+        document.getElementById('logradouroEntrega').value = cepEndereco.logradouro;
 
         resultado.innerHTML = `
           <span class="frete-ok">
@@ -461,6 +532,7 @@
         desenharPixPedido();
       } else {
         extra.innerHTML = renderCartao();
+        atualizarOpcoesCartaoCheckout();
       }
     }
 
@@ -485,9 +557,32 @@
     function renderCartao() {
       return `
         <div class="cartao-bloco">
-          <p class="pix-aviso">Pagamento com cartão indisponível: ainda não há integração com uma operadora. Os cartões salvos são apenas dados de demonstração e não serão cobrados.</p>
+          <p class="pix-aviso">Checkout demonstrativo: ainda não há operadora para cobrar cartões. O pedido ficará pendente e nenhum valor será cobrado.</p>
+          <p>Escolha um cartão já salvo ou cadastre outro em uma nova aba. Ao voltar, a lista será atualizada.</p>
+          <label for="tipoCartao">Modalidade</label>
+          <select id="tipoCartao" onchange="atualizarOpcoesCartaoCheckout()">
+            <option value="credito">Crédito</option>
+            <option value="debito">Débito</option>
+          </select>
+          <label for="cartaoCheckout">Cartão salvo</label>
+          <select id="cartaoCheckout"></select>
+          <a href="${window.checkoutDados?.cartoesUrl || 'usuario/cartoes.php'}?voltar=checkout" target="_blank" rel="noopener noreferrer">Cadastrar outro cartão</a>
         </div>
       `;
+    }
+
+    function atualizarOpcoesCartaoCheckout() {
+      const seletor = document.getElementById('cartaoCheckout');
+      const modalidade = document.getElementById('tipoCartao')?.value || 'credito';
+      if (!seletor) return;
+      const cartoes = (window.checkoutDados?.cartoes || []).filter(cartao =>
+        cartao.tipo_uso === modalidade || cartao.tipo_uso === 'ambos'
+      );
+      seletor.innerHTML = cartoes.length
+        ? cartoes.map(cartao =>
+          `<option value="${Number(cartao.id)}">${escaparTextoHTML(cartao.bandeira)} •••• ${escaparTextoHTML(cartao.ultimos_digitos)} — ${escaparTextoHTML(cartao.nome_titular)}</option>`
+        ).join('')
+        : '<option value="">Nenhum cartão compatível salvo</option>';
     }
 
     async function confirmarPedido() {
@@ -516,24 +611,45 @@
       const metodo = metodoEl ? metodoEl.value : 'pix';
 
       if (metodo === 'cartao') {
-        const tipoCartaoEl = document.querySelector('input[name="tipoCartao"]:checked');
-        const tipoCartao = tipoCartaoEl ? tipoCartaoEl.value : 'credito';
-        await finalizarPedido(tipoCartao);
+        const tipoCartao = document.getElementById('tipoCartao')?.value || '';
+        const cartaoId = Number(document.getElementById('cartaoCheckout')?.value || 0);
+        if (!cartaoId) {
+          alert('Cadastre ou selecione um cartão compatível antes de continuar.');
+          return;
+        }
+        await finalizarPedido(tipoCartao, cartaoId);
         return;
       }
 
-      await finalizarPedido('pix');
+      await finalizarPedido('pix', null);
     }
 
     let enviandoPedido = false;
 
-    async function finalizarPedido(metodo) {
+    async function finalizarPedido(metodo, cartaoId) {
       if (enviandoPedido) return;
       enviandoPedido = true;
       const botao = document.querySelector('.btn-confirmar');
       if (botao) {
         botao.disabled = true;
         botao.textContent = 'Registrando pedido...';
+      }
+
+      window.addEventListener('focus', async () => {
+        if (!window.usuarioSessao || !window.cartoesApiUrl) return;
+        try {
+          const resposta = await fetch(window.cartoesApiUrl, { credentials: 'same-origin' });
+          const dados = await resposta.json();
+          if (!resposta.ok || !dados.sucesso) throw new Error(dados.erro || 'Falha ao atualizar cartões.');
+          window.checkoutDados.cartoes = dados.cartoes;
+          if (document.getElementById('cartaoCheckout')) atualizarOpcoesCartaoCheckout();
+        } catch (erro) {
+          console.error('Não foi possível atualizar os cartões salvos.', erro);
+        }
+      });
+
+      if (new URLSearchParams(window.location.search).get('retorno') === 'checkout') {
+        window.addEventListener('load', () => setTimeout(abrirPagamento, 0), { once: true });
       }
 
       try {
@@ -549,9 +665,12 @@
             itens: itensCarrinho.filter(item => item.selecionado)
               .map(item => ({ id: item.id, qtd: item.qtd })),
             metodo,
+            cartao_id: cartaoId,
+            endereco_id: enderecoSelecionadoSalvo?.id || null,
+            salvar_endereco_padrao: document.getElementById('salvarEnderecoPadrao').checked,
             cep: document.getElementById('cepInput').value.replace(/\D/g, ''),
             uf: cepEndereco?.uf || '',
-            logradouro: cepEndereco?.logradouro || '',
+            logradouro: document.getElementById('logradouroEntrega').value.trim() || cepEndereco?.logradouro || '',
             bairro: cepEndereco?.bairro || '',
             localidade: cepEndereco?.localidade || '',
             numero: document.getElementById('numeroCasa').value.trim(),

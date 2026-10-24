@@ -26,6 +26,9 @@ exigirLogin();
 $usuarioId = $_SESSION['usuario_id'];
 $pdo = getConexao();
 $erros = [];
+$voltar = in_array($_GET['voltar'] ?? $_POST['voltar'] ?? '', ['checkout', 'doacao'], true)
+    ? ($_GET['voltar'] ?? $_POST['voltar'])
+    : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'salvar') {
     if (!validarTokenCsrf($_POST['csrf_token'] ?? null)) {
@@ -38,18 +41,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'salvar'
     $bandeira     = trim($_POST['bandeira'] ?? '');
     $ultimosDigitos = trim($_POST['ultimos_digitos'] ?? '');
     $nomeTitular  = trim($_POST['nome_titular'] ?? '');
+    $tipoUso      = $_POST['tipo_uso'] ?? '';
     $mes          = (int) ($_POST['validade_mes'] ?? 0);
     $ano          = (int) ($_POST['validade_ano'] ?? 0);
 
     if ($gatewayToken === '') $erros[] = 'Não foi possível gerar o token do cartão. Confira os dados e tente novamente.';
     if (!preg_match('/^\d{3}$/', $ultimosDigitos)) $erros[] = 'Número de cartão inválido.';
     if ($nomeTitular === '') $erros[] = 'Informe o nome do titular.';
+    if (!in_array($tipoUso, ['credito', 'debito', 'ambos'], true)) $erros[] = 'Selecione se o cartão é de crédito, débito ou ambos.';
     if ($mes < 1 || $mes > 12) $erros[] = 'Mês de validade inválido.';
     if ($ano < (int) date('Y')) $erros[] = 'Ano de validade inválido.';
 
     if (!$erros) {
-        $stmt = $pdo->prepare('INSERT INTO cartoes (usuario_id, gateway, gateway_token, bandeira, ultimos_digitos, nome_titular, validade_mes, validade_ano)
-                                VALUES (:usuario_id, :gateway, :token, :bandeira, :ultimos_digitos, :titular, :mes, :ano)');
+        $stmt = $pdo->prepare('INSERT INTO cartoes (usuario_id, gateway, gateway_token, bandeira, ultimos_digitos, nome_titular, validade_mes, validade_ano, tipo_uso)
+                                VALUES (:usuario_id, :gateway, :token, :bandeira, :ultimos_digitos, :titular, :mes, :ano, :tipo_uso)');
         $stmt->execute([
             'usuario_id' => $usuarioId,
             'gateway'    => $gateway ?: 'demo',
@@ -59,15 +64,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'salvar'
             'titular'    => $nomeTitular,
             'mes'        => $mes,
             'ano'        => $ano,
+            'tipo_uso'   => $tipoUso,
         ]);
-        redirecionar(BASE_URL . '/usuario/cartoes.php');
+        redirecionar($voltar !== ''
+            ? BASE_URL . '/index.php?retorno=' . rawurlencode($voltar) . ($voltar === 'doacao' ? '#doacao' : '#loja')
+            : BASE_URL . '/usuario/cartoes.php');
     }
 }
 
-if (($_GET['acao'] ?? '') === 'excluir' && isset($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'excluir') {
+    if (!validarTokenCsrf($_POST['csrf_token'] ?? null)) {
+        http_response_code(403);
+        exit('Sessão expirada. Atualize a página e tente novamente.');
+    }
     $stmt = $pdo->prepare('DELETE FROM cartoes WHERE id = :id AND usuario_id = :uid');
     $stmt->execute([
-        'id' => (int) $_GET['id'],
+        'id' => (int) ($_POST['id'] ?? 0),
         'uid' => $usuarioId
     ]);
 
@@ -129,12 +141,18 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="lp-saved-info">
                             <div class="lp-mini-card"></div>
                             <div>
-                                <?= limpar(ucfirst($c['bandeira'])) ?> •••• <?= limpar($c['ultimos_digitos']) ?><br>
+                                <?= limpar(ucfirst($c['bandeira'])) ?> •••• <?= limpar($c['ultimos_digitos']) ?>
+                                (<?= $c['tipo_uso'] === 'ambos' ? 'crédito e débito' : limpar($c['tipo_uso']) ?>)<br>
                                 <span class="lp-link-muted"><?= limpar($c['nome_titular']) ?> ·
                                 <?= str_pad($c['validade_mes'], 2, '0', STR_PAD_LEFT) ?>/<?= $c['validade_ano'] ?></span>
                             </div>
                         </div>
-                        <a href="?acao=excluir&id=<?= $c['id'] ?>" onclick="return confirm('Remover este cartão?')">Remover</a>
+                        <form method="post" action="<?= BASE_URL ?>/usuario/cartoes.php">
+                            <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
+                            <input type="hidden" name="acao" value="excluir">
+                            <input type="hidden" name="id" value="<?= (int) $c['id'] ?>">
+                            <button type="submit" onclick="return confirm('Remover este cartão?')">Remover</button>
+                        </form>
                     </li>
                 <?php endforeach; ?>
                 </ul>
@@ -153,6 +171,7 @@ require_once __DIR__ . '/../includes/header.php';
             <form method="post" action="" id="formCartao">
                 <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
                 <input type="hidden" name="acao" value="salvar">
+                <input type="hidden" name="voltar" value="<?= limpar($voltar) ?>">
                 <input type="hidden" name="gateway" value="demo">
                 <!-- Campos reais enviados ao servidor (preenchidos via JS antes do submit) -->
                 <input type="hidden" name="gateway_token" id="gateway_token">
@@ -171,6 +190,13 @@ require_once __DIR__ . '/../includes/header.php';
                 <label>Nome do titular</label>
                 <input type="text" id="nomeTitular" name="nome_titular" placeholder="Como está no cartão"
                        autocomplete="off" required>
+
+                <label for="tipoUsoCartao">Como este cartão pode ser usado?</label>
+                <select id="tipoUsoCartao" name="tipo_uso" required>
+                    <option value="credito">Crédito</option>
+                    <option value="debito">Débito</option>
+                    <option value="ambos">Crédito e débito</option>
+                </select>
 
                 <div class="lp-row-3">
                     <div>

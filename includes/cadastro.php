@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/email.php';
 
 $erros = [];
 $dados = ['nome' => '', 'email' => ''];
@@ -38,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$erros) {
-        $stmt = $pdo->prepare('INSERT INTO usuarios (nome, email, senha_hash, telefone, endereco)
-                                VALUES (:nome, :email, :senha_hash, :telefone, :endereco)');
+        $stmt = $pdo->prepare('INSERT INTO usuarios (nome, email, senha_hash, telefone, endereco, email_verificado_em)
+                                VALUES (:nome, :email, :senha_hash, :telefone, :endereco, NULL)');
         $stmt->execute([
             'nome'       => $dados['nome'],
             'email'      => $dados['email'],
@@ -48,9 +49,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'endereco'   => '',
         ]);
 
-        $usuario = autenticarUsuario($dados['email'], $senha);
-        iniciarSessaoUsuario($usuario);
-        redirecionar(BASE_URL . '/usuario/dashboard.php');
+        $usuarioId = (int) $pdo->lastInsertId();
+        $_SESSION['cadastro_pendente_id'] = $usuarioId;
+        $codigo = gerarCodigoVerificacaoEmail();
+
+        $stmt = $pdo->prepare(
+            'INSERT INTO codigos_verificacao_email (usuario_id, codigo_hash, expira_em)
+             VALUES (:usuario_id, :codigo_hash, DATE_ADD(NOW(), INTERVAL 15 MINUTE))
+             ON DUPLICATE KEY UPDATE codigo_hash = VALUES(codigo_hash),
+                 expira_em = VALUES(expira_em), tentativas = 0, criado_em = CURRENT_TIMESTAMP'
+        );
+        $stmt->execute([
+            'usuario_id' => $usuarioId,
+            'codigo_hash' => hash('sha256', $codigo),
+        ]);
+
+        $enviado = enviarEmailResend(
+            $dados['email'],
+            'Confirme seu e-mail - Lume Pet',
+            "Seu código de confirmação é: {$codigo}\n\n"
+                . "Digite esse código na página de confirmação em até 15 minutos. "
+                . "Se você não criou uma conta, ignore esta mensagem."
+        );
+        if (!$enviado) {
+            $stmt = $pdo->prepare('DELETE FROM codigos_verificacao_email WHERE usuario_id = :usuario_id');
+            $stmt->execute(['usuario_id' => $usuarioId]);
+        }
+
+        redirecionar(BASE_URL . '/pages/verificar-email.php?'
+            . ($enviado ? 'enviado=1' : 'erro=envio'));
     }
 }
 ?>

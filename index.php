@@ -39,6 +39,35 @@ $stmt = $pdo->query(
 );
 
 $produtos = $stmt->fetchAll();
+$enderecosCliente = [];
+$cartoesCliente = [];
+if ($usuario && $usuario['tipo'] === 'cliente') {
+    $stmt = $pdo->prepare(
+        'SELECT id, apelido, cep, logradouro, numero, complemento, bairro, cidade, estado, padrao
+         FROM enderecos WHERE usuario_id = :usuario_id
+         ORDER BY padrao DESC, criado_em DESC'
+    );
+    $stmt->execute(['usuario_id' => $usuario['id']]);
+    $enderecosCliente = $stmt->fetchAll();
+
+    $stmt = $pdo->prepare(
+        'SELECT id, bandeira, ultimos_digitos, nome_titular, tipo_uso
+         FROM cartoes WHERE usuario_id = :usuario_id ORDER BY criado_em DESC'
+    );
+    $stmt->execute(['usuario_id' => $usuario['id']]);
+    $cartoesCliente = $stmt->fetchAll();
+}
+$ongsParceiras = $pdo->query(
+    'SELECT id, nome FROM ongs WHERE status = "parceira" ORDER BY nome'
+)->fetchAll();
+$temEnderecoPadrao = count(array_filter(
+    $enderecosCliente,
+    static fn(array $endereco): bool => (int) $endereco['padrao'] === 1
+)) > 0;
+$perfilCheckoutCompleto = $usuario
+    && trim((string) $usuario['nome']) !== ''
+    && trim((string) $usuario['telefone']) !== ''
+    && $temEnderecoPadrao;
 
 ?>
 <!DOCTYPE html>
@@ -132,8 +161,9 @@ $produtos = $stmt->fetchAll();
         </nav>
 
         <div class="header-direita">
-            <a href="#" class="carrinho-icon" id="carrinhoAbrir" aria-controls="carrinhoPainel" aria-expanded="false" onclick="toggleCarrinho(event)">
-                🛒 <span class="carrinho-count">0</span>
+            <a href="#" class="carrinho-icon" id="carrinhoAbrir" aria-label="Abrir carrinho" aria-controls="carrinhoPainel" aria-expanded="false" onclick="toggleCarrinho(event)">
+                <img class="carrinho-icone-imagem" src="https://img.icons8.com/pastel-glyph/64/shopping-cart--v1.png" alt="" aria-hidden="true">
+                <span class="carrinho-count">0</span>
             </a>
         </div>
     </div>
@@ -216,7 +246,10 @@ $produtos = $stmt->fetchAll();
     <button class="carrinho-overlay" id="carrinhoOverlay" type="button" aria-label="Fechar carrinho" onclick="fecharCarrinho()"></button>
     <aside class="carrinho-painel" id="carrinhoPainel" role="dialog" aria-modal="true" aria-labelledby="carrinhoTitulo" aria-hidden="true" tabindex="-1">
         <div class="carrinho-header">
-            <h3 id="carrinhoTitulo">🛒 Seu Carrinho</h3>
+            <h3 id="carrinhoTitulo">
+                <img class="carrinho-titulo-icone" src="https://img.icons8.com/pastel-glyph/64/shopping-cart--v1.png" alt="" aria-hidden="true">
+                Seu Carrinho
+            </h3>
             <button class="carrinho-fechar" id="carrinhoFechar" type="button" aria-label="Fechar carrinho" onclick="toggleCarrinho(event)">✕</button>
         </div>
 
@@ -248,6 +281,15 @@ $produtos = $stmt->fetchAll();
 
             <div class="pagamento-cep">
                 <p><strong>📍 Endereço de entrega</strong></p>
+                <label for="enderecoSalvo">Escolha um endereço salvo</label>
+                <select id="enderecoSalvo" onchange="selecionarEnderecoCheckout()">
+                    <?php foreach ($enderecosCliente as $enderecoSalvo): ?>
+                        <option value="<?= (int) $enderecoSalvo['id'] ?>" <?= $enderecoSalvo['padrao'] ? 'selected' : '' ?>>
+                            <?= limpar($enderecoSalvo['apelido']) ?><?= $enderecoSalvo['padrao'] ? ' (padrão)' : '' ?> — <?= limpar($enderecoSalvo['cidade']) ?>/<?= limpar($enderecoSalvo['estado']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                    <option value="novo" <?= !$enderecosCliente ? 'selected' : '' ?>>Adicionar outro endereço</option>
+                </select>
                 <div class="cep-linha">
                     <input type="text" id="cepInput" placeholder="Digite seu CEP" maxlength="9" oninput="mascaraCep(this)">
                     <button type="button" onclick="calcularFrete()">Calcular</button>
@@ -256,10 +298,18 @@ $produtos = $stmt->fetchAll();
 
                 <div class="endereco-detalhes" id="enderecoDetalhes" style="display:none">
                     <div class="endereco-linha">
+                        <input type="text" id="logradouroEntrega" placeholder="Rua/avenida">
                         <input type="text" id="numeroCasa" placeholder="Número *">
                         <input type="text" id="complemento" placeholder="Complemento (opcional)">
                     </div>
+                    <label class="endereco-padrao-opcao">
+                        <input type="checkbox" id="salvarEnderecoPadrao">
+                        Salvar este endereço como padrão para próximas compras
+                    </label>
                 </div>
+                <?php if (!$perfilCheckoutCompleto): ?>
+                    <p class="checkout-perfil-aviso">Complete seu nome, telefone e endereço padrão no <a href="<?= BASE_URL ?>/usuario/perfil.php">perfil</a> para finalizar a compra.</p>
+                <?php endif; ?>
             </div>
 
             <div class="pagamento-cupom">
@@ -274,7 +324,7 @@ $produtos = $stmt->fetchAll();
             <div class="pagamento-metodos">
                 <p><strong>Forma de pagamento:</strong></p>
                 <label><input type="radio" name="pagamento" value="pix" checked onchange="atualizarMetodoPagamento()"> PIX</label>
-                <label><input type="radio" name="pagamento" value="cartao" disabled> Cartão (indisponível)</label>
+                <label><input type="radio" name="pagamento" value="cartao" onchange="atualizarMetodoPagamento()"> Cartão</label>
             </div>
 
             <div id="pagamento-extra"></div>
@@ -369,6 +419,7 @@ $produtos = $stmt->fetchAll();
             <button class="categoria-btn" onclick="filtrarCategoria('remedios', event)">Remédios</button>
         </div>
 
+        <div class="loja-produtos-area" id="lojaProdutosArea">
         <div class="loja-grade" id="lojaGrade">
 
     <div class="loja-vazio" id="lojaVazio" style="display: none;">
@@ -433,6 +484,11 @@ $produtos = $stmt->fetchAll();
             data-descricao="<?= htmlspecialchars(strtolower($descricao), ENT_QUOTES, 'UTF-8') ?>"
         >
 
+            <span class="produto-card-detalhes" aria-hidden="true">
+                <span class="produto-card-detalhes-icone">+</span>
+                Mais informações
+            </span>
+
             <div class="produto-img">
                 <img
                     src="<?= htmlspecialchars($caminhoImagem, ENT_QUOTES, 'UTF-8') ?>"
@@ -473,6 +529,7 @@ $produtos = $stmt->fetchAll();
         <button class="loja-ver-menos" id="lojaVerMenos" type="button" onclick="mostrarMenosProdutos()" hidden>
             Ver menos produtos
         </button>
+        </div>
 
 <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
 
@@ -598,13 +655,24 @@ $produtos = $stmt->fetchAll();
                 <h3>Quero doar</h3>
 
                 <div class="campo-grupo">
+                    <label for="doacao-ong">Instituição parceira <span class="obrigatorio">*</span></label>
+                    <select id="doacao-ong" required>
+                        <option value="">Selecione a ONG</option>
+                        <?php foreach ($ongsParceiras as $ong): ?>
+                            <option value="<?= (int) $ong['id'] ?>"><?= limpar($ong['nome']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span class="erro" id="erro-ong"></span>
+                </div>
+
+                <div class="campo-grupo">
                     <label>Nome <span class="opcional">(opcional)</span></label>
-                    <input type="text" id="doacao-nome" placeholder="Seu nome">
+                    <input type="text" id="doacao-nome" placeholder="Seu nome" value="<?= limpar($usuario['nome'] ?? '') ?>">
                 </div>
 
                 <div class="campo-grupo">
                     <label>E-mail <span class="obrigatorio">*</span></label>
-                    <input type="email" id="doacao-email" placeholder="seu@email.com">
+                    <input type="email" id="doacao-email" placeholder="seu@email.com" value="<?= limpar($usuario['email'] ?? '') ?>">
                     <span class="erro" id="erro-email"></span>
                 </div>
 
@@ -636,6 +704,7 @@ $produtos = $stmt->fetchAll();
             </div>
 
             <div class="doacao-resumo" id="doacaoResumo"></div>
+            <p class="pix-aviso">Esta tela registra uma intenção de doação. O site ainda não processa cobranças; a doação ficará pendente até a equipe confirmar o recebimento.</p>
 
             <div class="doacao-metodos">
                 <button class="btn-metodo ativo" id="btn-pix" onclick="selecionarMetodo('pix')">PIX</button>
@@ -649,12 +718,13 @@ $produtos = $stmt->fetchAll();
             </div>
 
             <div class="metodo-detalhe" id="detalhe-cartao" style="display:none">
-                <input type="text" placeholder="Número do cartão" maxlength="19" oninput="mascaraCartao(this)">
-                <input type="text" placeholder="Nome no cartão">
-                <div class="cartao-linha">
-                    <input type="text" placeholder="Validade (MM/AA)" maxlength="5" oninput="mascaraValidade(this)">
-                    <input type="text" placeholder="CVV" maxlength="3">
-                </div>
+                <p>Para registrar uma doação com cartão, entre na conta e escolha um cartão compatível salvo.</p>
+                <label for="doacao-cartao">Cartão salvo</label>
+                <select id="doacao-cartao"></select>
+                <a href="<?= BASE_URL . ($usuario ? '/usuario/cartoes.php?voltar=doacao' : '/includes/login.php?retorno=doacao') ?>"
+                   target="_blank" rel="noopener noreferrer">
+                    <?= $usuario ? 'Cadastrar um cartão' : 'Entrar para cadastrar um cartão' ?>
+                </a>
             </div>
 
             <button class="btn-confirmar-doacao" onclick="confirmarDoacao()">✅ Confirmar doação</button>
@@ -877,13 +947,22 @@ $produtos = $stmt->fetchAll();
     <script>window.usuarioSessao = <?= json_encode($usuarioSessao, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script>window.csrfToken = <?= json_encode(gerarTokenCsrf(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script>window.pedidosApiUrl = <?= json_encode(BASE_URL . '/api/finalizar-compra.php', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <script>window.doacaoApiUrl = <?= json_encode(BASE_URL . '/api/registrar-doacao.php', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <script>window.cartoesApiUrl = <?= json_encode(BASE_URL . '/api/cartoes.php', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <script>window.checkoutDados = <?= json_encode([
+        'perfilCompleto' => (bool) $perfilCheckoutCompleto,
+        'enderecos' => $enderecosCliente,
+        'cartoes' => $cartoesCliente,
+        'perfilUrl' => BASE_URL . '/usuario/perfil.php',
+        'cartoesUrl' => BASE_URL . '/usuario/cartoes.php',
+    ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="js/pix.js"></script>
     <script src="js/senha.js?v=1"></script>
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261024-registration-policy"></script>
-    <script src="js/commerce.js?v=20261024-cart-and-payment-status"></script>
-    <script src="js/site.js?v=20261024-show-less"></script>
+    <script src="js/commerce.js?v=20261024-user-cart-isolation"></script>
+    <script src="js/site.js?v=20261024-ver-menos-loja"></script>
 </body>
 </html>
 

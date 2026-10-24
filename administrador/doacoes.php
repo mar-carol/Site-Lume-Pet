@@ -71,7 +71,7 @@ $resumoOngs = $pdo->query(
 )->fetchAll();
 
 $doacoes = $pdo->query(
-    'SELECT d.id, d.valor, d.pontos_gerados, d.status, d.criado_em,
+    'SELECT d.id, d.valor, d.pontos_gerados, d.status, d.metodo_pagamento, d.criado_em,
             u.nome AS usuario_nome, u.email AS usuario_email, o.nome AS ong_nome
      FROM doacoes d
      JOIN usuarios u ON u.id = d.usuario_id
@@ -137,6 +137,7 @@ require __DIR__ . '/../includes/admin_header.php';
                     <th>Cliente</th>
                     <th>ONG</th>
                     <th>Valor</th>
+                    <th>Forma de pagamento</th>
                     <th>Status</th>
                     <th>Ação</th>
                 </tr>
@@ -148,6 +149,7 @@ require __DIR__ . '/../includes/admin_header.php';
                         <td><?= limpar($doacao['usuario_nome']) ?><br><small><?= limpar($doacao['usuario_email']) ?></small></td>
                         <td><?= limpar($doacao['ong_nome']) ?></td>
                         <td>R$ <?= number_format((float) $doacao['valor'], 2, ',', '.') ?></td>
+                        <td><?= limpar($doacao['metodo_pagamento'] ?: 'Não informado') ?></td>
                         <td><?= limpar(ucfirst($doacao['status'])) ?>
                             <?php if ($doacao['status'] === 'confirmada'): ?>
                                 <br><small><?= (int) $doacao['pontos_gerados'] ?> pontos creditados</small>

@@ -30,6 +30,10 @@
 
         const resultado = await resposta.json();
 
+        if (resultado.verificacao_pendente && resultado.url_verificacao) {
+            window.location.href = resultado.url_verificacao;
+            return;
+        }
         if (!resultado.sucesso) {
             erro.textContent = resultado.erro;
             return;
@@ -88,6 +92,10 @@
         });
         const resultado = await resposta.json();
 
+        if (resultado.verificacao_pendente && resultado.url_verificacao) {
+          window.location.href = resultado.url_verificacao;
+          return;
+        }
         if (!resposta.ok || !resultado.sucesso) {
           erro.textContent = resultado.erro || 'Não foi possível criar a conta.';
           return;

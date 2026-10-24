@@ -9,6 +9,9 @@ if (usuarioEstaLogado()) {
 }
 
 $erro = '';
+$retorno = in_array($_GET['retorno'] ?? $_POST['retorno'] ?? '', ['checkout', 'doacao'], true)
+    ? ($_GET['retorno'] ?? $_POST['retorno'])
+    : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!validarTokenCsrf($_POST['csrf_token'] ?? null)) {
@@ -20,7 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuario = autenticarUsuario($email, $senha);
 
         if ($usuario) {
+            if (empty($usuario['email_verificado_em'])) {
+                $_SESSION['cadastro_pendente_id'] = (int) $usuario['id'];
+                redirecionar(BASE_URL . '/pages/verificar-email.php');
+            }
             iniciarSessaoUsuario($usuario);
+            if ($retorno !== '' && $usuario['tipo'] === 'cliente') {
+                redirecionar(BASE_URL . '/index.php?retorno=' . rawurlencode($retorno)
+                    . ($retorno === 'doacao' ? '#doacao' : '#loja'));
+            }
             redirecionar($usuario['tipo'] === 'admin'
                 ? BASE_URL . '/includes/index.php'
                 : BASE_URL . '/usuario/dashboard.php');
@@ -52,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <form class="login-pagina-form" method="post" action="<?= BASE_URL ?>/includes/login.php">
     <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
+    <input type="hidden" name="retorno" value="<?= limpar($retorno) ?>">
 
     <label for="loginEmail">E-mail</label>
     <input id="loginEmail" type="email" name="email" autocomplete="email" required>
@@ -63,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </form>
 
 <p>Não tem conta? <a href="<?= BASE_URL ?>/includes/cadastro.php">Cadastre-se</a></p>
+<p><a href="<?= BASE_URL ?>/pages/recuperar.php">Esqueci minha senha</a></p>
 </section>
 </main>
 </body>

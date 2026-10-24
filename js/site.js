@@ -75,8 +75,10 @@
 
       const botaoVerMenos = document.getElementById('lojaVerMenos');
       if (botaoVerMenos) {
-        botaoVerMenos.hidden = limiteProdutosVisiveis <= produtosPorPagina
-          || totalResultados <= produtosPorPagina;
+        botaoVerMenos.dataset.expandido = String(
+          limiteProdutosVisiveis > produtosPorPagina && totalResultados > produtosPorPagina
+        );
+        atualizarBotaoVerMenos();
       }
 
       if (vazio) {
@@ -99,6 +101,21 @@
       document.getElementById('loja')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function atualizarBotaoVerMenos() {
+      const botao = document.getElementById('lojaVerMenos');
+      const areaProdutos = document.getElementById('lojaProdutosArea');
+      if (!botao || !areaProdutos) return;
+
+      const bannerPontos = document.querySelector('.banner-pontos');
+      const inicioProdutos = areaProdutos.getBoundingClientRect();
+      const fimDaAreaLoja = (bannerPontos || areaProdutos).getBoundingClientRect();
+      const dentroDaLoja = inicioProdutos.top < window.innerHeight && fimDaAreaLoja.bottom > 0;
+      botao.hidden = botao.dataset.expandido !== 'true' || !dentroDaLoja;
+    }
+
+    window.addEventListener('scroll', atualizarBotaoVerMenos, { passive: true });
+    document.addEventListener('scroll', atualizarBotaoVerMenos, { passive: true, capture: true });
+    window.addEventListener('resize', atualizarBotaoVerMenos);
 
     // Inicia mostrando o Geral
     filtrarProdutos();
@@ -245,24 +262,56 @@
 
     (function () {
     const slides = document.querySelectorAll('#servicoCarrossel .servico-slide');
+    const carrossel = document.getElementById('servicoCarrossel');
     const dotsWrap = document.getElementById('servicoDots');
+    if (!carrossel || !dotsWrap || slides.length === 0) return;
     let atual = 0;
 
-    slides.forEach((_, i) => {
+    function ajustarTamanhoSlide() {
+      const imagem = slides[atual].querySelector('img');
+      if (!imagem) return;
+      if (!imagem.complete || !imagem.naturalWidth) {
+        imagem.addEventListener('load', ajustarTamanhoSlide, { once: true });
+        return;
+      }
+
+      const proporcao = imagem.naturalWidth / imagem.naturalHeight;
+      const larguraDisponivel = carrossel.parentElement.clientWidth;
+      const maxLargura = Math.min(
+        window.matchMedia('(max-width: 768px)').matches ? larguraDisponivel : larguraDisponivel / 2,
+        400
+      );
+      const maxAltura = Math.min(300, window.innerHeight * 0.5);
+      const largura = Math.min(maxLargura, maxAltura * proporcao);
+      carrossel.style.width = `${largura}px`;
+      carrossel.style.height = `${largura / proporcao}px`;
+    }
+
+    slides.forEach((slide, i) => {
       const dot = document.createElement('button');
       dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Exibir imagem da ONG ${i + 1}`);
       dot.addEventListener('click', () => irParaSlide(i));
       dotsWrap.appendChild(dot);
     });
 
     function irParaSlide(i) {
+      if (i === atual) return;
       slides[atual].classList.remove('active');
       dotsWrap.children[atual].classList.remove('active');
       atual = i;
       slides[atual].classList.add('active');
       dotsWrap.children[atual].classList.add('active');
+      ajustarTamanhoSlide();
     }
 
+    slides.forEach(slide => {
+      const imagem = slide.querySelector('img');
+      if (imagem) imagem.addEventListener('load', ajustarTamanhoSlide, { once: true });
+    });
+    window.addEventListener('resize', ajustarTamanhoSlide);
+    ajustarTamanhoSlide();
     setInterval(() => irParaSlide((atual + 1) % slides.length), 4000);
   })();
 
@@ -320,11 +369,13 @@
     function abrirPagamentoDoacao() {
       const email = document.getElementById('doacao-email').value.trim();
       const valor = document.getElementById('doacao-valor').value.trim();
+      const ongId = document.getElementById('doacao-ong').value;
       let valido = true;
 
       // Limpa erros
       document.getElementById('erro-email').textContent = '';
       document.getElementById('erro-valor').textContent = '';
+      document.getElementById('erro-ong').textContent = '';
 
       // Valida email
       if (!email || !email.includes('@')) {
@@ -337,16 +388,29 @@
         document.getElementById('erro-valor').textContent = 'Por favor, informe um valor para a doação.';
         valido = false;
       }
+      if (!ongId) {
+        document.getElementById('erro-ong').textContent = 'Selecione a instituição que receberá sua doação.';
+        valido = false;
+      }
 
       if (!valido) return;
 
       // Preenche resumo
       const nome = document.getElementById('doacao-nome').value.trim();
-      document.getElementById('doacaoResumo').innerHTML = `
-        ${nome ? `<p><strong>Nome:</strong> ${nome}</p>` : ''}
-        <p><strong>E-mail:</strong> ${email}</p>
-        <p><strong>Valor:</strong> R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}</p>
-      `;
+      const resumo = document.getElementById('doacaoResumo');
+      resumo.replaceChildren();
+      [
+        ...(nome ? [['Nome', nome]] : []),
+        ['E-mail', email],
+        ['Instituição', document.getElementById('doacao-ong').selectedOptions[0].textContent],
+        ['Valor', `R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}`]
+      ].forEach(([rotulo, texto]) => {
+        const paragrafo = document.createElement('p');
+        const forte = document.createElement('strong');
+        forte.textContent = `${rotulo}: `;
+        paragrafo.append(forte, document.createTextNode(texto));
+        resumo.appendChild(paragrafo);
+      });
 
       selecionarMetodo('pix');
       document.getElementById('doacaoOverlay').classList.add('aberto');
@@ -364,48 +428,95 @@
 
       document.getElementById('detalhe-pix').style.display = metodo === 'pix' ? 'flex' : 'none';
       document.getElementById('detalhe-cartao').style.display = metodo !== 'pix' ? 'flex' : 'none';
+      if (metodo !== 'pix') atualizarCartoesDoacao();
 
-      if (metodo =='pix') {
+      if (metodo === 'pix') {
         const valor = parseFloat(document.getElementById('doacao-valor').value);
-        LumePix. renderizar (
+        LumePix.renderizar(
           document.getElementById('pixDoacaoContainer'),
           valor,
-          'DOA' + Date.now()          
+          'DOA' + Date.now()
         );
       }
     }
 
-    function mascaraCartao(input) {
-      input.value = input.value.replace(/\D/g, '').replace(/(\d{4})/g, '$1 ').trim().slice(0, 19);
+    function atualizarCartoesDoacao() {
+      const seletor = document.getElementById('doacao-cartao');
+      if (!seletor) return;
+      const cartoes = (window.checkoutDados?.cartoes || []).filter(cartao =>
+        cartao.tipo_uso === metodoDoacao || cartao.tipo_uso === 'ambos'
+      );
+      seletor.innerHTML = cartoes.length
+        ? cartoes.map(cartao =>
+          `<option value="${Number(cartao.id)}">${escaparTextoHTML(cartao.bandeira)} •••• ${escaparTextoHTML(cartao.ultimos_digitos)} — ${escaparTextoHTML(cartao.nome_titular)}</option>`
+        ).join('')
+        : '<option value="">Nenhum cartão compatível salvo</option>';
     }
 
-    function mascaraValidade(input) {
-      input.value = input.value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2').slice(0, 5);
-    }
-
-    function confirmarDoacao() {
-      const nomes = { pix: 'PIX', credito: 'Cartão de Crédito', debito: 'Cartão de Débito' };
-
-      if (metodoDoacao !== 'pix') {
-        const campos = document.querySelectorAll('#detalhe-cartao input');
-        for (let campo of campos) {
-          if (!campo.value.trim()) {
-            alert('Por favor, preencha todos os dados do cartão.');
-            return;
-          }
-        }
+    async function confirmarDoacao() {
+      if (!window.usuarioSessao || window.usuarioSessao.tipo !== 'cliente') {
+        alert('Entre na sua conta de cliente para registrar a doação.');
+        window.location.href = 'includes/login.php?retorno=doacao';
+        return;
       }
 
-      alert(`✅ Doação confirmada via ${nomes[metodoDoacao]}!\nObrigado pelo seu apoio! 🐾`);
-      fecharPagamentoDoacao();
+      const cartaoId = metodoDoacao === 'pix'
+        ? null
+        : Number(document.getElementById('doacao-cartao').value || 0);
+      if (metodoDoacao !== 'pix' && !cartaoId) {
+        alert('Cadastre ou selecione um cartão compatível. O cartão não será cobrado neste checkout demonstrativo.');
+        return;
+      }
 
-      // Limpa o formulário
-      document.getElementById('doacao-nome').value = '';
-      document.getElementById('doacao-email').value = '';
-      document.getElementById('doacao-valor').value = '';
-      document.querySelectorAll('.btn-valor').forEach(btn => btn.classList.remove('ativo'));
+      const botao = document.querySelector('.btn-confirmar-doacao');
+      botao.disabled = true;
+      try {
+        const resposta = await fetch(window.doacaoApiUrl, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': window.csrfToken || ''
+          },
+          body: JSON.stringify({
+            ong_id: Number(document.getElementById('doacao-ong').value),
+            valor: document.getElementById('doacao-valor').value,
+            metodo: metodoDoacao,
+            cartao_id: cartaoId
+          })
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.erro || 'Não foi possível registrar a intenção de doação.');
+        }
+
+        alert(`Intenção de doação #${resultado.doacao_id} registrada e pendente de confirmação. Nenhum pagamento foi processado.`);
+        fecharPagamentoDoacao();
+        document.getElementById('doacao-nome').value = '';
+        document.getElementById('doacao-email').value = '';
+        document.getElementById('doacao-valor').value = '';
+        document.getElementById('doacao-ong').value = '';
+        document.querySelectorAll('.btn-valor').forEach(btn => btn.classList.remove('ativo'));
+      } catch (erro) {
+        alert(erro.message || 'Não foi possível registrar a doação. Tente novamente.');
+      } finally {
+        botao.disabled = false;
+      }
     }
 
+    window.addEventListener('focus', async () => {
+      if (!window.usuarioSessao || !window.cartoesApiUrl) return;
+      try {
+        const resposta = await fetch(window.cartoesApiUrl, { credentials: 'same-origin' });
+        const dados = await resposta.json();
+        if (!resposta.ok || !dados.sucesso) throw new Error(dados.erro || 'Falha ao atualizar cartões.');
+        window.checkoutDados.cartoes = dados.cartoes;
+        atualizarCartoesDoacao();
+        if (document.getElementById('cartaoCheckout')) atualizarOpcoesCartaoCheckout();
+      } catch (erro) {
+        console.error('Não foi possível atualizar os cartões salvos.', erro);
+      }
+    });
 
     // PÁGINA DE PRODUTO
 

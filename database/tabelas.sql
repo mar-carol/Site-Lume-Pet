@@ -20,6 +20,7 @@ CREATE TABLE usuarios (
     pontos INT NOT NULL DEFAULT 0,
     tipo ENUM('cliente','admin') NOT NULL DEFAULT 'cliente',
     status ENUM('ativo','inativo') NOT NULL DEFAULT 'ativo',
+    email_verificado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -38,6 +39,7 @@ CREATE TABLE cartoes (
     nome_titular VARCHAR(150) NOT NULL,
     validade_mes TINYINT DEFAULT NULL,
     validade_ano SMALLINT DEFAULT NULL,
+    tipo_uso ENUM('credito','debito','ambos') NOT NULL DEFAULT 'ambos',
     padrao TINYINT(1) NOT NULL DEFAULT 0,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
@@ -174,6 +176,7 @@ CREATE TABLE doacoes (
     usuario_id INT NOT NULL,
     ong_id INT NOT NULL,
     cartao_id INT DEFAULT NULL,
+    metodo_pagamento VARCHAR(40) DEFAULT NULL,
     valor DECIMAL(10,2) NOT NULL,
     pontos_gerados INT NOT NULL DEFAULT 0,
     status ENUM('pendente','confirmada','cancelada') NOT NULL DEFAULT 'pendente',
@@ -181,6 +184,27 @@ CREATE TABLE doacoes (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (ong_id) REFERENCES ongs(id) ON DELETE CASCADE,
     FOREIGN KEY (cartao_id) REFERENCES cartoes(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- ENDEREÇOS SALVOS PARA ENTREGA
+-- ---------------------------------------------------------
+CREATE TABLE enderecos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    apelido VARCHAR(60) NOT NULL DEFAULT 'Meu endereço',
+    cep CHAR(8) NOT NULL,
+    logradouro VARCHAR(150) NOT NULL,
+    numero VARCHAR(30) NOT NULL,
+    complemento VARCHAR(100) DEFAULT NULL,
+    bairro VARCHAR(80) DEFAULT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    estado CHAR(2) NOT NULL,
+    padrao TINYINT(1) NOT NULL DEFAULT 0,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    KEY idx_enderecos_usuario_padrao (usuario_id, padrao),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------
@@ -195,4 +219,32 @@ CREATE TABLE pontos_historico (
     descricao VARCHAR(255) DEFAULT NULL,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- TOKENS DE RECUPERAÇÃO DE SENHA
+-- ---------------------------------------------------------
+CREATE TABLE password_reset_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    token_hash CHAR(64) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    used_at DATETIME DEFAULT NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_password_reset_usuario_criado (usuario_id, criado_em),
+    KEY idx_password_reset_expira (expires_at),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- CÓDIGOS DE VERIFICAÇÃO DE E-MAIL
+-- ---------------------------------------------------------
+CREATE TABLE codigos_verificacao_email (
+    usuario_id INT NOT NULL PRIMARY KEY,
+    codigo_hash CHAR(64) NOT NULL,
+    expira_em DATETIME NOT NULL,
+    tentativas TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    KEY idx_codigos_verificacao_expira (expira_em)
 ) ENGINE=InnoDB;
