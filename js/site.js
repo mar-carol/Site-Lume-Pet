@@ -3,6 +3,8 @@
     const siteProjetoUrl = new URL('../', document.currentScript.src);
 
     let categoriaAtiva = 'geral';
+    const produtosPorPagina = 8;
+    let limiteProdutosVisiveis = produtosPorPagina;
 
     function filtrarCategoria(categoria, event) {
       categoriaAtiva = categoria;
@@ -13,9 +15,13 @@
       filtrarProdutos();
     }
 
-    function filtrarProdutos() {
+    function filtrarProdutos(reiniciarLimite = true) {
       const campoPesquisa = document.getElementById('campoPesquisa');
       if (!campoPesquisa) return;
+
+      if (reiniciarLimite) {
+        limiteProdutosVisiveis = produtosPorPagina;
+      }
 
       const texto = campoPesquisa.value.toLowerCase().trim();
       const pesquisaMenu = document.getElementById('menuPesquisa');
@@ -32,6 +38,7 @@
         remedios: ['remedio', 'remedios', 'medicamento', 'medicamentos']
       };
       let produtosVisiveis = 0;
+      let totalResultados = 0;
 
       cards.forEach(card => {
         const categoria = (card.dataset.categoria || '')
@@ -50,22 +57,34 @@
           passaCategoria = categoriaAtiva === 'geral' || categoriasPermitidas.includes(categoria);
         }
 
-        const deveMostrar = passaCategoria && passaPesquisa;
+        const corresponde = passaCategoria && passaPesquisa;
+        const deveMostrar = corresponde && produtosVisiveis < limiteProdutosVisiveis;
 
         card.classList.toggle('oculto', !deveMostrar);
         card.classList.toggle('visivel', deveMostrar);
         card.style.display = deveMostrar ? 'flex' : 'none';
 
         if (deveMostrar) produtosVisiveis++;
+        if (corresponde) totalResultados++;
       });
 
+      const botaoVerMais = document.getElementById('lojaVerMais');
+      if (botaoVerMais) {
+        botaoVerMais.hidden = produtosVisiveis >= totalResultados;
+      }
+
       if (vazio) {
-        vazio.style.display = produtosVisiveis > 0 ? 'none' : 'flex';
+        vazio.style.display = totalResultados > 0 ? 'none' : 'flex';
       }
 
       document.querySelectorAll('.categoria-btn').forEach(btn => {
         btn.classList.toggle('desativado', !!texto);
       });
+    }
+
+    function mostrarMaisProdutos() {
+      limiteProdutosVisiveis += produtosPorPagina;
+      filtrarProdutos(false);
     }
 
 

@@ -38,25 +38,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Login - Lume Pet</title>
 <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
 </head>
-<body>
-<h1>Entrar</h1>
+<body class="pagina-login">
+<main class="login-pagina-conteudo">
+<a class="login-pagina-logo" href="<?= BASE_URL ?>/index.php" aria-label="Voltar para a página inicial da Lume Pet">
+    <img src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet">
+</a>
+<section class="login-pagina-card" aria-labelledby="loginTitulo">
+<h1 id="loginTitulo">Entrar</h1>
 
 <?php if ($erro): ?>
-    <p style="color:red;"><?= limpar($erro) ?></p>
+    <p class="login-pagina-erro" role="alert"><?= limpar($erro) ?></p>
 <?php endif; ?>
 
-<form method="post" action="<?= BASE_URL ?>/includes/login.php">
+<form class="login-pagina-form" method="post" action="<?= BASE_URL ?>/includes/login.php">
     <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
 
-    <label>E-mail</label>
-    <input type="email" name="email" required>
+    <label for="loginEmail">E-mail</label>
+    <input id="loginEmail" type="email" name="email" autocomplete="email" required>
 
-    <label>Senha</label>
-    <input type="password" name="senha" required>
+    <label for="loginSenha">Senha</label>
+    <input id="loginSenha" type="password" name="senha" autocomplete="current-password" required>
 
     <button type="submit">Entrar</button>
 </form>
 
 <p>Não tem conta? <a href="<?= BASE_URL ?>/includes/cadastro.php">Cadastre-se</a></p>
+</section>
+</main>
 </body>
 </html>

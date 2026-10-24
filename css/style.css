@@ -294,6 +294,117 @@ body {
   text-align: center;
 }
 
+.pagina-login {
+  display: grid;
+  min-height: 100vh;
+  padding: 32px 20px;
+  place-items: center;
+  background: linear-gradient(135deg, #f3fbfc, #fff7eb);
+}
+
+.login-pagina-conteudo {
+  width: 100%;
+  max-width: 440px;
+}
+
+.login-pagina-logo {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 20px;
+}
+
+.login-pagina-logo img {
+  display: block;
+  width: 76px;
+  height: auto;
+}
+
+.login-pagina-card {
+  padding: 32px;
+  border: 1px solid #e1ebf2;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(56, 90, 129, 0.12);
+}
+
+.login-pagina-card h1 {
+  margin: 0 0 24px;
+  color: #385A81;
+  font-size: 26px;
+  text-align: center;
+}
+
+.login-pagina-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-pagina-form label {
+  color: #385A81;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login-pagina-form input {
+  width: 100%;
+  min-height: 46px;
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border: 1px solid #c7d8e4;
+  border-radius: 10px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+}
+
+.login-pagina-form input:focus {
+  border-color: #FA8000;
+  outline: 2px solid rgba(250, 128, 0, 0.16);
+}
+
+.login-pagina-form button {
+  min-height: 46px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 24px;
+  background: #385A81;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.login-pagina-form button:hover {
+  background: #FA8000;
+}
+
+.login-pagina-card > p {
+  margin: 20px 0 0;
+  color: #5f6d79;
+  font-size: 14px;
+  text-align: center;
+}
+
+.login-pagina-card > p a {
+  color: #385A81;
+  font-weight: 600;
+}
+
+.login-pagina-card > p a:hover {
+  color: #FA8000;
+}
+
+.login-pagina-card > .login-pagina-erro {
+  margin: 0 0 18px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #a52828;
+  font-size: 14px;
+}
+
 .politica-privacidade {
   background: none;
   border: none;
@@ -1059,9 +1170,9 @@ transform: translateY(-50%) rotate(90deg); }
   transition: width 0.2s linear;
 }
  
-/* SERVIÇO */
+/* SERVIÇO/ CARROSSEL ONGS E SAIBA MAIS*/
 .servico {
-  padding: 60px 40px;
+  padding: 79px 40px;
   background: #fff;
   text-align: center;
 }
@@ -1267,7 +1378,7 @@ transform: translateY(-50%) rotate(90deg); }
 /*LOJA*/
 .loja {
   background: #f9f9f9;
-  padding: 60px 40px;
+  padding: 70px 40px;
   text-align: center;
 }
  
@@ -1353,6 +1464,28 @@ transform: translateY(-50%) rotate(90deg); }
   max-width: 1120px;
   margin: 0 auto;
   align-items: stretch;
+}
+
+.loja-ver-mais {
+  margin: 28px auto 0;
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 24px;
+  background: #385A81;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.loja-ver-mais:hover {
+  background: #FA8000;
+  transform: translateY(-1px);
+}
+
+.loja-ver-mais[hidden] {
+  display: none;
 }
 
 .loja-vazio {
@@ -3446,7 +3579,8 @@ body {
 }
 
 .banner-pontos {
-  display: flex;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
   max-width: 1120px;
@@ -3476,21 +3610,37 @@ body {
   font-size: 18px;
 }
 
+.banner-pontos-conteudo {
+  min-width: 0;
+}
+
 .banner-pontos p {
   margin: 0;
   color: #5f6d79;
   font-size: 14px;
 }
 
+.banner-pontos-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .banner-pontos a {
-  flex: 0 0 auto;
-  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
   padding: 10px 16px;
   border-radius: 20px;
   background: #385A81;
   color: #fff;
   font-size: 13px;
   text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+  transition: background 0.3s ease;
 }
 
 .banner-pontos a:hover {
@@ -3551,18 +3701,18 @@ body {
   }
 
   .banner-pontos {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    grid-template-columns: 48px minmax(0, 1fr);
+    align-items: center;
     padding: 18px;
   }
 
-  .banner-pontos > div {
-    flex: 1;
-    min-width: 180px;
+  .banner-pontos-acoes {
+    grid-column: 1 / -1;
+    justify-content: stretch;
   }
 
   .banner-pontos a {
-    margin-left: 66px;
+    flex: 1 1 0;
   }
 }
 
@@ -3582,8 +3732,13 @@ body {
     gap: 12px;
   }
 
+  .banner-pontos-acoes {
+    gap: 8px;
+  }
+
   .banner-pontos a {
-    margin-left: 60px;
+    padding: 10px 8px;
+    white-space: normal;
   }
 }
 

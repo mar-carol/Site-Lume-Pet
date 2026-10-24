@@ -305,7 +305,7 @@ $produtos = $stmt->fetchAll();
 
     <!-- serviço -->
      
-    <section class="servico">
+    <section class="servico" id="servico">
         <h1>Mais que um pet shop, uma missão!</h1>
         <div class="servico-wrapper">
 
@@ -460,17 +460,13 @@ $produtos = $stmt->fetchAll();
 
 </div>
 
+        <button class="loja-ver-mais" id="lojaVerMais" type="button" onclick="mostrarMaisProdutos()" hidden>
+            Ver mais produtos
+        </button>
 
 <aside class="banner-pontos" aria-labelledby="bannerPontosTitulo">
 
     <span class="banner-pontos-icone" aria-hidden="true">✦</span>
-
-    <div class="banner-pontos-saiba-mais">
-        <h3 id="bannerSaibaPontos">Saiba mais</h3>
-        <a href="<?= BASE_URL ?>/pages/sobrepontos.php">
-            Sobre os pontos
-        </a>
-    </div>
 
     <div class="banner-pontos-conteudo">
         <h3 id="bannerPontosTitulo">Doe e acumule pontos</h3>
@@ -480,9 +476,14 @@ $produtos = $stmt->fetchAll();
         </p>
     </div>
 
-    <a href="<?= BASE_URL ?>/usuario/pontos.php">
-        Veja seus pontos
-    </a>
+    <div class="banner-pontos-acoes">
+        <a href="<?= BASE_URL ?>/pages/sobrepontos.php">
+            Sobre os pontos
+        </a>
+        <a href="<?= BASE_URL ?>/usuario/pontos.php">
+            Veja seus pontos
+        </a>
+    </div>
 
 </aside>
 
@@ -872,7 +873,7 @@ $produtos = $stmt->fetchAll();
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261022-orders"></script>
     <script src="js/commerce.js?v=20261022-orders"></script>
-    <script src="js/site.js?v=20261022-review-carousel"></script>
+    <script src="js/site.js?v=20261024-ong-carousel"></script>
 </body>
 </html>
 
