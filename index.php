@@ -626,8 +626,8 @@ $perfilCheckoutCompleto = $usuario
             <div class="doacao-info">
                 <img src="assets/images/dog.jpg" alt="Ajudando animais" class="doacao-img">
                 <h3>Sua doação faz a diferença!</h3>
-                <p>Cada contribuição ajuda animais abandonados a terem uma segunda chance. Com o seu apoio, conseguimos fornecer alimentação, cuidados veterinários e um lar temporário cheio de amor.</p>
-                <p>Junte-se a nós e transforme vidas — uma patinha de cada vez.</p>
+                <p>Cada contribuição ajuda animais abandonados a terem uma segunda chance. Com o seu apoio, conseguimos fornecer apoio para ongs com alimentação, cuidados veterinários e um lar temporário cheio de amor.</p>
+                <p>Junte-se a nós e transforme vidas, uma patinha de cada vez.</p>
             </div>
 
             <div class="doacao-form">

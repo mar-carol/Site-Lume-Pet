@@ -2333,7 +2333,7 @@ transform: translateY(-50%) rotate(90deg); }
 /* DOAÇÃO */
 .doacao {
   background: #2d8bba;
-  padding: 60px 40px;
+  padding: 65px 40px;
   text-align: center;
 }
 
@@ -2369,13 +2369,13 @@ transform: translateY(-50%) rotate(90deg); }
 }
 
 .doacao-info h3 {
-  font-size: 20px;
+  font-size: 27px;
   margin-bottom: 12px;
   color: #FFFEEE;
 }
 
 .doacao-info p {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.7;
   color: #e0f0f8;
   margin-bottom: 10px;
@@ -5453,4 +5453,15 @@ body {
   .pagina-politicas .politicas-layout { grid-template-columns: 1fr; margin-top: -20px; }
   .pagina-politicas .indice { position: static; }
   .pagina-politicas .conteudo { padding: 26px 20px; }
+}
+
+body p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.loja p,
+.avaliacao p {
+  text-align: initial;
+  text-justify: auto;
 }
