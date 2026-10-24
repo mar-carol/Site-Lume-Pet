@@ -604,7 +604,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function fecharProduto() {
+    function fecharProduto(restaurarRolagem = true) {
       document.getElementById('produtoPagina').classList.remove('aberta');
 
       SECOES_CLASSES.forEach(sel => {
@@ -612,7 +612,9 @@
         if (el) el.style.display = '';
       });
 
-      window.scrollTo({ top: posicaoScrollProduto, behavior: 'smooth' });
+      if (restaurarRolagem) {
+        window.scrollTo({ top: posicaoScrollProduto, behavior: 'smooth' });
+      }
     }
 
     function alterarQtdProduto(delta) {
@@ -891,16 +893,36 @@
       document.getElementById('navMenu').classList.toggle('aberto');
     }
 
-    // fecha o menu ao clicar em qualquer link
-    document.querySelectorAll('#navMenu a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (link.hash) {
-          document.querySelectorAll('#navMenu a.ativo').forEach(item => item.classList.remove('ativo'));
-          link.classList.add('ativo');
-        }
+    // fecha o menu ao clicar em qualquer link e reabre as seções ao sair do produto
+    document.addEventListener('click', event => {
+      const link = event.target.closest('.header a[href^="#"]');
+      if (!link) return;
+
+      const destino = link.getAttribute('href');
+      const secaoDestino = destino && destino.length > 1
+        ? document.getElementById(destino.slice(1))
+        : null;
+      const paginaProduto = document.getElementById('produtoPagina');
+
+      if (secaoDestino && paginaProduto?.classList.contains('aberta')) {
+        event.preventDefault();
+        fecharProduto(false);
+        window.history.pushState(null, '', destino);
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            secaoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+      }
+
+      if (link.closest('#navMenu') && link.hash) {
+        document.querySelectorAll('#navMenu a.ativo').forEach(item => item.classList.remove('ativo'));
+        link.classList.add('ativo');
+      }
+      if (link.closest('#navMenu')) {
         document.getElementById('menuHamburguer').classList.remove('aberto');
         document.getElementById('navMenu').classList.remove('aberto');
-      });
+      }
     });
 
     function atualizarLinkAtivo() {
