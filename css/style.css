@@ -2261,7 +2261,7 @@ transform: translateY(-50%) rotate(90deg); }
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.7s ease;
 }
 
 .adote-slide.active {
