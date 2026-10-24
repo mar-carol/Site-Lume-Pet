@@ -265,6 +265,7 @@
     let cepValidado = false;
     let cepEndereco = null;
     let enderecoSelecionadoSalvo = null;
+    let consultaFreteId = 0;
     let cupomAtual = null; // { codigo, tipo: 'percentual' | 'fixo' | 'frete', valor, desc }
 
     const CUPONS = {
@@ -347,12 +348,16 @@
       const campos = ['cepInput', 'logradouroEntrega', 'numeroCasa', 'complemento'];
       if (!seletor || !detalhes) return;
 
+      consultaFreteId++;
       const endereco = window.checkoutDados?.enderecos?.find(item => String(item.id) === seletor.value);
       enderecoSelecionadoSalvo = endereco || null;
-      const somenteLeitura = Boolean(endereco);
+      const numeroSalvo = String(endereco?.numero || '').trim();
+      const numeroLegado = endereco && (
+        numeroSalvo === '' || ['S/N', 'SN', 'S N'].includes(numeroSalvo.toUpperCase())
+      );
       campos.forEach(id => {
         const campo = document.getElementById(id);
-        if (campo) campo.readOnly = somenteLeitura;
+        if (campo) campo.readOnly = Boolean(endereco) && !(id === 'numeroCasa' && numeroLegado);
       });
 
       if (!endereco) {
@@ -372,7 +377,7 @@
 
       document.getElementById('cepInput').value = endereco.cep;
       document.getElementById('logradouroEntrega').value = endereco.logradouro;
-      document.getElementById('numeroCasa').value = endereco.numero;
+      document.getElementById('numeroCasa').value = numeroLegado ? '' : endereco.numero;
       document.getElementById('complemento').value = endereco.complemento || '';
       document.getElementById('salvarEnderecoPadrao').checked = false;
       detalhes.style.display = 'flex';
@@ -393,11 +398,37 @@
       input.value = input.value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').slice(0, 9);
     }
 
+    function atualizarNumeroEnderecoSelecionado() {
+      if (!enderecoSelecionadoSalvo || !cepValidado) return;
+      const cep = document.getElementById('cepInput').value.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+      const endereco = enderecoSelecionadoSalvo;
+      const uf = String(endereco.estado || '').toUpperCase();
+      const info = TABELA_FRETE[uf] || FRETE_PADRAO;
+      const partes = [
+        endereco.logradouro,
+        document.getElementById('numeroCasa').value.trim()
+          ? `Número ${document.getElementById('numeroCasa').value.trim()}`
+          : '',
+        endereco.complemento,
+        endereco.bairro,
+        `${endereco.cidade}/${uf}`,
+        `CEP ${cep.slice(0, 5)}-${cep.slice(5)}`
+      ];
+      document.getElementById('cepResultado').innerHTML = `
+        <span class="frete-ok">
+          ${partes.filter(Boolean).map(escaparTextoHTML).join(', ')}<br>
+          🚚 Frete estimado: R$ ${info.valor.toFixed(2).replace('.', ',')} — ${info.prazo}
+        </span>
+      `;
+    }
+
     async function calcularFrete() {
       const cepInput = document.getElementById('cepInput');
       const resultado = document.getElementById('cepResultado');
       const enderecoDetalhes = document.getElementById('enderecoDetalhes');
       const cep = cepInput.value.replace(/\D/g, '');
+      const consultaAtual = ++consultaFreteId;
 
       if (cep.length !== 8) {
         resultado.innerHTML = '<span class="erro-frete">CEP inválido. Digite os 8 números.</span>';
@@ -408,11 +439,31 @@
         return;
       }
 
+      if (enderecoSelecionadoSalvo) {
+        const uf = String(enderecoSelecionadoSalvo.estado || '').toUpperCase();
+        const info = TABELA_FRETE[uf] || FRETE_PADRAO;
+        freteAtual = info.valor;
+        cepValidado = true;
+        cepEndereco = {
+          uf,
+          logradouro: enderecoSelecionadoSalvo.logradouro || '',
+          bairro: enderecoSelecionadoSalvo.bairro || '',
+          localidade: enderecoSelecionadoSalvo.cidade || ''
+        };
+        atualizarNumeroEnderecoSelecionado();
+        enderecoDetalhes.style.display = 'flex';
+        atualizarResumoPagamento();
+        return;
+      }
+
       resultado.innerHTML = '<span class="carregando-frete">Calculando frete...</span>';
 
       try {
         const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        if (!resp.ok) throw new Error('Não foi possível consultar o CEP.');
         const dados = await resp.json();
+
+        if (consultaAtual !== consultaFreteId) return;
 
         if (dados.erro) {
           resultado.innerHTML = '<span class="erro-frete">CEP não encontrado.</span>';
@@ -444,6 +495,7 @@
         enderecoDetalhes.style.display = 'flex';
         atualizarResumoPagamento();
       } catch (e) {
+        if (consultaAtual !== consultaFreteId) return;
         resultado.innerHTML = '<span class="erro-frete">Não foi possível calcular o frete agora. Tente novamente.</span>';
         freteAtual = 0;
         cepValidado = false;
@@ -667,13 +719,13 @@
             metodo,
             cartao_id: cartaoId,
             endereco_id: enderecoSelecionadoSalvo?.id || null,
+            numero: document.getElementById('numeroCasa').value.trim(),
             salvar_endereco_padrao: document.getElementById('salvarEnderecoPadrao').checked,
             cep: document.getElementById('cepInput').value.replace(/\D/g, ''),
             uf: cepEndereco?.uf || '',
             logradouro: document.getElementById('logradouroEntrega').value.trim() || cepEndereco?.logradouro || '',
             bairro: cepEndereco?.bairro || '',
             localidade: cepEndereco?.localidade || '',
-            numero: document.getElementById('numeroCasa').value.trim(),
             complemento: document.getElementById('complemento').value.trim(),
             cupom: cupomAtual?.codigo || ''
           })

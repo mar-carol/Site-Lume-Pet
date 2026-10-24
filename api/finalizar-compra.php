@@ -265,7 +265,7 @@ try {
     $enderecoSalvo = null;
     if ($enderecoId && $enderecoId > 0) {
         $stmt = $pdo->prepare(
-            'SELECT id, cep, logradouro, numero, complemento, bairro, cidade, estado
+            'SELECT id, cep, logradouro, numero, complemento, bairro, cidade, estado, padrao
              FROM enderecos WHERE id = :id AND usuario_id = :usuario_id'
         );
         $stmt->execute(['id' => $enderecoId, 'usuario_id' => $usuarioId]);
@@ -283,9 +283,15 @@ try {
     $logradouro = trim((string) ($dados['logradouro'] ?? ''));
     $bairro = trim((string) ($dados['bairro'] ?? ''));
     $localidade = trim((string) ($dados['localidade'] ?? ''));
+    $corrigirNumeroEndereco = false;
     if ($enderecoSalvo) {
         $cep = preg_replace('/\D/', '', $enderecoSalvo['cep']);
-        $numero = trim($enderecoSalvo['numero']);
+        $numeroSalvo = trim($enderecoSalvo['numero']);
+        $corrigirNumeroEndereco = $numeroSalvo === ''
+            || in_array(mb_strtoupper($numeroSalvo, 'UTF-8'), ['S/N', 'SN', 'S N'], true);
+        $numero = $corrigirNumeroEndereco
+            ? trim((string) ($dados['numero'] ?? ''))
+            : $numeroSalvo;
         $complemento = trim((string) ($enderecoSalvo['complemento'] ?? ''));
         $uf = strtoupper($enderecoSalvo['estado']);
         $logradouro = trim($enderecoSalvo['logradouro']);
@@ -384,6 +390,25 @@ try {
     $endereco = implode(', ', $partesEndereco);
 
     $pdo->beginTransaction();
+    if ($enderecoSalvo && $corrigirNumeroEndereco) {
+        $stmt = $pdo->prepare(
+            'UPDATE enderecos SET numero = :numero WHERE id = :id AND usuario_id = :usuario_id'
+        );
+        $stmt->execute([
+            'numero' => $numero,
+            'id' => $enderecoSalvo['id'],
+            'usuario_id' => $usuarioId,
+        ]);
+        if ((int) $enderecoSalvo['padrao'] === 1) {
+            $stmt = $pdo->prepare(
+                'UPDATE usuarios SET endereco = :endereco WHERE id = :usuario_id'
+            );
+            $stmt->execute([
+                'endereco' => trim($logradouro . ', ' . $numero),
+                'usuario_id' => $usuarioId,
+            ]);
+        }
+    }
     if (!$enderecoSalvo && $salvarEnderecoPadrao) {
         $stmt = $pdo->prepare('UPDATE enderecos SET padrao = 0 WHERE usuario_id = :usuario_id');
         $stmt->execute(['usuario_id' => $usuarioId]);

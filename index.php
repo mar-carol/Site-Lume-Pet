@@ -299,7 +299,7 @@ $perfilCheckoutCompleto = $usuario
                 <div class="endereco-detalhes" id="enderecoDetalhes" style="display:none">
                     <div class="endereco-linha">
                         <input type="text" id="logradouroEntrega" placeholder="Rua/avenida">
-                        <input type="text" id="numeroCasa" placeholder="Número *">
+                        <input type="text" id="numeroCasa" placeholder="Número *" maxlength="30" required aria-required="true" oninput="atualizarNumeroEnderecoSelecionado()">
                         <input type="text" id="complemento" placeholder="Complemento (opcional)">
                     </div>
                     <label class="endereco-padrao-opcao">

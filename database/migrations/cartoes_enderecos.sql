@@ -27,10 +27,18 @@ CREATE TABLE IF NOT EXISTS enderecos (
 INSERT INTO enderecos
     (usuario_id, apelido, cep, logradouro, numero, cidade, estado, padrao)
 SELECT u.id, 'Meu endereço', REPLACE(REPLACE(u.cep, '-', ''), ' ', ''),
-       u.endereco, 'S/N', u.cidade, u.estado, 1
+       u.endereco, '', u.cidade, u.estado, 1
 FROM usuarios u
 WHERE COALESCE(u.cep, '') <> ''
   AND COALESCE(u.endereco, '') <> ''
   AND COALESCE(u.cidade, '') <> ''
   AND COALESCE(u.estado, '') <> ''
   AND NOT EXISTS (SELECT 1 FROM enderecos e WHERE e.usuario_id = u.id);
+
+UPDATE enderecos
+SET apelido = CONVERT(0x4D657520656E64657265C3A76F USING utf8mb4)
+WHERE HEX(apelido) = '4D657520656E646572653F6F';
+
+UPDATE enderecos
+SET numero = ''
+WHERE UPPER(TRIM(numero)) IN ('S/N', 'SN', 'S N');

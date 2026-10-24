@@ -1062,10 +1062,13 @@ body.carrinho-aberto {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  padding: 16px;
+  overflow-y: auto;
+  background: rgba(24, 39, 56, 0.58);
   z-index: 2000;
   justify-content: center;
   align-items: center;
+  overscroll-behavior: contain;
 }
 
 .pagamento-overlay.aberto {
@@ -1073,95 +1076,142 @@ body.carrinho-aberto {
 }
 
 .pagamento-modal {
-  background: #FFFEEE;
-  border-radius: 14px;
-  padding: 28px;
-  width: 90%;
-  max-width: 420px;
-  max-height: 88vh;
+  width: min(100%, 520px);
+  max-height: calc(100vh - 32px);
+  padding: 24px;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  overscroll-behavior: contain;
+  background: #fff;
+  border: 1px solid #e6edf2;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(24, 39, 56, 0.24);
+  color: #334155;
+}
+
+@supports (height: 100dvh) {
+  .pagamento-modal { max-height: calc(100dvh - 32px); }
 }
 
 .pagamento-header {
+  position: sticky;
+  top: -24px;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin: -24px -24px 18px;
+  padding: 18px 24px 14px;
+  background: #fff;
+  border-bottom: 1px solid #edf1f5;
 }
 
 .pagamento-header h3 {
-  color: #385A81;
-  font-size: 18px;
+  color: #263f5b;
+  font-size: 20px;
+  line-height: 1.3;
 }
 
 .pagamento-header button {
-  background: none;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f1f5f9;
   border: none;
-  font-size: 18px;
+  font-size: 17px;
   cursor: pointer;
-  color: #385A81;
+  color: #475569;
+  transition: background 0.2s, color 0.2s;
+}
+
+.pagamento-header button:hover {
+  background: #e2eaf2;
+  color: #263f5b;
 }
 
 .pagamento-resumo {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 16px;
-  font-size: 13px;
-  color: #333;
-  max-height: 160px;
+  max-height: 140px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
   overflow-y: auto;
+  border: 1px solid #e3eaf0;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
 }
 
 .pagamento-resumo p {
-  margin: 2px 0;
+  margin: 4px 0;
+  line-height: 1.45;
+}
+
+.pagamento-resumo hr {
+  margin: 9px 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.pagamento-resumo strong {
+  color: #263f5b;
+  font-size: 15px;
 }
 
 /* CEP / FRETE dentro do pagamento */
 .pagamento-cep,
 .pagamento-cupom {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  padding: 16px;
+  border: 1px solid #e7edf2;
+  border-radius: 12px;
+  background: #fff;
 }
 
 .pagamento-cep p,
 .pagamento-cupom p {
-  font-size: 13px;
-  color: #385A81;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
+  color: #334e68;
+  font-size: 14px;
 }
 
 .cep-linha,
 .cupom-linha {
   display: flex;
+  min-width: 0;
   gap: 8px;
 }
 
 .cep-linha input,
 .cupom-linha input {
   flex: 1;
-  padding: 10px 14px;
-  border: 2px solid #cde0d3;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
   background: #fff;
+  color: #1e293b;
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .cep-linha input:focus,
 .cupom-linha input:focus {
   border-color: #2d8bba;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(45, 139, 186, 0.14);
 }
 
 .cep-linha button,
 .cupom-linha button {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 9px;
   background: #2d8bba;
   color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0 16px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -1176,7 +1226,7 @@ body.carrinho-aberto {
 
 #cepResultado,
 #cupomResultado {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 13px;
 }
 
@@ -1184,8 +1234,8 @@ body.carrinho-aberto {
 .cartao-bloco > label,
 .metodo-detalhe > label {
   display: block;
-  margin: 8px 0 5px;
-  color: #385A81;
+  margin: 10px 0 6px;
+  color: #475569;
   font-size: 13px;
   font-weight: 600;
 }
@@ -1196,20 +1246,30 @@ body.carrinho-aberto {
 .doacao-form select {
   width: 100%;
   min-height: 42px;
-  padding: 9px 12px;
-  border: 1px solid #cde0d3;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
   background: #fff;
-  color: #333;
+  color: #1e293b;
   font: inherit;
 }
 
+.pagamento-modal input:focus,
+.pagamento-modal select:focus {
+  border-color: #2d8bba;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(45, 139, 186, 0.14);
+}
+
 .checkout-perfil-aviso {
-  padding: 10px 12px;
-  border-radius: 8px;
+  margin-top: 12px;
+  padding: 11px 12px;
+  border: 1px solid #f0d8aa;
+  border-radius: 9px;
   background: #fff4e5;
   color: #78531d;
   font-size: 13px;
+  line-height: 1.5;
 }
 
 /* NÚMERO / COMPLEMENTO */
@@ -1220,7 +1280,7 @@ body.carrinho-aberto {
 
 .endereco-linha {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(90px, .6fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(80px, .6fr) minmax(0, 1fr);
   gap: 8px;
   width: 100%;
 }
@@ -1229,25 +1289,22 @@ body.carrinho-aberto {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #555;
+  color: #475569;
   font-size: 12px;
+  line-height: 1.45;
 }
 
 .endereco-linha input {
-  flex: 1;
   min-width: 0;
   width: 100%;
-  padding: 10px 14px;
-  border: 2px solid #cde0d3;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
   background: #fff;
-}
-
-.endereco-linha input:focus {
-  border-color: #2d8bba;
+  color: #1e293b;
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 /* BLOCO PIX */
@@ -1255,7 +1312,7 @@ body.carrinho-aberto {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   font-size: 13px;
   color: #555;
 }
@@ -1298,9 +1355,9 @@ body.carrinho-aberto {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   font-size: 13px;
-  color: #555;
+  color: #475569;
 }
 
 .cartao-tipo {
@@ -1361,36 +1418,106 @@ body.carrinho-aberto {
 }
 
 .pagamento-metodos {
-  margin-bottom: 14px;
-  font-size: 14px;
-  color: #333;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  margin-bottom: 16px;
+  color: #334155;
+  font-size: 14px;
+}
+
+.pagamento-metodos > p {
+  grid-column: 1 / -1;
+  margin-bottom: 2px;
 }
 
 .pagamento-metodos label {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #dbe4ec;
+  border-radius: 10px;
+  background: #f8fafc;
   cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pagamento-metodos label:has(input:checked) {
+  border-color: #2d8bba;
+  background: #eff8fc;
+  color: #245c7a;
 }
 
 .btn-confirmar {
+  position: sticky;
+  bottom: -24px;
   width: 100%;
+  min-height: 48px;
+  margin-top: 2px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 11px;
   background: #385A81;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 12px;
+  color: #fff;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s;
+  box-shadow: 0 -8px 18px rgba(255, 255, 255, 0.92);
+  transition: background 0.2s, transform 0.2s;
 }
 
 .btn-confirmar:hover {
   background: #FA8000;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 540px) {
+  .pagamento-overlay {
+    padding: 10px;
+    align-items: flex-end;
+  }
+
+  .pagamento-modal {
+    width: 100%;
+    max-height: calc(100vh - 20px);
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .pagamento-header {
+    top: -18px;
+    margin: -18px -18px 14px;
+    padding: 14px 18px 12px;
+  }
+
+  .pagamento-header h3 {
+    font-size: 18px;
+  }
+
+  .pagamento-cep,
+  .pagamento-cupom {
+    padding: 13px;
+  }
+
+  .endereco-linha {
+    grid-template-columns: minmax(0, 1fr) minmax(80px, .45fr);
+  }
+
+  .endereco-linha input:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .btn-confirmar {
+    bottom: -18px;
+  }
+}
+
+@supports (height: 100dvh) {
+  @media (max-width: 540px) {
+    .pagamento-modal { max-height: calc(100dvh - 20px); }
+  }
 }
 
 /* CARROSSEL */
