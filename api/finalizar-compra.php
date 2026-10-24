@@ -250,14 +250,13 @@ try {
     }
 
     $stmt = $pdo->prepare(
-        'SELECT u.nome, u.telefone,
-                EXISTS(SELECT 1 FROM enderecos e WHERE e.usuario_id = u.id AND e.padrao = 1) AS tem_endereco_padrao
+        'SELECT u.nome, u.telefone
          FROM usuarios u WHERE u.id = :id AND u.tipo = "cliente" AND u.status = "ativo"'
     );
     $stmt->execute(['id' => $usuarioId]);
     $perfil = $stmt->fetch();
-    if (!$perfil || trim((string) $perfil['nome']) === '' || trim((string) $perfil['telefone']) === '' || !(int) $perfil['tem_endereco_padrao']) {
-        responderPedidos(['sucesso' => false, 'erro' => 'Complete seu nome, telefone e endereço padrão no perfil antes de finalizar a compra.'], 409);
+    if (!$perfil || trim((string) $perfil['nome']) === '' || trim((string) $perfil['telefone']) === '') {
+        responderPedidos(['sucesso' => false, 'erro' => 'Complete seu nome e telefone no perfil antes de finalizar a compra.'], 409);
     }
 
     $enderecoId = filter_var($dados['endereco_id'] ?? null, FILTER_VALIDATE_INT);

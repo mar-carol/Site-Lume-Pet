@@ -305,7 +305,7 @@
         return;
       }
       if (!window.checkoutDados?.perfilCompleto) {
-        alert('Antes de comprar, complete seu nome, telefone e endereço padrão no perfil. Seu carrinho continuará salvo.');
+        alert('Antes de comprar, complete seu nome e telefone no perfil. O endereço de entrega será informado no checkout. Seu carrinho continuará salvo.');
         window.location.href = window.checkoutDados?.perfilUrl || 'usuario/perfil.php';
         return;
       }

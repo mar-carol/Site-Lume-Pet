@@ -68,14 +68,9 @@ if ($usuario && $usuario['tipo'] === 'cliente') {
 $ongsParceiras = $pdo->query(
     'SELECT id, nome FROM ongs WHERE status = "parceira" ORDER BY nome'
 )->fetchAll();
-$temEnderecoPadrao = count(array_filter(
-    $enderecosCliente,
-    static fn(array $endereco): bool => (int) $endereco['padrao'] === 1
-)) > 0;
 $perfilCheckoutCompleto = $usuario
     && trim((string) $usuario['nome']) !== ''
-    && trim((string) $usuario['telefone']) !== ''
-    && $temEnderecoPadrao;
+    && trim((string) $usuario['telefone']) !== '';
 
 ?>
 <!DOCTYPE html>
@@ -316,7 +311,7 @@ $perfilCheckoutCompleto = $usuario
                     </label>
                 </div>
                 <?php if (!$perfilCheckoutCompleto): ?>
-                    <p class="checkout-perfil-aviso">Complete seu nome, telefone e endereço padrão no <a href="<?= BASE_URL ?>/usuario/perfil.php">perfil</a> para finalizar a compra.</p>
+                    <p class="checkout-perfil-aviso">Complete seu nome e telefone no <a href="<?= BASE_URL ?>/usuario/perfil.php">perfil</a> para finalizar a compra. O endereço de entrega será informado no checkout.</p>
                 <?php endif; ?>
             </div>
 
@@ -941,7 +936,7 @@ $perfilCheckoutCompleto = $usuario
     <script src="js/senha.js?v=1"></script>
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261024-registration-policy"></script>
-    <script src="js/commerce.js?v=20261024-cart-preserve"></script>
+    <script src="js/commerce.js?v=20261024-checkout-profile-validation"></script>
     <script src="js/site.js?v=20261024-product-page-nav-fix"></script>
 </body>
 </html>
