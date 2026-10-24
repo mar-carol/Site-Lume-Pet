@@ -38,16 +38,16 @@ Em produção, configure `LUME_PET_DB_HOST`, `LUME_PET_DB_NAME`,
 `LUME_PET_DB_USER`, `LUME_PET_DB_PASS` e, se necessário,
 `LUME_PET_DB_CHARSET` como variáveis de ambiente.
 
-Para enviar códigos de confirmação de cadastro e links de recuperação, crie
-uma chave de API na Resend, valide o domínio do remetente no serviço e configure
+Para enviar links de recuperação de senha, crie uma chave de API na Resend,
+valide o domínio do remetente no serviço e configure
 `LUME_PET_RESEND_API_KEY` com a chave privada e `LUME_PET_MAIL_FROM` com o
 endereço remetente validado. Nunca coloque a chave no código ou no Git.
 Defina também `LUME_PET_PUBLIC_URL` com a URL pública completa do site
 (por exemplo, `https://exemplo.com` ou `http://localhost/Site-Lume-Pet`).
-Os códigos de confirmação expiram em 15 minutos e permitem até cinco tentativas;
-os links de recuperação expiram em uma hora e só podem ser usados uma vez.
-O painel administrativo **Verificação de e-mails** mostra quais contas já
-confirmaram o endereço, sem revelar códigos.
+O cadastro e o acesso à conta não exigem confirmação de e-mail. Os links de
+recuperação expiram em uma hora e só podem ser usados uma vez. O painel
+administrativo **Contas de clientes** mantém os registros históricos de
+confirmação, sem bloquear contas sem confirmação.
 
 Os cadastros de cartão deste projeto são apenas demonstrativos: não há
 operadora conectada, portanto nenhum cartão pode ser cobrado. Não digite dados
@@ -71,7 +71,7 @@ internos usam `BASE_URL` e refletem esta estrutura:
 ├── administrador/
 │   ├── produtos.php          Gerenciamento administrativo de produtos
 │   ├── avaliacoes.php        Consulta e remoção administrativa de avaliações
-│   ├── emails.php            Situação da confirmação de e-mail dos clientes
+│   ├── emails.php            Registros históricos de confirmação de e-mail
 │   └── animais.php           Gerenciamento administrativo de animais
 ├── usuario/
 │   ├── dashboard.php         Resumo da conta do cliente
@@ -86,7 +86,7 @@ internos usam `BASE_URL` e refletem esta estrutura:
 │   ├── ongpage.php           Informações das ONGs parceiras
 │   ├── politica.php          Política de privacidade
 │   ├── recuperar.php         Recuperação de senha
-│   └── verificar-email.php   Confirmação do e-mail no cadastro
+│   └── verificar-email.php   Página legada de confirmação de e-mail
 ├── api/                      Endpoints JSON de login, pedidos, cartões e doações
 ├── config/                   Configuração de banco e URL base
 ├── assets/

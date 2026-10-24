@@ -11,23 +11,23 @@ $totalVerificados = (int) $pdo->query(
     'SELECT COUNT(*) FROM usuarios
      WHERE tipo = "cliente" AND status = "ativo" AND email_verificado_em IS NOT NULL'
 )->fetchColumn();
-$totalPendentes = $totalClientes - $totalVerificados;
+$totalSemConfirmacao = $totalClientes - $totalVerificados;
 $usuarios = $pdo->query(
     'SELECT nome, email, email_verificado_em, criado_em
      FROM usuarios WHERE tipo = "cliente" ORDER BY criado_em DESC'
 )->fetchAll();
 
-$tituloPagina = 'Verificação de e-mails';
+$tituloPagina = 'Contas de clientes';
 $paginaAtual = 'emails';
 require __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <section class="lp-panel">
     <h2 style="margin-top:0;">Situação das contas</h2>
-    <p>A confirmação é feita pelo próprio cliente com o código enviado ao e-mail. Por segurança, os códigos não são exibidos neste painel.</p>
+    <p>A confirmação de e-mail não é mais necessária para criar ou acessar uma conta. Os status abaixo são apenas registros de confirmações anteriores.</p>
     <p><strong>Clientes:</strong> <?= $totalClientes ?>
         &nbsp; <strong>E-mails confirmados:</strong> <?= $totalVerificados ?>
-        &nbsp; <strong>Aguardando confirmação:</strong> <?= $totalPendentes ?></p>
+        &nbsp; <strong>Sem confirmação registrada:</strong> <?= $totalSemConfirmacao ?></p>
 </section>
 
 <section class="lp-panel">
@@ -41,7 +41,7 @@ require __DIR__ . '/../includes/admin_header.php';
                     <th>Cliente</th>
                     <th>E-mail</th>
                     <th>Cadastro</th>
-                    <th>Verificação</th>
+                    <th>Confirmação de e-mail</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@ require __DIR__ . '/../includes/admin_header.php';
                                 <span class="lp-badge lp-badge-ativo">Confirmado</span><br>
                                 <small><?= (new DateTime($usuario['email_verificado_em']))->format('d/m/Y H:i') ?></small>
                             <?php else: ?>
-                                <span class="lp-badge lp-badge-pendente">Pendente</span>
+                                <span class="lp-badge">Não registrada (acesso liberado)</span>
                             <?php endif; ?>
                         </td>
                     </tr>

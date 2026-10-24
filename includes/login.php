@@ -23,10 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuario = autenticarUsuario($email, $senha);
 
         if ($usuario) {
-            if (empty($usuario['email_verificado_em'])) {
-                $_SESSION['cadastro_pendente_id'] = (int) $usuario['id'];
-                redirecionar(BASE_URL . '/pages/verificar-email.php');
-            }
             iniciarSessaoUsuario($usuario);
             if ($retorno !== '' && $usuario['tipo'] === 'cliente') {
                 redirecionar(BASE_URL . '/index.php?retorno=' . rawurlencode($retorno)

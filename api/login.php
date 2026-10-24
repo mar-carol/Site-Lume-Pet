@@ -25,17 +25,6 @@ if (!$usuario) {
     exit;
 }
 
-if (empty($usuario['email_verificado_em'])) {
-    $_SESSION['cadastro_pendente_id'] = (int) $usuario['id'];
-    echo json_encode([
-        'sucesso' => false,
-        'verificacao_pendente' => true,
-        'url_verificacao' => BASE_URL . '/pages/verificar-email.php',
-        'erro' => 'Confirme seu e-mail para entrar.',
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
 iniciarSessaoUsuario($usuario);
 
 echo json_encode([
