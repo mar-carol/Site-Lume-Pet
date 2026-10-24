@@ -761,6 +761,7 @@ $perfilCheckoutCompleto = $usuario
                 <p>Além de oferecer produtos de alta qualidade para seus amigos de quarto patas, buscamos ser um ponto de apoio para aqueles que desejam adotar e cuidar de um novo amiguinho.</p>
                 <p>Acreditamos que cada animal merece amor, cuidado e um lar. Estamos aqui para inspirar a população a fazer a diferença — seja através de adoções, doações ou compartilhando conhecimento sobre o bem-estar animal.</p>
                 <p>Junte-se a nós nessa jornada de amor e responsabilidade, e vamos juntos construir um mundo melhor para nossos amigos peludos!</p>
+                <p>Acompanhe nossas <a class="sobre-link-instagram" href="https://www.instagram.com/lumepet_oficial/" target="_blank" rel="noopener noreferrer">redes sociais</a> e fique por dentro de mais informações sobre cuidado, adoção e bem-estar animal.</p>
             </div>
 
         </div>

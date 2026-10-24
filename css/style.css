@@ -2874,6 +2874,21 @@ transform: translateY(-50%) rotate(90deg); }
   margin: 0;
 }
 
+.sobre-link-instagram {
+  color: #FA8000;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.sobre-link-instagram:hover,
+.sobre-link-instagram:focus-visible {
+  background: transparent;
+  color: #FA8000;
+}
+
 /* RESPONSIVO */
 @media (max-width: 768px) {
   .sobre-wrapper {
