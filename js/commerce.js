@@ -659,6 +659,9 @@
         return;
       }
 
+      const itensComprados = itensCarrinho
+        .filter(item => item.selecionado)
+        .map(({ id, qtd }) => ({ id, qtd }));
       const metodoEl = document.querySelector('input[name="pagamento"]:checked');
       const metodo = metodoEl ? metodoEl.value : 'pix';
 
@@ -669,16 +672,16 @@
           alert('Cadastre ou selecione um cartão compatível antes de continuar.');
           return;
         }
-        await finalizarPedido(tipoCartao, cartaoId);
+        await finalizarPedido(tipoCartao, cartaoId, itensComprados);
         return;
       }
 
-      await finalizarPedido('pix', null);
+      await finalizarPedido('pix', null, itensComprados);
     }
 
     let enviandoPedido = false;
 
-    async function finalizarPedido(metodo, cartaoId) {
+    async function finalizarPedido(metodo, cartaoId, itensComprados) {
       if (enviandoPedido) return;
       enviandoPedido = true;
       const botao = document.querySelector('.btn-confirmar');
@@ -714,8 +717,7 @@
           },
           body: JSON.stringify({
             acao: 'finalizar',
-            itens: itensCarrinho.filter(item => item.selecionado)
-              .map(item => ({ id: item.id, qtd: item.qtd })),
+            itens: itensComprados,
             metodo,
             cartao_id: cartaoId,
             endereco_id: enderecoSelecionadoSalvo?.id || null,
@@ -735,7 +737,17 @@
           throw new Error(resultado.erro || 'Não foi possível registrar o pedido.');
         }
 
-        itensCarrinho = itensCarrinho.filter(item => !item.selecionado);
+        const quantidadesCompradas = new Map(
+          itensComprados.map(item => [item.id, item.qtd])
+        );
+        itensCarrinho = itensCarrinho.flatMap(item => {
+          const quantidadeComprada = quantidadesCompradas.get(item.id) || 0;
+          if (quantidadeComprada === 0) return [item];
+
+          const quantidadeRestante = item.qtd - quantidadeComprada;
+          if (quantidadeRestante <= 0) return [];
+          return [{ ...item, qtd: quantidadeRestante, selecionado: false }];
+        });
         atualizarCarrinho();
         persistirListasCarrinho();
         fecharPagamento();
