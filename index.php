@@ -941,7 +941,7 @@ $perfilCheckoutCompleto = $usuario
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261024-registration-policy"></script>
     <script src="js/commerce.js?v=20261024-cart-preserve"></script>
-    <script src="js/site.js?v=20261024-animals-from-dashboard"></script>
+    <script src="js/site.js?v=20261024-active-section-nav"></script>
 </body>
 </html>
 

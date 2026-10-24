@@ -2,6 +2,52 @@
 
     const siteProjetoUrl = new URL('../', document.currentScript.src);
 
+    (function acompanharSecaoAtiva() {
+      const links = [...document.querySelectorAll('#navMenu a[href^="#"]')]
+        .filter(link => link.getAttribute('href').length > 1);
+      const secoes = links
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+      if (!links.length || !secoes.length) return;
+
+      let quadroPendente = false;
+      function atualizarAtalhoAtivo() {
+        quadroPendente = false;
+        const alturaHeader = document.querySelector('.header')?.getBoundingClientRect().height || 0;
+        const linhaAtiva = Math.min(alturaHeader + 24, window.innerHeight * 0.45);
+        const secoesVisiveis = secoes
+          .map(secao => ({ secao, retangulo: secao.getBoundingClientRect() }))
+          .filter(({ retangulo }) => retangulo.top < window.innerHeight && retangulo.bottom > 0);
+        const secaoSobLinha = secoesVisiveis
+          .filter(({ retangulo }) => retangulo.top <= linhaAtiva && retangulo.bottom > linhaAtiva)
+          .pop();
+        const atual = secaoSobLinha || secoesVisiveis
+          .sort((a, b) => Math.abs(a.retangulo.top - linhaAtiva) - Math.abs(b.retangulo.top - linhaAtiva))[0];
+        const idAtivo = atual?.secao.id || '';
+
+        links.forEach(link => {
+          const ativo = link.hash === `#${idAtivo}`;
+          link.classList.toggle('ativo', ativo);
+          if (ativo) {
+            link.setAttribute('aria-current', 'location');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      function agendarAtualizacao() {
+        if (quadroPendente) return;
+        quadroPendente = true;
+        window.requestAnimationFrame(atualizarAtalhoAtivo);
+      }
+
+      window.addEventListener('scroll', agendarAtualizacao, { passive: true });
+      window.addEventListener('resize', agendarAtualizacao);
+      window.addEventListener('hashchange', agendarAtualizacao);
+      atualizarAtalhoAtivo();
+    })();
+
     let categoriaAtiva = 'geral';
     const produtosPorPagina = 8;
     let limiteProdutosVisiveis = produtosPorPagina;
