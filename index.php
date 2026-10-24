@@ -262,7 +262,7 @@ $perfilCheckoutCompleto = $usuario
         </div>
 
         <ul id="carrinho-lista">
-            <li class="carrinho-vazio">Nenhum item ainda.</li>
+            <li class="carrinho-vazio">Nenhum item foi adicionado.</li>
         </ul>
 
         <h4 class="carrinho-salvos-titulo">Guardados para depois</h4>
