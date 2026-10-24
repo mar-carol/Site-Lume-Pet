@@ -5462,6 +5462,12 @@ body p {
 
 .loja p,
 .avaliacao p {
-  text-align: initial;
+  text-align: inherit;
   text-justify: auto;
+}
+
+.loja .produto-card p {
+  text-align: justify;
+  text-align-last: center;
+  text-justify: inter-word;
 }
