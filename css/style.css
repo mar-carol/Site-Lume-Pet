@@ -1686,7 +1686,7 @@ transform: translateY(-50%) rotate(90deg); }
 }
 
 .servico-info h2 {
-  font-size: 20px;
+  font-size: 24px;
   color: #385A81 !important;
   margin-bottom: 16px;
 }
@@ -1694,7 +1694,7 @@ transform: translateY(-50%) rotate(90deg); }
 .servico-info p {
   max-width: 520px;
   margin: 0 0 32px;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.7;
   color: #555;
 }
