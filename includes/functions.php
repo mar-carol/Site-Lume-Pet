@@ -20,6 +20,38 @@ function validarTokenCsrf(?string $token): bool
     return !empty($token) && !empty($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
+function validarSenhaCadastro(string $senha): ?string
+{
+    if (strlen($senha) < 8) return 'A senha deve ter no mínimo 8 caracteres.';
+    if (preg_match('/\s/', $senha)) return 'A senha não pode conter espaços.';
+    if (!preg_match('/^[A-Za-z0-9!@#$%&*?^_]+$/D', $senha)) {
+        return 'A senha contém caracteres não permitidos. Use apenas letras, números e: !@#$%&*?^_.';
+    }
+    if (!preg_match('/[A-Z]/', $senha)) return 'A senha deve ter pelo menos 1 letra maiúscula.';
+    if (!preg_match('/[a-z]/', $senha)) return 'A senha deve ter pelo menos 1 letra minúscula.';
+    if (!preg_match('/\d/', $senha)) return 'A senha deve ter pelo menos 1 número.';
+    if (!preg_match('/[!@#$%&*?^_]/', $senha)) {
+        return 'A senha deve ter pelo menos 1 caractere especial (!@#$%&*?^_).';
+    }
+
+    for ($i = 0, $tamanho = strlen($senha); $i < $tamanho - 2; $i++) {
+        $a = ord($senha[$i]);
+        $b = ord($senha[$i + 1]);
+        $c = ord($senha[$i + 2]);
+        $saoDigitos = $a >= 48 && $a <= 57
+            && $b >= 48 && $b <= 57
+            && $c >= 48 && $c <= 57;
+
+        if ($saoDigitos && (($b - $a === 1 && $c - $b === 1)
+            || ($a - $b === 1 && $b - $c === 1)
+            || ($a === $b && $b === $c))) {
+            return 'A senha não pode ter números seguidos (ex: 123, 321, 111).';
+        }
+    }
+
+    return null;
+}
+
 function limpar(string $valor): string
 {
     return htmlspecialchars(trim($valor), ENT_QUOTES, 'UTF-8');

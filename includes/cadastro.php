@@ -3,7 +3,8 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 $erros = [];
-$dados = ['nome' => '', 'email' => '', 'telefone' => '', 'endereco' => ''];
+$dados = ['nome' => '', 'email' => ''];
+$aceitouPolitica = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -14,17 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dados = [
         'nome'     => trim($_POST['nome'] ?? ''),
         'email'    => trim($_POST['email'] ?? ''),
-        'telefone' => trim($_POST['telefone'] ?? ''),
-        'endereco' => trim($_POST['endereco'] ?? ''),
     ];
     $senha          = $_POST['senha'] ?? '';
     $confirmarSenha = $_POST['confirmar_senha'] ?? '';
+    $aceitouPolitica = isset($_POST['aceitou_politica']) && $_POST['aceitou_politica'] === '1';
 
     if ($dados['nome'] === '') $erros[] = 'Informe seu nome completo.';
     if (!filter_var($dados['email'], FILTER_VALIDATE_EMAIL)) $erros[] = 'E-mail inválido.';
-    if ($dados['telefone'] === '') $erros[] = 'Informe seu telefone.';
-    if ($dados['endereco'] === '') $erros[] = 'Informe seu endereço.';
-    if (strlen($senha) < 6) $erros[] = 'A senha deve ter pelo menos 6 caracteres.';
+    if (!$aceitouPolitica) $erros[] = 'Aceite a Política de Privacidade para continuar.';
+    $erroSenha = validarSenhaCadastro($senha);
+    if ($erroSenha !== null) $erros[] = $erroSenha;
     if ($senha !== $confirmarSenha) $erros[] = 'As senhas não conferem.';
 
     if (!$erros) {
@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nome'       => $dados['nome'],
             'email'      => $dados['email'],
             'senha_hash' => password_hash($senha, PASSWORD_DEFAULT),
-            'telefone'   => $dados['telefone'],
-            'endereco'   => $dados['endereco'],
+            'telefone'   => '',
+            'endereco'   => '',
         ]);
 
         $usuario = autenticarUsuario($dados['email'], $senha);
@@ -83,17 +83,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label for="cadastroEmail">E-mail</label>
     <input id="cadastroEmail" type="email" name="email" value="<?= limpar($dados['email']) ?>" autocomplete="email" required>
 
-    <label for="cadastroTelefone">Telefone</label>
-    <input id="cadastroTelefone" type="text" name="telefone" value="<?= limpar($dados['telefone']) ?>" autocomplete="tel" required>
-
-    <label for="cadastroEndereco">Endereço</label>
-    <input id="cadastroEndereco" type="text" name="endereco" value="<?= limpar($dados['endereco']) ?>" autocomplete="street-address" required>
-
     <label for="cadastroSenha">Senha</label>
-    <input id="cadastroSenha" type="password" name="senha" autocomplete="new-password" required minlength="6">
+    <input id="cadastroSenha" type="password" name="senha" autocomplete="new-password" required minlength="8">
+    <small class="cadastro-regras-senha">
+        Mín. 8 caracteres: use letras sem acento, maiúsculas e minúsculas, números e pelo menos um destes símbolos: !@#$%&amp;*?^_.
+        Não use espaços nem sequências de números, como 123, 321 ou 111.
+    </small>
 
     <label for="cadastroConfirmarSenha">Confirmar senha</label>
-    <input id="cadastroConfirmarSenha" type="password" name="confirmar_senha" autocomplete="new-password" required minlength="6">
+    <input id="cadastroConfirmarSenha" type="password" name="confirmar_senha" autocomplete="new-password" required minlength="8">
+
+    <div class="cadastro-politica">
+        <input id="cadastroPolitica" type="checkbox" name="aceitou_politica" value="1" required <?= $aceitouPolitica ? 'checked' : '' ?>>
+        <label for="cadastroPolitica">Li e concordo com a <a href="<?= BASE_URL ?>/pages/politica.php" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.</label>
+    </div>
 
     <button type="submit">Cadastrar</button>
 </form>

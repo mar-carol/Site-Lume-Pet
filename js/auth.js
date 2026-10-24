@@ -78,6 +78,7 @@
       dados.append('email', email);
       dados.append('senha', senha);
       dados.append('senha2', senha2);
+      dados.append('aceitou_politica', '1');
 
       try {
         const resposta = await fetch(new URL('api/cadastro.php', raizProjetoUrl), {

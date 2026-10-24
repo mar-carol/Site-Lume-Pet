@@ -461,6 +461,46 @@ body {
   outline: 2px solid rgba(250, 128, 0, 0.16);
 }
 
+.login-pagina-form .cadastro-regras-senha {
+  margin: -2px 0 4px;
+  color: #6b7a89;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.login-pagina-form .cadastro-politica {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 8px 0;
+}
+
+.login-pagina-form .cadastro-politica input {
+  flex: 0 0 16px;
+  width: 16px;
+  min-height: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  padding: 0;
+  accent-color: #385A81;
+}
+
+.login-pagina-form .cadastro-politica label {
+  color: #5f6d79;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.login-pagina-form .cadastro-politica a {
+  color: #385A81;
+  font-weight: 600;
+}
+
+.login-pagina-form .cadastro-politica a:hover {
+  color: #FA8000;
+}
+
 .login-pagina-form button {
   min-height: 46px;
   margin-top: 8px;
@@ -3621,6 +3661,7 @@ body {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   height: 2.6em;
   min-height: 2.6em;
@@ -3632,6 +3673,7 @@ body {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   height: 2.8em;
   min-height: 2.8em;
@@ -3837,6 +3879,860 @@ body {
   .banner-pontos a {
     padding: 10px 8px;
     white-space: normal;
+  }
+}
+
+
+/* PÁGINA SOBRE PONTOS */
+
+.pagina-sobre-pontos {
+    --sp-azul: #385A81;
+    --sp-azul-escuro: #2d4968;
+    --sp-laranja: #FA8000;
+    --sp-texto: #333;
+    --sp-texto-suave: #5f6d79;
+    --sp-fundo: #f9f9f9;
+    --sp-branco: #ffffff;
+    --sp-borda: #e1ebf2;
+
+    margin: 0;
+    padding: 0;
+    background: var(--sp-fundo);
+    color: var(--sp-texto);
+    font-family: poppins, sans-serif;
+    line-height: 1.7;
+}
+
+.pagina-sobre-pontos *,
+.pagina-sobre-pontos *::before,
+.pagina-sobre-pontos *::after {
+    box-sizing: border-box;
+}
+
+.pagina-sobre-pontos a {
+    text-decoration: none;
+}
+
+.sp-container {
+    width: min(1160px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 32px 0 70px;
+}
+
+/* Navegação de localização */
+
+.sp-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    color: var(--sp-texto-suave);
+    font-size: 13px;
+}
+
+.sp-breadcrumb a {
+    color: var(--sp-azul);
+    font-weight: 600;
+}
+
+.sp-breadcrumb a:hover {
+    color: var(--sp-azul-escuro);
+}
+
+/* Apresentação principal */
+
+.sp-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: 40px;
+    min-height: 360px;
+    padding: 48px 56px;
+    overflow: hidden;
+    border: 1px solid #f5d5b0;
+    border-radius: 18px;
+    background: linear-gradient(110deg, #fff7eb, #fff);
+}
+
+.sp-hero-texto {
+    position: relative;
+    z-index: 1;
+}
+
+.sp-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    border: 1px solid #f5d5b0;
+    border-radius: 30px;
+    background: #fff;
+    color: var(--sp-azul);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sp-hero h1 {
+    max-width: 540px;
+    margin: 22px 0 16px;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: -1.5px;
+}
+
+.sp-hero h1 span {
+    display: block;
+    color: var(--sp-laranja);
+}
+
+.sp-hero-texto > p {
+    max-width: 490px;
+    margin: 0 0 28px;
+    color: var(--sp-texto-suave);
+    font-size: 15px;
+}
+
+.sp-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 12px 22px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.sp-botao:hover {
+    transform: translateY(-2px);
+}
+
+.sp-botao-principal {
+    background: var(--sp-laranja);
+    color: var(--sp-branco);
+    box-shadow: 0 6px 16px rgba(250, 128, 0, 0.18);
+}
+
+.sp-botao-principal:hover {
+    background: var(--sp-azul);
+}
+
+/* Ilustração decorativa */
+
+.sp-hero-ilustracao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.sp-circulo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 250px;
+    border: 12px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    background: #ffe2c2;
+    box-shadow: 0 15px 40px rgba(56, 90, 129, 0.12);
+    transform: rotate(-5deg);
+}
+
+.sp-patinha {
+    font-size: 86px;
+    line-height: 1.2;
+}
+
+.sp-moeda {
+    margin-top: 8px;
+    color: var(--sp-azul);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.sp-estrela {
+    position: absolute;
+    color: var(--sp-laranja);
+}
+
+.sp-estrela-1 {
+    top: 18px;
+    right: -16px;
+    font-size: 40px;
+}
+
+.sp-estrela-2 {
+    bottom: 22px;
+    left: -26px;
+    font-size: 35px;
+}
+
+/* Títulos e introdução */
+
+.sp-introducao {
+    max-width: 740px;
+    margin: 64px auto 36px;
+    text-align: center;
+}
+
+.sp-sobretitulo {
+    color: var(--sp-azul);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.sp-introducao h2,
+.sp-como-texto h2 {
+    margin: 10px 0 14px;
+    font-size: clamp(25px, 3vw, 34px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.6px;
+}
+
+.sp-introducao p,
+.sp-como-texto p {
+    margin: 0;
+    color: var(--sp-texto-suave);
+    font-size: 14px;
+}
+
+/* Cartões de benefícios */
+
+.sp-beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.sp-card {
+    padding: 30px 26px;
+    border: 1px solid var(--sp-borda);
+    border-radius: 14px;
+    background: var(--sp-branco);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.sp-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 90, 129, 0.12);
+}
+
+.sp-card-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    font-size: 25px;
+}
+
+.sp-icone-azul {
+    background: #eaf2f8;
+}
+
+.sp-icone-laranja {
+    background: #fff1e2;
+}
+
+.sp-icone-verde {
+    background: #eaf2f8;
+}
+
+.sp-card h3,
+.sp-etapas h3 {
+    margin: 0 0 9px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.sp-card p,
+.sp-etapas p {
+    margin: 0;
+    color: var(--sp-texto-suave);
+    font-size: 13px;
+}
+
+/* Etapas */
+
+.sp-como-funciona {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 65px;
+    align-items: start;
+    margin-top: 64px;
+    padding: 36px;
+    border: 1px solid var(--sp-borda);
+    border-radius: 14px;
+    background: var(--sp-branco);
+}
+
+.sp-etapas {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sp-etapas li {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.sp-numero {
+    display: flex;
+    flex: 0 0 45px;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #eaf2f8;
+    color: var(--sp-azul);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Aviso informativo */
+
+.sp-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 30px;
+    padding: 24px 26px;
+    border: 1px solid #d9e4ee;
+    border-radius: 14px;
+    background: #edf4f8;
+}
+
+.sp-aviso-icone {
+    display: flex;
+    flex: 0 0 34px;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--sp-branco);
+    color: var(--sp-laranja);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.sp-aviso h3 {
+    margin: 0 0 5px;
+    font-size: 15px;
+}
+
+.sp-aviso p {
+    margin: 0;
+    color: var(--sp-texto-suave);
+    font-size: 12px;
+}
+
+/* Chamada final */
+
+.sp-cta {
+    margin-top: 54px;
+    padding: 40px 24px;
+    border-radius: 18px;
+    background: var(--sp-azul);
+    color: var(--sp-branco);
+    text-align: center;
+}
+
+.sp-cta > span {
+    font-size: 28px;
+}
+
+.sp-cta h2 {
+    margin: 12px 0 8px;
+    font-size: clamp(23px, 3vw, 31px);
+    line-height: 1.3;
+}
+
+.sp-cta p {
+    margin: 0 0 23px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+}
+
+.sp-botao-claro {
+    background: var(--sp-branco);
+    color: var(--sp-azul);
+}
+
+.sp-botao-claro:hover {
+    background: #fff1e2;
+}
+
+/* Responsividade */
+
+@media (max-width: 800px) {
+    .sp-hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 40px 30px;
+    }
+
+    .sp-hero-ilustracao {
+        padding: 10px 0;
+    }
+
+    .sp-circulo {
+        width: 205px;
+        height: 205px;
+    }
+
+    .sp-patinha {
+        font-size: 68px;
+    }
+
+    .sp-beneficios {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .sp-card {
+        padding: 24px;
+    }
+
+    .sp-como-funciona {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 55px;
+        padding: 30px 24px;
+    }
+
+    .sp-introducao {
+        margin-top: 55px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sp-container {
+        width: calc(100% - 28px);
+        padding-top: 20px;
+    }
+
+    .sp-hero {
+        padding: 30px 22px;
+        border-radius: 14px;
+    }
+
+    .sp-hero h1 {
+        font-size: 34px;
+        letter-spacing: -0.8px;
+    }
+
+    .sp-botao {
+        width: 100%;
+    }
+
+    .sp-cta {
+        padding: 34px 20px;
+    }
+
+    .sp-aviso {
+        padding: 20px 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pagina-sobre-pontos *,
+    .pagina-sobre-pontos *::before,
+    .pagina-sobre-pontos *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+/* PÁGINA SOBRE PONTOS — componentes alinhados ao site */
+.pagina-sobre-pontos {
+  padding: 84px 0 0;
+  background: #fff;
+  color: #333;
+  font-family: poppins, sans-serif;
+}
+
+.sp-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  min-height: 84px;
+  border-bottom: 3px solid #fa8;
+  background: #eefdffed;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(2px);
+}
+
+.sp-header-conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1100px, calc(100% - 48px));
+  min-height: 81px;
+  margin: 0 auto;
+}
+
+.pagina-sobre-pontos .user-home-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.sp-header-titulo {
+  margin-right: auto;
+  color: #385A81;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sp-header-voltar {
+  padding: 10px 20px;
+  border-radius: 4px;
+  background: #385A81;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.sp-header-voltar:hover {
+  background: #FA8000;
+}
+
+.sp-container {
+  width: min(1100px, calc(100% - 48px));
+  padding: 36px 0 64px;
+}
+
+.sp-hero {
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr);
+  gap: 36px;
+  min-height: 0;
+  padding: 40px 48px;
+  border: 1px solid #f5d5b0;
+  border-radius: 16px;
+  background: linear-gradient(110deg, #fff7eb, #fff);
+}
+
+.sp-etiqueta {
+  border-color: #f5d5b0;
+  border-radius: 20px;
+  color: #385A81;
+}
+
+.sp-hero h1 {
+  margin: 18px 0 14px;
+  color: #385A81;
+  font-size: clamp(30px, 4vw, 40px);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.sp-hero h1 span {
+  color: #FA8000;
+}
+
+.sp-hero-texto > p {
+  margin-bottom: 22px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.sp-botao {
+  min-height: 44px;
+  padding: 11px 24px;
+  border-radius: 4px;
+}
+
+.sp-botao:hover {
+  transform: translateY(-1px);
+}
+
+.sp-botao-principal {
+  background: #FA8000;
+  box-shadow: none;
+}
+
+.sp-botao-principal:hover {
+  background: #385A81;
+}
+
+.sp-pontos-destaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 230px);
+  min-height: 190px;
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid #f5d5b0;
+  border-radius: 14px;
+  background: #fff;
+  color: #385A81;
+  text-align: center;
+}
+
+.sp-pontos-icone {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  place-items: center;
+  border-radius: 50%;
+  background: #FA8000;
+  color: #fff;
+  font-size: 25px;
+}
+
+.sp-pontos-destaque strong {
+  font-size: 24px;
+  line-height: 1.3;
+}
+
+.sp-pontos-destaque > span:last-child {
+  margin-top: 5px;
+  color: #5f6d79;
+  font-size: 13px;
+}
+
+.sp-introducao {
+  margin: 56px auto 30px;
+}
+
+.sp-sobretitulo {
+  color: #FA8000;
+  letter-spacing: 1.5px;
+}
+
+.sp-introducao h2,
+.sp-como-texto h2 {
+  color: #385A81;
+  font-size: clamp(24px, 3vw, 30px);
+  letter-spacing: 0;
+}
+
+.sp-introducao p,
+.sp-como-texto p {
+  color: #555;
+  line-height: 1.7;
+}
+
+.sp-beneficios {
+  gap: 20px;
+}
+
+.sp-card {
+  padding: 24px;
+  border-color: #e1ebf2;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(56, 90, 129, 0.08);
+}
+
+.sp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(56, 90, 129, 0.12);
+}
+
+.sp-card-icone {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+}
+
+.sp-icone-azul,
+.sp-icone-verde {
+  background: #eaf2f8;
+}
+
+.sp-icone-laranja {
+  background: #fff1e2;
+}
+
+.sp-card h3,
+.sp-etapas h3 {
+  color: #385A81;
+}
+
+.sp-card p,
+.sp-etapas p {
+  color: #555;
+  line-height: 1.65;
+}
+
+.sp-como-funciona {
+  gap: 48px;
+  margin-top: 44px;
+  padding: 32px;
+  border-color: #e1ebf2;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(56, 90, 129, 0.08);
+}
+
+.sp-etapas {
+  gap: 22px;
+}
+
+.sp-etapas li {
+  gap: 14px;
+}
+
+.sp-numero {
+  flex-basis: 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #eaf2f8;
+  color: #385A81;
+}
+
+.sp-aviso {
+  gap: 14px;
+  margin-top: 24px;
+  padding: 20px 22px;
+  border-color: #d9e4ee;
+  border-radius: 12px;
+  background: #f4f8fa;
+}
+
+.sp-aviso h3 {
+  color: #385A81;
+}
+
+.sp-aviso p {
+  color: #555;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sp-cta {
+  margin-top: 36px;
+  padding: 34px 24px;
+  border-radius: 14px;
+  background: #385A81;
+}
+
+.sp-cta h2 {
+  font-size: clamp(22px, 3vw, 28px);
+}
+
+.sp-botao-claro {
+  border-radius: 4px;
+  color: #385A81;
+}
+
+.sp-botao-claro:hover {
+  background: #fff1e2;
+}
+
+@media (max-width: 800px) {
+  .sp-hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px;
+  }
+
+  .sp-pontos-destaque {
+    min-height: 160px;
+  }
+
+  .sp-beneficios {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-como-funciona {
+    gap: 24px;
+    margin-top: 36px;
+    padding: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagina-sobre-pontos {
+    padding-top: 74px;
+  }
+
+  .sp-header {
+    min-height: 74px;
+  }
+
+  .sp-header-conteudo {
+    width: calc(100% - 28px);
+    min-height: 71px;
+    gap: 12px;
+  }
+
+  .pagina-sobre-pontos .user-home-logo img {
+    width: 48px;
+    height: auto;
+  }
+
+  .sp-header-titulo {
+    font-size: 13px;
+  }
+
+  .sp-header-voltar {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .sp-container {
+    width: calc(100% - 28px);
+    padding: 22px 0 40px;
+  }
+
+  .sp-hero {
+    gap: 20px;
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .sp-hero h1 {
+    font-size: 30px;
+  }
+
+  .sp-botao {
+    width: 100%;
+  }
+
+  .sp-como-funciona {
+    padding: 22px 18px;
+  }
+
+  .sp-aviso {
+    padding: 18px 16px;
+  }
+
+  .sp-cta {
+    padding: 28px 18px;
   }
 }
 

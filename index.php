@@ -179,17 +179,18 @@ $produtos = $stmt->fetchAll();
                 </div>
                 <div class="campo-grupo">
                     <label>Senha</label>
-                    <input type="password" id="cad-senha" placeholder="Crie uma senha" minlength="8">
-                    <small style="color: #777;font-size: 12px;">
-                        Mín. 8 caracteres, com letras maiúsculas, minúsculas, números e caracteres especiais (!@#$%&*?^_).
-                </small>
+                    <input type="password" id="cad-senha" placeholder="Crie uma senha" minlength="8" required>
+                    <small class="cadastro-regras-senha">
+                        Mín. 8 caracteres: use letras sem acento, maiúsculas e minúsculas, números e pelo menos um destes símbolos: !@#$%&amp;*?^_.
+                        Não use espaços nem sequências de números, como 123, 321 ou 111.
+                    </small>
                 </div>
                 <div class="campo-grupo">
                     <label>Confirmar senha</label>
-                    <input type="password" id="cad-senha2" placeholder="Repita a senha">
+                    <input type="password" id="cad-senha2" placeholder="Repita a senha" minlength="8" required>
                 </div>
                 <div class="politica-privacidade">
-                    <input type="checkbox" id="cad-aceito" name="cad-aceito"required>
+                    <input type="checkbox" id="cad-aceito" name="cad-aceito" required>
                     <label for="cad-aceito">
                     Li e concordo com a <a href="<?= BASE_URL ?>/pages/politica.php" target="_blank">Política de Privacidade</a>
                 </label>
@@ -871,7 +872,7 @@ $produtos = $stmt->fetchAll();
     <script src="js/pix.js"></script>
     <script src="js/senha.js?v=1"></script>
     <script src="js/pedidos.js?v=20261022-orders"></script>
-    <script src="js/auth.js?v=20261022-orders"></script>
+    <script src="js/auth.js?v=20261024-registration-policy"></script>
     <script src="js/commerce.js?v=20261022-orders"></script>
     <script src="js/site.js?v=20261024-ong-carousel"></script>
 </body>

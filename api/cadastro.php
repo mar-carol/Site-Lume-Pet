@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -19,17 +20,23 @@ $nome = trim($_POST['nome'] ?? '');
 $email = strtolower(trim($_POST['email'] ?? ''));
 $senha = $_POST['senha'] ?? '';
 $senha2 = $_POST['senha2'] ?? '';
+$aceitouPolitica = ($_POST['aceitou_politica'] ?? '') === '1';
 
 if ($nome === '' || $email === '' || $senha === '' || $senha2 === '') {
     responderCadastro(false, 'Preencha todos os campos.', null, 422);
+}
+
+if (!$aceitouPolitica) {
+    responderCadastro(false, 'Aceite a Política de Privacidade para continuar.', null, 422);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     responderCadastro(false, 'Informe um e-mail válido.', null, 422);
 }
 
-if (strlen($senha) < 6) {
-    responderCadastro(false, 'A senha deve ter no mínimo 6 caracteres.', null, 422);
+$erroSenha = validarSenhaCadastro($senha);
+if ($erroSenha !== null) {
+    responderCadastro(false, $erroSenha, null, 422);
 }
 
 if ($senha !== $senha2) {
