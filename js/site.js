@@ -323,7 +323,7 @@
 
       const slides = carrossel.querySelectorAll('.adote-slide');
       const dotsWrap = document.getElementById('adoteDots');
-      if (slides.length === 0 || !dotsWrap) return;
+      if (slides.length < 2 || !dotsWrap) return;
 
       let current = 0;
 

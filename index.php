@@ -39,6 +39,14 @@ $stmt = $pdo->query(
 );
 
 $produtos = $stmt->fetchAll();
+$stmt = $pdo->query(
+    "SELECT a.nome, a.especie, a.raca, a.idade_aproximada, a.foto, o.nome AS ong_nome
+     FROM animais a
+     INNER JOIN ongs o ON o.id = a.ong_id
+     WHERE a.status = 'disponivel'
+     ORDER BY a.criado_em DESC"
+);
+$animaisDisponiveis = $stmt->fetchAll();
 $enderecosCliente = [];
 $cartoesCliente = [];
 if ($usuario && $usuario['tipo'] === 'cliente') {
@@ -557,7 +565,6 @@ $perfilCheckoutCompleto = $usuario
        
     </section>
 
-    <!-- parte de adoção eu preciso mudar isso pq agora vai cadastrar os animais pelo dashboard -->
     <section class="adote" id="adote">
         <div class="adote-wrapper">
 
@@ -567,72 +574,44 @@ $perfilCheckoutCompleto = $usuario
 
                 <h3>Formulário de Adoção</h3>
                 <p>Preencha o formulário abaixo para iniciar o processo de adoção. Estamos ansiosos para ajudá-lo a encontrar o companheiro perfeito!</p>
-                <button onclick="window.open('https://docs.google.com/forms/d/19jwE_GqqetJgKmBXx1GyW-G6J0R0P3yBoZaWcABsxVQ/viewform?ts=6a5eda39&edit_requested=true', '_blank')">Responda o nosso formulário</button>
+                <button type="button" onclick="window.open('https://docs.google.com/forms/d/19jwE_GqqetJgKmBXx1GyW-G6J0R0P3yBoZaWcABsxVQ/viewform?ts=6a5eda39&edit_requested=true', '_blank', 'noopener,noreferrer')">Responda o nosso formulário</button>
             </div>
 
             <div class="adote-carrossel" id="adoteCarrossel">
-
-                                 <div class="adote-slide active">
-                    <img src="assets/images/GATA CRISTAL.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Cristal</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRA CRISTAL E MAYA.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Cristal e Maya</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRO RAFA.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Rapha</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRA JUJUBA.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Jujuba</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRA BUBBALOO.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Bubbaloo</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRO JHONNY.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Jhonny</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRA KIARA.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Kiara</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/GATO THEO.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Theo</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/CACHORRO TITO.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Tito</span>
-                </div>
-
-                 <div class="adote-slide">
-                    <img src="assets/images/GATAS MÍSTICA E SELENE.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Mística e Selene</span>
-                </div>
-
-                 <div class="adote-slide">
-                    <img src="assets/images/CACHORRA MELZINHA2.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Melzinha</span>
-                </div>
-
-                <div class="adote-slide">
-                    <img src="assets/images/GATA PITTY.jpeg" alt="Pet Adotado">
-                    <span class="adote-tag">Pitty</span>
-                </div>
-
-                <div class="adote-dots" id="adoteDots"></div>
+                <?php if ($animaisDisponiveis): ?>
+                    <?php foreach ($animaisDisponiveis as $indice => $animal): ?>
+                        <article class="adote-slide<?= $indice === 0 ? ' active' : '' ?>">
+                            <?php if (!empty($animal['foto'])): ?>
+                                <img
+                                    src="<?= BASE_URL ?>/administrador/uploads/animais/<?= rawurlencode($animal['foto']) ?>"
+                                    alt="<?= limpar($animal['nome']) ?>"
+                                    loading="<?= $indice === 0 ? 'eager' : 'lazy' ?>">
+                            <?php else: ?>
+                                <div class="adote-sem-foto" aria-hidden="true">
+                                    <span class="material-symbols-outlined">pets</span>
+                                </div>
+                            <?php endif; ?>
+                            <div class="adote-tag">
+                                <strong><?= limpar($animal['nome']) ?></strong>
+                                <span>
+                                    <?= limpar($animal['especie']) ?>
+                                    <?php if (!empty($animal['raca'])): ?> · <?= limpar($animal['raca']) ?><?php endif; ?>
+                                    <?php if (!empty($animal['idade_aproximada'])): ?> · <?= limpar($animal['idade_aproximada']) ?><?php endif; ?>
+                                </span>
+                                <small>ONG <?= limpar($animal['ong_nome']) ?></small>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                    <?php if (count($animaisDisponiveis) > 1): ?>
+                        <div class="adote-dots" id="adoteDots" aria-label="Escolher animal"></div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div class="adote-vazio">
+                        <span class="material-symbols-outlined" aria-hidden="true">pets</span>
+                        <p>No momento, não há animais disponíveis para adoção.</p>
+                        <small>Novos animais aparecerão aqui quando forem cadastrados no painel.</small>
+                    </div>
+                <?php endif; ?>
             </div>
 
         </div>
@@ -962,7 +941,7 @@ $perfilCheckoutCompleto = $usuario
     <script src="js/pedidos.js?v=20261022-orders"></script>
     <script src="js/auth.js?v=20261024-registration-policy"></script>
     <script src="js/commerce.js?v=20261024-cart-preserve"></script>
-    <script src="js/site.js?v=20261024-ver-menos-loja"></script>
+    <script src="js/site.js?v=20261024-animals-from-dashboard"></script>
 </body>
 </html>
 
