@@ -2828,29 +2828,33 @@ transform: translateY(-50%) rotate(90deg); }
 /* LAYOUT DOIS LADOS */
 .sobre-wrapper {
   display: flex;
-  align-items: center;
-  gap: 50px;
-  max-width: 1000px;
+  align-items: flex-start;
+  gap: clamp(28px, 5vw, 56px);
+  max-width: 1080px;
   margin: 0 auto;
   text-align: left;
 }
 
-/* FOTO */
+/* FOTO SOBRE*/
 .sobre-img {
-  flex: 1;
+  flex: 0 1 400px;
+  min-width: 0;
 }
 
 .sobre-img img {
+  display: block;
   width: 100%;
+  max-width: 400px;
+  height: auto;
   border-radius: 14px;
-  object-fit: cover;
-  max-height: 420px;
+  object-fit: contain;
   box-shadow: 0 6px 20px rgba(56, 90, 129, 0.2);
 }
 
-/* TEXTO */
+/* TEXTO SOBRE*/
 .sobre-texto {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -2875,6 +2879,11 @@ transform: translateY(-50%) rotate(90deg); }
   .sobre-wrapper {
     flex-direction: column;
     text-align: center;
+  }
+
+  .sobre-img {
+    flex: 0 1 auto;
+    width: min(100%, 360px);
   }
 
   .sobre-texto h3 {

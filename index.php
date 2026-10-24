@@ -752,13 +752,13 @@ $perfilCheckoutCompleto = $usuario
         <div class="sobre-wrapper">
 
             <div class="sobre-img">
-                <img src="assets/images/exemploftong.jpeg" alt="Lume Pet">
+                <img src="assets/images/sobrenos.lumepet.jpeg" alt="Lume Pet">
             </div>
 
             <div class="sobre-texto">
                 <h3>Nossa história!</h3>
-                <p>A Lume Pet foi criada com o propósito de ser mais do que um simples pet shop. Nossa missão é promover e conscientizar a importância do cuidado e bem-estar animal.</p>
-                <p>Além de oferecer produtos de alta qualidade para seus pets, buscamos ser um ponto de apoio para aqueles que desejam adotar e cuidar de um novo amiguinho de quatro patas.</p>
+                <p>A Lume Pet foi criada com o propósito de ser mais do que um simples e-commerce pet. Nossa missão é promover verdadeiramente ONGs pet e conscientizar a importância do cuidado e bem-estar animal.</p>
+                <p>Além de oferecer produtos de alta qualidade para seus amigos de quarto patas, buscamos ser um ponto de apoio para aqueles que desejam adotar e cuidar de um novo amiguinho.</p>
                 <p>Acreditamos que cada animal merece amor, cuidado e um lar. Estamos aqui para inspirar a população a fazer a diferença — seja através de adoções, doações ou compartilhando conhecimento sobre o bem-estar animal.</p>
                 <p>Junte-se a nós nessa jornada de amor e responsabilidade, e vamos juntos construir um mundo melhor para nossos amigos peludos!</p>
             </div>
