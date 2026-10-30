@@ -940,5 +940,3 @@ $perfilCheckoutCompleto = $usuario
     <script src="js/site.js?v=20261024-product-page-nav-fix"></script>
 </body>
 </html>
-
-<!---->

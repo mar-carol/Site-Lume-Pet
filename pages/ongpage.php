@@ -6,10 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nossas ONGs parceiras | Lume Pet</title>
     <link rel="icon" href="<?= BASE_URL ?>/assets/images/imgicon.ico" type="image/x-icon">
-    <!-- CORREÇÃO: a fonte Poppins nunca era carregada -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css?v=<?= @filemtime(__DIR__ . '/../css/style.css') ?: time() ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -21,7 +17,7 @@
             <a href="<?= BASE_URL ?>/index.php" class="home-ong" aria-label="Voltar para a página inicial">
                 <i class="fa-solid fa-house"></i>
             </a>
-            <!-- CORREÇÃO: classe logo-header (o CSS já a esperava) -->
+ 
             <a href="<?= BASE_URL ?>/index.php" class="logo-header" aria-label="Voltar para a página inicial">
                 <img src="<?= BASE_URL ?>/assets/images/marcad.png" alt="LumePet">
             </a>
@@ -64,9 +60,7 @@
                 </article>
             </div>
         </section>
-
-        <!-- CORREÇÃO: botões dentro de uma section própria, links estilizados
-             (sem <button> dentro de <a>) e sem o </div> sobrando -->
+    
         <section class="ongs-acoes" aria-label="Ações rápidas">
             <a href="<?= BASE_URL ?>/index.php#doacao" class="btn-primary">Fazer Doação</a>
             <a href="<?= BASE_URL ?>/index.php#adote" class="btn-seg">Adotar um Pet</a>
@@ -160,12 +154,10 @@
 
         <div class="site-footer-base">
             <p>&copy; <?= date('Y') ?> Lume Pet. Todos os direitos reservados.</p>
-            <!-- CORREÇÃO: volta ao topo desta página, não da home -->
             <a href="#topo">Voltar ao topo ↑</a>
         </div>
     </footer>
 
-    <!-- CORREÇÃO: texto da mensagem codificado (Olá = Ol%C3%A1) -->
     <a href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es"
        class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Conversar no WhatsApp">
         <i class="fab fa-whatsapp"></i>
