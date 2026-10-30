@@ -8,7 +8,7 @@ body {
     font-family: poppins, sans-serif;
     background: white;
     color: #333;
-    padding-top: 90px;
+    padding-top: 80px;
 }
 
 section {
@@ -16,10 +16,6 @@ section {
 }
 
 /* cabeçalho/menu */
-body {
-  padding-top: 80px;
-}
-
 .header {
     display: flex;
     justify-content: space-between;
@@ -3774,373 +3770,403 @@ transform: translateY(-50%) rotate(90deg); }
   }
 }
 
-/* ABA SOBRE AS ONGS */
+/* ======== PÁGINA DAS ONGS — LUME PET  =========== */
 
-/*header*/
+/* ---------- CABEÇALHO ----------*/
 
-.ongs-header {
-  position: fixed;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 80px;
-
-  display: flex;
-  align-items: center;
-
-  background-color: #eefdffbc;
-
-  border-bottom: 3px solid transparent;
-
-  z-index: 1000;
-
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-
+.header.ongs-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    min-height: 80px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(238, 253, 255, 0.95);
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-.ong-header-conteudo {
-position:relative;
+.header.ongs-header .ong-header-conteudo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-width: 100%;
-height: 100%;
+.header.ongs-header .logo-header {
+    display: flex;
+    align-items: center;
+}
+
+.header.ongs-header .logo-header img {
+    display: block;
+    height: 52px;
+    width: auto;
+    max-width: 100%;
 }
 
 .home-ong {
-  position: absolute;
-  left: 40px;
-  top: 50%;
-  
-  transform: translateY(-50%);
-
-  width: 45px;
-  height: 45px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color:#2d8bba;
-
-  border-radius: 50%;
-
-  text-decoration: none;
-
-  transition: 0.3s ease;
-} 
-
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2d8bba;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                transform 0.3s ease;
+}
 
 .home-ong i {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .home-ong:hover {
-  transform: translateY(-50%) scale(1.05);
-  background: #FA8000;
-  color: #fff;
+    transform: translateY(-50%) scale(1.05);
+    background-color: #fa8000;
+    color: #fff;
 }
 
-.logo-header {
-  position:absolute;
-
-  left: 50%;
-  top: 50%;
-  
-  transform: translate(-50%, -50%);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin: 0;
+.ongs-main {
+    padding-top: 0;
 }
 
-.logo-header img {
-  width: 125px;
-  height: auto;
+/* ---------- DESTAQUE PRINCIPAL ---------- */
 
-  display: block;
-}
-
-/*responsividade*/ 
-
-@media (max-width: 600px) {
-  .home-ong {
-    left: 20px;
-
-    width: 40px;
-    height: 40px;
-  }
-
-  .home-ong i {
-    font-size: 19px;
-  }
-
-  .logo-header img {
-    width: 105px;
-  }
-}
-
-/*HERO DA PÁGINA*/
-
-  html{
-    scroll-behavior: smooth;
-  }
-
-  .ongs-hero {
+.ongs-hero {
     position: relative;
-    height: 480px;
-
-    background:linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)),
-              url('../assets/images/hero-image.jpg');
-
-    background-size:cover;
-    background-position:center;
-
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    
-    color:#fff;
-  }
-
-  .ongs-hero-overlay {
-    width: 100%;
-    max-width: 980px;
-    padding: 35px 45px;
-    box-sizing: border-box;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-  }
-
-.ongs-hero-overlay h1 {
-  font-size: 32px;
-  line-height: 1.2;
-  margin: 0 0 30px;
-  color: #FFF;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        #367dad,
+        rgba(33, 90, 120, 0.92)
+    );
 }
 
-.ongs-hero-texto {
-  display: flex;
-  gap: 40px;
-  text-align: left;
-  margin-bottom: 25px;
+.ongs-hero-overlay {
+    width: 100%;
+    max-width: 820px;
+    padding: 40px 24px;
+    box-sizing: border-box;
 }
 
-.ongs-hero-coluna {
-  flex: 1;
+.ongs-breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+    font-size: 13px;
 }
 
-.ongs-hero-overlay p {
-  margin: 0 0 18px;
-  font-size: 15px;
-  line-height: 1.7;
-  color:#FFFEEE;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+.ongs-breadcrumbs a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.9;
 }
 
-.ongs-hero-coluna p:last-child {
-  margin-bottom: 0;
+.ongs-breadcrumbs a:hover {
+    text-decoration: underline;
 }
 
-.ongs-hero-overlay strong,
-.ongs-hero-destaque {
-  display: block;
-  margin-top: 5px;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #fff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+.ongs-hero h1 {
+    margin: 0 0 14px;
+    font-size: 40px;
+    line-height: 1.15;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-
-.ongs-lista{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 40px 20px;
+.ongs-hero p {
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 17px;
+    line-height: 1.6;
+    text-align: center;
 }
 
-.ongs-lista a {
-  background: #fa8000;
-  border: 4px solid #fa8000;
-  color: #fff;
+/* ---------- SEÇÕES ---------- */
 
-  padding: 16px 36px;
-  border-radius: 40px;
-
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
-
-  transition: 0.3s ease;
+.ongs-secao {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 20px;
+    box-sizing: border-box;
 }
 
-.ongs-lista a:hover {
-  background: #fa8;
-  border-color: #FA8000;
-  transform: scale(1.06);
+.ongs-titulo {
+    margin: 0 0 36px;
+    text-align: center;
+    font-size: 28px;
+    color: #4a4a4a;
 }
 
-@media (max-width: 768px) {
-  .ongs-hero {
-    min-height: auto;
-    padding: 50px 20px;
-  }
+/* ---------- COMO AJUDAR ---------- */
 
-  .ongs-hero-overlay {
-    max-width: 650px;
-    padding: 30px 25px;
-  }
+.ongs-passos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+}
 
-  .ongs-hero-overlay h1{
-    font-size: 26px;
-  }
+.ongs-passo {
+    text-align: center;
+    padding: 10px;
+}
 
-  .ongs-hero-texto {
-    flex-direction: column;
-    gap: 0;
-  }
+.ongs-passo-icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 13px;
+    border-radius: 50%;
+    background: #eefdff;
+    color: #2d8bba;
+    font-size: 28px;
+}
 
-  .ongs-hero-overlay p {
+.ongs-passo h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #444;
+}
+
+.ongs-passo p {
+    max-width: 280px;
+    margin: 0 auto;
     font-size: 14px;
     line-height: 1.6;
-  }
-
-  .ongs-hero-overlay strong,
-  .ongs-hero-destaque {
-    font-size: 15px;
-  }
+    color: #666;
+    text-align: center; 
 }
 
-@media (max-width: 480px) {
+/* ---------- BOTÕES "FAZER DOAÇÃO" / "ADOTAR UM PET" ----------*/
 
-  .ongs-hero {
-    padding: 40px 15px;
-  }
-
-  .ongs-hero-overlay {
-    padding: 25px 20px;
-  }
-
-  .ongs-hero-overlay h1 {
-    font-size: 23px;
-    margin-bottom: 20px;
-  }
-
-  .ongs-hero-overlay p {
-    font-size: 14px;
-  }
+main .ongs-acoes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+    padding: 0 20px 16px;
 }
 
-/*ONGS PARCEIRAS*/
-
-.ongs-pagina {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 20px;
+.ongs-acoes a {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
 }
+
+.ongs-acoes .btn-primary {
+    border: 2px solid #2d8bba; 
+}
+
+.ongs-acoes .btn-primary:hover {
+    border-color: #385A81;
+}
+
+/* ---------- GRADE DE ONGS ----------*/
 
 .ongs-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
 }
 
-.ong-card {
-  display: flex;
-  align-items: stretch;
-  background: #fff;
-  border-radius: 13px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ---------- CARD INDIVIDUAL ---------- */
+
+.ongs-card {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 18px;
+    scroll-margin-top: 100px;
+    transition: box-shadow 0.3s ease,
+                transform 0.3s ease;
 }
 
-.ong-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+.ongs-card:hover,
+.ongs-card:target {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
 }
 
-.ong-card-imagem{
-  flex: 0 0 40%;
+.ongs-card-imagem {
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+    background: #eefdff;
 }
 
-.ong-card-imagem img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.ongs-card-imagem img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.ong-card-conteudo {
-  flex: 1;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.ongs-card-conteudo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
 }
 
-.ong-card-conteudo h2 {
-  font-size: 20px;
-  color: #2d8bba;
-  margin: 0 0 10px;
+.ongs-card-conteudo h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #2d8bba;
 }
 
-.ong-card-conteudo p {
-  font-size: 12px;
-  color: #555;
-  line-height: 1.6;
-  margin: 0 0 20px;
+.ongs-card-conteudo p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #666;
 }
+
+/* ---------- BOTÃO DO SITE DA ONG ---------- */
 
 .btn-ong-site {
-  align-self: flex-start;
-
-  background: #FA8000;
-  color: #fff;
-
-padding: 10px 24px;
-border-radius: 30px;
-
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
-
-  transition: 0.3s ease;
+    width: 100%;
+    margin-top: auto;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 30px;
+    background: #fa8000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease,
+                transform 0.3s ease;
 }
 
-.btn-ong-site:hover {
-  background: #385A81;
-  transform: scale(1.05);
+.btn-ong-site:hover,
+.btn-ong-site:focus-visible {
+    background: #385a81;
+    transform: scale(1.02);
 }
 
-.ong-card:nth-child(even) {
-  flex-direction: row-reverse;
+.home-ong:focus-visible,
+.ongs-breadcrumbs a:focus-visible,
+.btn-ong-site:focus-visible {
+    outline: 3px solid #2d8bba;
+    outline-offset: 4px;
+}
+
+.site-footer-apresentacao p,
+.site-footer-base p {
+    text-align: left;
+}
+
+/* ---------- RESPONSIVIDADE ---------- */
+
+@media (max-width: 1100px) {
+    .ongs-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ongs-passos {
+        gap: 20px;
+    }
 }
 
 @media (max-width: 700px) {
-  .ong-card,
-  .ong-card:nth-child(even) {
-    flex-direction: column;
-  }
+    .ongs-passos {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
 
-  .ong-card-imagem {
-    flex: none;
-    height: 220px;
-  }
+    .ongs-hero h1 {
+        font-size: 30px;
+    }
 
-  .ong-card-conteudo {
-    padding: 20px;
-  }
+    .ongs-hero p {
+        font-size: 15px;
+    }
 
+    .ongs-titulo {
+        font-size: 24px;
+    }
+
+    .ongs-secao {
+        padding: 40px 16px;
+    }
 }
 
-/* Ajustes de navegação, escala visual e consistência do catálogo */
+@media (max-width: 600px) {
+    .home-ong {
+        left: 16px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .home-ong i {
+        font-size: 19px;
+    }
+
+    .header.ongs-header .logo-header img {
+        height: 44px;
+        width: auto;
+    }
+
+    .ongs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ongs-card-imagem {
+        height: 220px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ongs-card,
+    .home-ong,
+    .btn-ong-site {
+        transition: none;
+    }
+
+    .ongs-card:hover,
+    .ongs-card:target,
+    .home-ong:hover,
+    .btn-ong-site:hover {
+        transform: none;
+    }
+}
+
 html {
   font-size: 16px;
   overflow-x: clip;
