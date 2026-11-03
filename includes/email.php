@@ -25,7 +25,7 @@ function enviarEmailResend(string $destinatario, string $assunto, string $mensag
         return false;
     }
 
-    // Checar extensão cURL: necessária para chamar a API (precisa estar habilitada no PHP/XAMPP)
+    // Checar extensão cURL: necessária para chamar a API 
     if (!function_exists('curl_init')) {
         error_log('Envio de e-mail indisponível: a extensão cURL do PHP não está habilitada.');
         return false;
@@ -59,7 +59,7 @@ function enviarEmailResend(string $destinatario, string $assunto, string $mensag
     $erroCurl = curl_error($curl);
     curl_close($curl);
 
-    // Registro de falhas no log do servidor: sem resposta ou status HTTP diferente de 2xx
+    // Registro de falhas no log do servidor
     if ($resposta === false || $status < 200 || $status >= 300) {
         error_log('Falha no envio de e-mail pela Resend. HTTP ' . $status
             . ($erroCurl !== '' ? '; cURL: ' . $erroCurl : '') . '.');
