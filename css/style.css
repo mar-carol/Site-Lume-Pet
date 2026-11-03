@@ -1,4 +1,4 @@
-* {
+* {  /* Configura todo o estilo da plataforma, padronizando as propriedades do CSS */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -15,9 +15,9 @@ section {
     scroll-margin-top: 100px;
 }
 
-/* cabeçalho/menu */
-.header {
-    display: flex;
+/* cabeçalho/menu */ 
+.header {     /* Organiza a logo, o menu de navegação e mentem ele fixo durante toda a rolagem da pagina */
+    display: flex;  
     justify-content: space-between;
     align-items: center;
     padding: 15px 24px;
@@ -59,7 +59,7 @@ section {
 }
 
 /* MENU HAMBÚRGUER */
-.menu-hamburguer {
+.menu-hamburguer {  /* configura o botão do menu hamburguer quando a tela é pequena */
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -352,8 +352,8 @@ section {
   text-align: left;
 }
 
-.login-modal .politica-privacidade input {
-  flex: 0 0 auto;
+.login-modal .politica-privacidade input { 
+  flex: 0 0 auto;      /* configura a checkbox/caixa da policica de privacidade */
   width: 16px;
   height: 16px;
   margin: 2px 0 0;
@@ -776,7 +776,7 @@ section {
 }
 
 /* CARRINHO - BARRA LATERAL */
-.carrinho-overlay {
+.carrinho-overlay {     /* configura a sobreposição do carrinho, escurecendo o restante da página */
   position: fixed;
   inset: 0;
   z-index: 1098;
@@ -1945,7 +1945,7 @@ transform: translateY(-50%) rotate(90deg); }
 }
 
 /* GRADE DE PRODUTOS */
-.loja-grade {
+.loja-grade {         /* organiza os produtos na loja */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   grid-auto-rows: 1fr;
@@ -2108,8 +2108,8 @@ transform: translateY(-50%) rotate(90deg); }
   line-height: 1;
 }
 
-.produto-card:focus-visible {
-  outline: 3px solid #FA8000;
+.produto-card:focus-visible {  /* cards de prosutos */
+  outline: 3px solid #FA8000;  /* destaca o card quando focalizado */
   outline-offset: 3px;
 }
 
@@ -2778,7 +2778,7 @@ transform: translateY(-50%) rotate(90deg); }
   gap: 10px;
 }
 
-.cartao-linha input { 
+.cartao-linha input {    /* ajusta os campos do cartão e configura o botão de confirmar doação */
   flex: 1;
   min-width: 0;
  }
@@ -3333,9 +3333,9 @@ transform: translateY(-50%) rotate(90deg); }
   }
 }
  
-/* RESPONSIVIDADE */
-@media (max-width: 768px) {
-  .header {
+/* RESPONSIVIDADE - Menu Mobile */
+@media (max-width: 768px) {  /* Adaptar a organização e os espaçamentos do cabeçalho para telas menores. */
+  .header { 
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -3481,8 +3481,8 @@ transform: translateY(-50%) rotate(90deg); }
   padding: 20px;
 }
 
-.produto-detalhe-img img {
-  max-width: 100%;
+.produto-detalhe-img img {  /* Imagem do produto na página de detalhes. */
+  max-width: 100%;   /* Ajustar a imagem ao espaço disponível, mantendo suas proporções sem cortes ou distorções.*/
   max-height: 100%;
   object-fit: contain;
 }
@@ -3994,10 +3994,10 @@ main .ongs-acoes {
     gap: 24px;
 }
 
-/* ---------- CARD INDIVIDUAL ---------- */
+/* ---------- CARD INDIVIDUAL ONGS ---------- */
 
-.ongs-card {
-    min-width: 0;
+.ongs-card {   /* Cartões que apresentam as informações das ONGs. */
+    min-width: 0;   /* Organizar e padronizar a aparência dos cartões das ONGs */
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -4261,8 +4261,8 @@ body {
   align-items: stretch;
 }
 
-.servico > h1 {
-  margin-bottom: 36px;
+.servico > h1 {  /* Título principal da seção de serviços.*/
+  margin-bottom: 36px; /* Ajusta o tamanho do título conforme a largura da tela, contribuindo para a responsividade*/
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   line-height: 1.25;
 }

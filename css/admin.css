@@ -218,8 +218,8 @@ form textarea {
     resize: vertical;
 }
 
-form input:focus,
-form select:focus,
+form input:focus,   /* Destaca os campos dos formulários do painel administrativo  quando selecionados */
+form select:focus,  /* quando selecionados, utilizando bordas e sombras azuis. */
 form textarea:focus {
     border-color: var(--primary);
     /* ANTES: box-shadow: 0 0 0 3px rgba(123, 97, 255, .12); (roxo fixo) */
@@ -309,9 +309,9 @@ tr:last-child td {
     color: var(--danger);
 }
 
-.avaliacao-acoes {
+.avaliacao-acoes { /* Seção de gerenciamento das avaliações - admin */
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap;  /* Organiza os botões de ação das avaliações, permitindo a quebra de linha quando necessário */
     gap: 6px;
 }
 

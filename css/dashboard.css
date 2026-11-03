@@ -534,8 +534,8 @@ body > ul li {
 	overflow-wrap: anywhere;
 }
 
-.compra-valores {
-	grid-column: 1 / -1;
+.compra-valores { /* valore e detalher da compra */
+	grid-column: 1 / -1;    /*Organizar o resumo financeiro do pedido, incluindo subtotal, frete, desconto e valor total. */
 	max-width: 440px;
 	width: 100%;
 	margin-left: auto;
@@ -618,8 +618,8 @@ form label {
 	font-weight: 700;
 }
 
-form input:not([type='hidden']),
-form textarea,
+form input:not([type='hidden']), /* Formulários das páginas de gerenciamento e da área do usuário */
+form textarea,                /*Padroniza a aparência dos campos dos formulários, mantendo dimensões, cores e bordas uniformes*/
 form select {
 	width: 100%;
 	min-height: 44px;
@@ -745,8 +745,8 @@ body > table tr:last-child td {
 	border-bottom: 0;
 }
 
-body > table tr:hover td {
-	background: #fffaf4;
+body > table tr:hover td { 
+	background: #fffaf4; /* Destaca a linha da tabela quando o mouse passa sobre ela. */
 }
 
 body > table td:last-child {

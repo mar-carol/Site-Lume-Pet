@@ -22,8 +22,8 @@
     margin-bottom: 28px;
 }
 
-.user-stat {
-    display: flex;
+.user-stat {     /* Cartões de informações da conta */
+    display: flex;  /* Organizar a aparência dos cartões e aplicar um efeito visual quando o usuário passa o cursor sobre eles.*/
     min-height: 150px;
     flex-direction: column;
     align-items: flex-start;
