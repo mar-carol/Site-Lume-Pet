@@ -13,47 +13,47 @@ if (campoCepPerfil && botaoBuscarCep && statusCepPerfil) {
   botaoBuscarCep.addEventListener('click', async () => {
     const cep = campoCepPerfil.value.replace(/\D/g, '');
 
-    if (cep.length !== 8) {
+    if (cep.length !== 8) { // Verifica se o CEP possui 8 dígitos
       statusCepPerfil.textContent = 'Digite um CEP válido com 8 números.';
       statusCepPerfil.dataset.estado = 'erro';
       campoCepPerfil.focus();
       return;
     }
 
-    botaoBuscarCep.disabled = true;
+    botaoBuscarCep.disabled = true; // Desativa os campos durante a consulta
     campoCepPerfil.disabled = true;
     statusCepPerfil.textContent = 'Consultando endereço...';
     statusCepPerfil.dataset.estado = 'carregando';
 
-    try {
+    try { // Consulta o endereço pela API ViaCEP
       const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       if (!resposta.ok) {
         throw new Error('A consulta de CEP não está disponível no momento.');
       }
 
       const endereco = await resposta.json();
-      if (endereco.erro) {
+      if (endereco.erro) { // Verifica se o CEP foi encontrado
         statusCepPerfil.textContent = 'CEP não encontrado. Confira os números e tente novamente.';
         statusCepPerfil.dataset.estado = 'erro';
         return;
       }
 
-      const campoEndereco = document.getElementById('perfil-endereco');
+      const campoEndereco = document.getElementById('perfil-endereco'); // Identifica os campos que receberão o endereço
       const campoCidade = document.getElementById('perfil-cidade');
       const campoEstado = document.getElementById('perfil-estado');
 
-      if (endereco.logradouro) campoEndereco.value = endereco.logradouro;
+      if (endereco.logradouro) campoEndereco.value = endereco.logradouro; // Preenche os campos com os dados do endereço encontrado
       if (endereco.localidade) campoCidade.value = endereco.localidade;
       if (endereco.uf) campoEstado.value = endereco.uf;
 
-      statusCepPerfil.textContent = 'Endereço encontrado. Confira os dados e salve seu perfil.';
+      statusCepPerfil.textContent = 'Endereço encontrado. Confira os dados e salve seu perfil.'; // Informa que a consulta foi realizada com sucesso
       statusCepPerfil.dataset.estado = 'sucesso';
-    } catch (erro) {
+    } catch (erro) { // Trata possíveis erros durante a consulta
       statusCepPerfil.textContent = erro instanceof Error
         ? erro.message
         : 'Não foi possível consultar o CEP. Tente novamente.';
       statusCepPerfil.dataset.estado = 'erro';
-    } finally {
+    } finally { // Reativa o botão de busca e o campo de CEP
       botaoBuscarCep.disabled = false;
       campoCepPerfil.disabled = false;
     }

@@ -48,35 +48,35 @@
       atualizarAtalhoAtivo();
     })();
 
-    let categoriaAtiva = 'geral';
+    let categoriaAtiva = 'geral'; // Define a categoria inicial e o limite de produtos exibidos
     const produtosPorPagina = 8;
     let limiteProdutosVisiveis = produtosPorPagina;
 
-    function filtrarCategoria(categoria, event) {
+    function filtrarCategoria(categoria, event) {  // Atualiza a categoria selecionada pelo usuário
       categoriaAtiva = categoria;
-      document.querySelectorAll('.categoria-btn').forEach(btn => btn.classList.remove('ativo'));
+      document.querySelectorAll('.categoria-btn').forEach(btn => btn.classList.remove('ativo')); // Altera o destaque do botão da categoria selecionada
       if (event && event.currentTarget) {
         event.currentTarget.classList.add('ativo');
       }
       filtrarProdutos();
     }
 
-    function filtrarProdutos(reiniciarLimite = true) {
+    function filtrarProdutos(reiniciarLimite = true) {  // Função responsável pela pesquisa e filtragem dos produtos
       const campoPesquisa = document.getElementById('campoPesquisa');
       if (!campoPesquisa) return;
 
-      if (reiniciarLimite) {
+      if (reiniciarLimite) {  // Reinicia o limite de produtos exibidos
         limiteProdutosVisiveis = produtosPorPagina;
       }
 
-      const texto = campoPesquisa.value.toLowerCase().trim();
+      const texto = campoPesquisa.value.toLowerCase().trim();  // Organiza o texto pesquisado e sincroniza com a busca do menu
       const pesquisaMenu = document.getElementById('menuPesquisa');
       if (pesquisaMenu && pesquisaMenu.value !== campoPesquisa.value) {
         pesquisaMenu.value = campoPesquisa.value;
       }
       const cards = document.querySelectorAll('.produto-card');
       const vazio = document.getElementById('lojaVazio');
-      const categoriasPorFiltro = {
+      const categoriasPorFiltro = {  // Define as categorias e suas variações de nomenclatura
         higiene: ['higiene'],
         alimento: ['alimento', 'alimentos', 'comida', 'ração', 'racao'],
         brinquedo: ['brinquedo', 'brinquedos'],
@@ -86,15 +86,15 @@
       let produtosVisiveis = 0;
       let totalResultados = 0;
 
-      cards.forEach(card => {
+      cards.forEach(card => { // Analisa as informações de cada produto
         const categoria = (card.dataset.categoria || '')
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
         const nome = card.dataset.nome.toLowerCase();
         const descricao = (card.dataset.descricao || '').toLowerCase();
-        const passaPesquisa = nome.includes(texto) || descricao.includes(texto);
+        const passaPesquisa = nome.includes(texto) || descricao.includes(texto); // Verifica se o nome ou a descrição corresponde à pesquisa
 
-        let passaCategoria;
+        let passaCategoria;  // Verifica a categoria selecionada ou pesquisa em todas
         if (texto) {
           // com texto digitado, a busca vale para TODAS as categorias
           passaCategoria = true;
@@ -103,10 +103,10 @@
           passaCategoria = categoriaAtiva === 'geral' || categoriasPermitidas.includes(categoria);
         }
 
-        const corresponde = passaCategoria && passaPesquisa;
+        const corresponde = passaCategoria && passaPesquisa; // Verifica quais produtos atendem aos filtros e ao limite de exibição
         const deveMostrar = corresponde && produtosVisiveis < limiteProdutosVisiveis;
 
-        card.classList.toggle('oculto', !deveMostrar);
+        card.classList.toggle('oculto', !deveMostrar); 	// Exibe ou oculta os produtos conforme o resultado
         card.classList.toggle('visivel', deveMostrar);
         card.style.display = deveMostrar ? 'flex' : 'none';
 
@@ -412,7 +412,7 @@
       document.querySelectorAll('.btn-valor').forEach(btn => btn.classList.remove('ativo'));
     }
 
-    function abrirPagamentoDoacao() {
+    function abrirPagamentoDoacao() { // Verifica os dados antes de continuar com a doação
       const email = document.getElementById('doacao-email').value.trim();
       const valor = document.getElementById('doacao-valor').value.trim();
       const ongId = document.getElementById('doacao-ong').value;
@@ -434,14 +434,14 @@
         document.getElementById('erro-valor').textContent = 'Por favor, informe um valor para a doação.';
         valido = false;
       }
-      if (!ongId) {
+      if (!ongId) { // Verifica se uma ONG foi selecionada
         document.getElementById('erro-ong').textContent = 'Selecione a instituição que receberá sua doação.';
         valido = false;
       }
 
-      if (!valido) return;
+      if (!valido) return; // Impede a continuidade caso existam dados inválidos
 
-      // Preenche resumo
+      // Preenche resumo - Organiza as informações para apresentar o resumo da doação
       const nome = document.getElementById('doacao-nome').value.trim();
       const resumo = document.getElementById('doacaoResumo');
       resumo.replaceChildren();
@@ -458,11 +458,11 @@
         resumo.appendChild(paragrafo);
       });
 
-      selecionarMetodo('pix');
+      selecionarMetodo('pix'); // Define o Pix como pagamento inicial e abre a janela de doação
       document.getElementById('doacaoOverlay').classList.add('aberto');
     }
 
-    function fecharPagamentoDoacao() {
+    function fecharPagamentoDoacao() { // Fecha a janela de pagamento da doação
       document.getElementById('doacaoOverlay').classList.remove('aberto');
     }
 
@@ -833,8 +833,8 @@
         </div>
       `;
 
-      container.querySelector('button').addEventListener('click', () => enviarAvaliacao(produtoId));
-      document.querySelectorAll('#estrelasInput span').forEach(estrela => {
+      container.querySelector('button').addEventListener('click', () => enviarAvaliacao(produtoId)); // Envia a avaliação ao clicar no botão
+      document.querySelectorAll('#estrelasInput span').forEach(estrela => { // Identifica a nota selecionada e atualiza as estrelas
         estrela.addEventListener('click', function () {
           notaSelecionada = parseInt(this.dataset.valor);
           atualizarEstrelasInput();
@@ -843,15 +843,15 @@
     }
 
     function atualizarEstrelasInput() {
-      document.querySelectorAll('#estrelasInput span').forEach(estrela => {
+      document.querySelectorAll('#estrelasInput span').forEach(estrela => { 
         estrela.classList.toggle('ativa', parseInt(estrela.dataset.valor) <= notaSelecionada);
       });
     }
 
-    async function enviarAvaliacao(produtoId) {
+    async function enviarAvaliacao(produtoId) { // Função responsável por registrar a avaliação do produto
       const texto = document.getElementById('textoAvaliacao').value.trim();
 
-      if (notaSelecionada === 0) {
+      if (notaSelecionada === 0) { // Verifica se a nota e o comentário foram preenchidos
         alert('Selecione de 1 a 5 estrelas antes de enviar.');
         return;
       }
@@ -860,7 +860,7 @@
         return;
       }
 
-      try {
+      try { // Envia a avaliação para registro no servidor
         const resposta = await fetch(new URL('api/avaliacao.php', siteProjetoUrl), {
           method: 'POST',
           headers: {
@@ -871,7 +871,7 @@
           body: JSON.stringify({ produto_id: produtoId, nota: notaSelecionada, comentario: texto })
         });
         const resultado = await resposta.json();
-        if (!resposta.ok || !resultado.sucesso) {
+        if (!resposta.ok || !resultado.sucesso) { // Verifica se a avaliação foi registrada corretamente
           throw new Error(resultado.erro || 'Não foi possível enviar a avaliação.');
         }
 

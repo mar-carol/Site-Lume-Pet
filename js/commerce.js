@@ -111,17 +111,17 @@
       }
     });
 
-   function adicionarAoCarrinho(id, nome, preco) {
+   function adicionarAoCarrinho(id, nome, preco) { // Função responsável por adicionar produtos ao carrinho
     const precoNum = Number(preco);
 
     id = Number(id);
-    const existente = itensCarrinho.find(item => item.id === id);
+    const existente = itensCarrinho.find(item => item.id === id); // Verifica se o produto já está no carrinho
 
-    if (existente) {
+    if (existente) {  // Atualiza a quantidade do produto existente
         existente.qtd = Math.min(100, existente.qtd + 1);
         existente.selecionado = true;
     } else {
-        itensCarrinho.push({
+        itensCarrinho.push({  // Adiciona um novo produto ao carrinho
             id: id,
             nome: nome,
             preco: precoNum,
@@ -268,15 +268,14 @@
     let consultaFreteId = 0;
     let cupomAtual = null; // { codigo, tipo: 'percentual' | 'fixo' | 'frete', valor, desc }
 
-    const CUPONS = {
+    const CUPONS = { // Define os cupons de desconto disponíveis na loja
       'PET10':       { tipo: 'percentual', valor: 10, desc: '10% de desconto' },
       'PET20':       { tipo: 'percentual', valor: 20, desc: '20% de desconto' },
       'BEMVINDO15':  { tipo: 'fixo',       valor: 15, desc: 'R$ 15,00 de desconto' },
       'FRETEGRATIS': { tipo: 'frete',      valor: 0,  desc: 'Frete grátis' },
     };
 
-    // tabela simplificada de frete por estado (simulação)
-    const TABELA_FRETE = {
+    const TABELA_FRETE = { // tabela simplificada de frete por estado (simulação)
       SP: { valor: 12.90, prazo: '2 a 3 dias úteis' },
       RJ: { valor: 18.90, prazo: '3 a 5 dias úteis' },
       MG: { valor: 18.90, prazo: '3 a 5 dias úteis' },
@@ -285,6 +284,7 @@
       SC: { valor: 22.90, prazo: '4 a 6 dias úteis' },
       RS: { valor: 24.90, prazo: '4 a 7 dias úteis' },
     };
+    // Define o frete padrão para os demais estados
     const FRETE_PADRAO = { valor: 29.90, prazo: '5 a 9 dias úteis' };
 
     let pixCodigo = '';
@@ -527,14 +527,14 @@
       atualizarResumoPagamento();
     }
 
-    function calcularTotaisPagamento() {
-      const subtotal = itensCarrinho
+    function calcularTotaisPagamento() { 	// Calcula os valores totais do pagamento
+      const subtotal = itensCarrinho // Calcula o subtotal dos produtos selecionados
         .filter(item => item.selecionado)
         .reduce((s, i) => s + i.preco * i.qtd, 0);
       let frete = cepValidado ? freteAtual : 0;
       let desconto = 0;
 
-      if (cupomAtual) {
+      if (cupomAtual) { // Aplica o desconto conforme o tipo de cupom
         if (cupomAtual.tipo === 'percentual') {
           desconto = subtotal * (cupomAtual.valor / 100);
         } else if (cupomAtual.tipo === 'fixo') {
@@ -544,7 +544,7 @@
         }
       }
 
-      const total = Math.max(subtotal - desconto, 0) + frete;
+      const total = Math.max(subtotal - desconto, 0) + frete; // Calcula o valor final com desconto e frete
       return { subtotal, frete, desconto, total };
     }
 
@@ -707,7 +707,7 @@
         window.addEventListener('load', () => setTimeout(abrirPagamento, 0), { once: true });
       }
 
-      try {
+      try { // Envia os dados do pedido para registro no servidor
         const resposta = await fetch(window.pedidosApiUrl, {
           method: 'POST',
           credentials: 'same-origin',
@@ -715,7 +715,7 @@
             'Content-Type': 'application/json',
             'X-CSRF-Token': window.csrfToken || ''
           },
-          body: JSON.stringify({
+          body: JSON.stringify({ // Reúne as informações da compra e do endereço de entrega
             acao: 'finalizar',
             itens: itensComprados,
             metodo,
@@ -732,7 +732,7 @@
             cupom: cupomAtual?.codigo || ''
           })
         });
-        const resultado = await resposta.json();
+        const resultado = await resposta.json(); // Verifica se o pedido foi registrado corretamente
         if (!resposta.ok || !resultado.sucesso) {
           throw new Error(resultado.erro || 'Não foi possível registrar o pedido.');
         }

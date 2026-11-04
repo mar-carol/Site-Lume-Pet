@@ -1,53 +1,53 @@
     // LOGIN / CADASTRO
     // (armazenamento local no navegador — apenas para demonstração)
 
-    const raizProjetoUrl = new URL('../', document.currentScript.src);
+    const raizProjetoUrl = new URL('../', document.currentScript.src); // Define o caminho principal do projeto
     let usuarioLogado = window.usuarioSessao || null;
 
-   async function fazerLogin() {
-    const email = document.getElementById('login-email').value.trim();
+   async function fazerLogin() { // Função responsável pelo login do usuário
+    const email = document.getElementById('login-email').value.trim();  // Obtém os dados preenchidos no formulário
     const senha = document.getElementById('login-senha').value;
     const erro = document.getElementById('erro-login');
 
     erro.textContent = '';
 
-    if (!email || !senha) {
+    if (!email || !senha) {  // Verifica se os campos obrigatórios foram preenchidos
         erro.textContent = 'Preencha e-mail e senha.';
         return;
     }
 
-    const dados = new FormData();
+    const dados = new FormData();  // Organiza os dados para envio ao servidor
 
     dados.append('email', email);
     dados.append('senha', senha);
 
-    try {
+    try {   // Envia os dados para validação no PHP
         const resposta = await fetch(new URL('api/login.php', raizProjetoUrl), {
             method: 'POST',
             body: dados,
             credentials: 'same-origin'
         });
 
-        const resultado = await resposta.json();
+        const resultado = await resposta.json();   // Verifica a resposta do servidor
 
         if (!resultado.sucesso) {
             erro.textContent = resultado.erro;
             return;
         }
 
-        usuarioLogado = resultado.usuario;
+        usuarioLogado = resultado.usuario;   // Armazena os dados do usuário e atualiza a página
         localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
         fecharLogin();
         window.location.reload();
 
-    } catch (erroConexao) {
+    } catch (erroConexao) {  // Trata possíveis erros de conexão
         erro.textContent =
             'Erro de conexão com o servidor.';
     }
 }
 
-    async function fazerCadastro() {
-      const nome = document.getElementById('cad-nome').value.trim();
+    async function fazerCadastro() {  	// Função responsável pelo cadastro do usuário
+      const nome = document.getElementById('cad-nome').value.trim(); // Obtém os dados preenchidos no formulário de cadastro
       const email = document.getElementById('cad-email').value.trim();
       const senha = document.getElementById('cad-senha').value;
       const senha2 = document.getElementById('cad-senha2').value;
@@ -55,15 +55,15 @@
       const erro = document.getElementById('erro-cadastro');
       erro.textContent = '';
 
-      if (!nome || !email || !senha || !senha2) {
+      if (!nome || !email || !senha || !senha2) {  // Verifica o preenchimento dos campos obrigatórios
         erro.textContent = 'Preencha todos os campos.';
         return;
       }
-      if (!aceitouPolitica) {
+      if (!aceitouPolitica) {  // Verifica a aceitação da Política de Privacidade
         erro.textContent = 'Aceite a Política de Privacidade para continuar.';
         return;
       }
-      const erroSenha = validarSenha(senha);
+      const erroSenha = validarSenha(senha);  // Valida a senha e confirma se as duas senhas coincidem
       if (erroSenha) {
         erro.textContent = erroSenha;
         return;
@@ -73,14 +73,14 @@
         return;
       }
 
-      const dados = new FormData();
+      const dados = new FormData();  // Organiza os dados do cadastro para envio
       dados.append('nome', nome);
       dados.append('email', email);
       dados.append('senha', senha);
       dados.append('senha2', senha2);
       dados.append('aceitou_politica', '1');
 
-      try {
+      try { // Envia os dados para registro no servidor
         const resposta = await fetch(new URL('api/cadastro.php', raizProjetoUrl), {
           method: 'POST',
           body: dados,
@@ -88,12 +88,12 @@
         });
         const resultado = await resposta.json();
 
-        if (!resposta.ok || !resultado.sucesso) {
+        if (!resposta.ok || !resultado.sucesso) {  // Verifica se o cadastro foi realizado com sucesso
           erro.textContent = resultado.erro || 'Não foi possível criar a conta.';
           return;
         }
 
-        usuarioLogado = resultado.usuario;
+        usuarioLogado = resultado.usuario;  // Armazena os dados do usuário e atualiza a página
         localStorage.setItem('lumepet_usuario_logado', JSON.stringify(usuarioLogado));
         window.location.reload();
       } catch (erroConexao) {
@@ -101,12 +101,12 @@
       }
     }
 
-    function atualizarUsuarioUI() {
+    function atualizarUsuarioUI() { // Atualiza as informações do usuário no cabeçalho
       const nomeEl = document.getElementById('usuarioNome');
       const link = document.getElementById('usuarioLink');
       if (!nomeEl || !link) return;
 
-      if (usuarioLogado) {
+      if (usuarioLogado) { // Verifica se o usuário está conectado à conta
       nomeEl.textContent = usuarioLogado.nome.split(' ')[0];
       montarDropdownUsuario();
     } else {
@@ -119,13 +119,13 @@
 
   atualizarUsuarioUI();
 
-  function toggleLogin(event) {
+  function toggleLogin(event) { // Abre a janela de login
       event.preventDefault();
       mudarAba('login');
       document.getElementById('loginOverlay').classList.add('aberto');
     }
 
-    function fecharLogin() {
+    function fecharLogin() { // Fecha a janela de login e limpa as mensagens de erro
       document.getElementById('loginOverlay').classList.remove('aberto');
       document.getElementById('erro-login').textContent = '';
       document.getElementById('erro-cadastro').textContent = '';

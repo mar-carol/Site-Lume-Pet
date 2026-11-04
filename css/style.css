@@ -2107,7 +2107,7 @@ transform: translateY(-50%) rotate(90deg); }
   line-height: 1;
 }
 
-.produto-card:focus-visible {  /* cards de prosutos */
+.produto-card:focus-visible {  /* cards de produtos */
   outline: 3px solid #FA8000;  /* destaca o card quando focalizado */
   outline-offset: 3px;
 }
