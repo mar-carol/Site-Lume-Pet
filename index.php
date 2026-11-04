@@ -7,7 +7,7 @@ $usuarioLogado = usuarioEstaLogado();
 
 $usuario = null;
 
-if ($usuarioLogado) {
+if ($usuarioLogado) { 
     $pdo = getConexao();
 
     $stmt = $pdo->prepare(

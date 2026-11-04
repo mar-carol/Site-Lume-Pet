@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/../config/database.php'; ?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
