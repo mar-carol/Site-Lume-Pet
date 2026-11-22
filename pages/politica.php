@@ -12,11 +12,17 @@
 </head>
 
 <body class="pagina-politicas">
-<header class="ongs-header">
-  <div class="ong-header-conteudo">
+
+<!-- cabeçalho -->
+<header class="politica-header">
+  <div class="politica-header-conteudo">
+    <a href="<?= BASE_URL ?>/index.php" class="home-politica" aria-label="Voltar para a página inicial">
+      <i class="fa-solid fa-house"></i>
+    </a>
     <a href="<?= BASE_URL ?>/index.php" class="logo-header"><img src="<?= BASE_URL ?>/assets/images/marcad.png" alt="Lume Pet"></a>
   </div>
 </header>
+
 <main id="topo">
   <div class="hero-politicas">
     <h1>Política de Privacidade</h1>
